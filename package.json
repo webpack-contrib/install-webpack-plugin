@@ -1,0 +1,38 @@
+{
+  "name": "npm-install-loader",
+  "version": "1.0.0",
+  "description": "Webpack loader to automatically npm install & save dependencies.",
+  "main": "index.js",
+  "scripts": {
+    "changelog": "npm run changelog:generate && npm run changelog:add",
+    "changelog:add": "git add CHANGELOG.md",
+    "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "postversion": "npm run version:amend && npm run publish",
+    "publish": "npm run publish:git && npm run publish:npm",
+    "publish:git": "git push origin master --tags",
+    "publish:npm": "npm publish",
+    "test": "NODE_ENV=test nyc mocha",
+    "version": "npm run changelog",
+    "version:amend": "git commit --amend -m \"Release v${npm_package_version}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericclemmons/webpack-npm-install-loader.git"
+  },
+  "author": "Eric Clemmons <eric@smarterspam.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ericclemmons/webpack-npm-install-loader/issues"
+  },
+  "homepage": "https://github.com/ericclemmons/webpack-npm-install-loader#readme",
+  "dependencies": {
+    "babel-core": "^6.3.26"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.6",
+    "expect": "^1.13.4",
+    "mocha": "^2.3.4",
+    "nyc": "^5.0.1"
+  }
+}
