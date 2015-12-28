@@ -1,2 +1,3 @@
-# babel-plugin-auto-install
-Babel plugin to automatically install &amp; save imports to your package.json
+# webpack-npm-install-loader
+
+> Webpack loader to automatically npm install & save dependencies.
