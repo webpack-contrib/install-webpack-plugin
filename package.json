@@ -7,7 +7,7 @@
     "changelog": "npm run changelog:generate && npm run changelog:add",
     "changelog:add": "git add CHANGELOG.md",
     "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "coverage": "npm test && nyc report --reporter=text-lcov | coveralls",
     "postversion": "npm run version:amend && npm run publish",
     "publish": "npm run publish:git && npm run publish:npm",
     "publish:git": "git push origin master --tags",
