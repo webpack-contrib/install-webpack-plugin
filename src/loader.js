@@ -3,7 +3,7 @@ var path = require("path");
 var parser = require("./parser");
 
 module.exports = function(source, map) {
-  var context = this.options.context;
+  var context = this.options.context || process.cwd();
   var resolve = this.options.resolve;
 
   var dependencies = parser.parse(source);
