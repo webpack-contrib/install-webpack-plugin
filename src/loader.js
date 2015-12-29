@@ -3,6 +3,10 @@ var path = require("path");
 var parser = require("./parser");
 
 module.exports = function(source, map) {
+  if (this.cacheable) {
+    this.cacheable();
+  }
+
   var context = this.options.context || process.cwd();
   var resolve = this.options.resolve;
 
