@@ -15,7 +15,7 @@ module.exports.check = function(dependencies, dirs) {
 
       return false;
     } catch(e) {
-      var modulePaths = dirs.map(function(dir) {
+      var modulePaths = (dirs || []).map(function(dir) {
         return path.resolve(dir, dependency);
       });
 
