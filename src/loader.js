@@ -2,7 +2,7 @@ var installer = require("./installer");
 var path = require("path");
 var parser = require("./parser");
 
-module.exports = function(source, map) {
+module.exports = function loader(source, map) {
   if (this.cacheable) {
     this.cacheable();
   }
