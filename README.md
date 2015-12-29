@@ -8,8 +8,8 @@ It sucks to <kbd>Ctrl-C</kbd> your
 build script & server just to install
 a dependency you didn't know you needed until now.
 
-Instead, use `require` or `import` how
-you normally would and `npm install` will happen automatically between reloads.
+Instead, use `require` or `import` how you normally would and `npm install`
+will happen automatically install missing dependencies between reloads.
 
 ### Usage
 
@@ -28,7 +28,7 @@ module: {
 ```
 
 This will ensure that any other loaders
-(e.g. `eslint-loader`, `babel-loader`,e tc.) have completed.
+(e.g. `eslint-loader`, `babel-loader`, etc.) have completed.
 
 ### Saving
 
