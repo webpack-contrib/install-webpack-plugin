@@ -20,6 +20,12 @@
     "type": "git",
     "url": "git+https://github.com/ericclemmons/webpack-npm-install-loader.git"
   },
+  "keywords": [
+    "webpack",
+    "webpack-loader",
+    "npm",
+    "install"
+  ],
   "author": "Eric Clemmons <eric@smarterspam.com>",
   "license": "MIT",
   "bugs": {
