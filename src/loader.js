@@ -9,8 +9,8 @@ module.exports = function(source, map) {
   var dependencies = parser.parse(source);
 
   var modulePaths = [].concat(
-    resolve.root,
-    resolve.modulesDirectories
+    resolve.root || [],
+    resolve.modulesDirectories || []
   ).map(function(dir) {
     return path.resolve(context, dir);
   });
