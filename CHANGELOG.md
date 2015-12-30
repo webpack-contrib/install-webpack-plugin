@@ -1,6 +1,13 @@
 # Change Log
 
-## [1.0.0](https://github.com/ericclemmons/npm-install-loader/tree/1.0.0) (2015-12-29)
+## [1.0.1](https://github.com/ericclemmons/npm-install-loader/tree/1.0.1) (2015-12-30)
+[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.0...1.0.1)
+
+**Fixed bugs:**
+
+- Support deep imports and multiple imports from the same module [\#4](https://github.com/ericclemmons/npm-install-loader/pull/4) ([insin](https://github.com/insin))
+
+## [v1.0.0](https://github.com/ericclemmons/npm-install-loader/tree/v1.0.0) (2015-12-29)
 **Implemented enhancements:**
 
 - Initial Release [\#1](https://github.com/ericclemmons/npm-install-loader/pull/1) ([ericclemmons](https://github.com/ericclemmons))
