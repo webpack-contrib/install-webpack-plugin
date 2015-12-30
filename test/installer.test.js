@@ -21,6 +21,18 @@ describe("installer", function() {
         expect(installer.check(["does-not-exist"])).toEqual(["does-not-exist"]);
       });
 
+      context("that import deeply", function() {
+        it("should return their module name", function() {
+          expect(installer.check(["does-not-exist/lib/test"])).toEqual(["does-not-exist"]);
+        });
+      });
+
+      context("that import multiple times from the same module", function() {
+        it("should return their module name once", function() {
+          expect(installer.check(["d-n-e/a", "d-n-e/b"])).toEqual(["d-n-e"]);
+        });
+      });
+
       context("that exists in alternative directories", function() {
         it("should return []", function() {
           expect(installer.check(["test"], [process.cwd()])).toEqual([]);

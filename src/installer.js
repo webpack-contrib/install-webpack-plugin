@@ -3,17 +3,26 @@ var fs = require("fs");
 var path = require("path");
 
 module.exports.check = function(dependencies, dirs) {
-  return dependencies.filter(function(dependency) {
+  var missing = [];
+  dependencies.forEach(function(dependency) {
     // Ignore relative modules, which aren't installed by NPM
-    if (!/^[a-z\-0-9]+$/.test(dependency)) {
-      return false;
+    if (/^\./.test(dependency)) {
+      return;
+    }
+
+    // Only look for the dependency directory
+    dependency = dependency.split('/')[0];
+
+    // Bail early if we've already determined this is a missing dependency
+    if (missing.indexOf(dependency) !== -1) {
+      return;
     }
 
     try {
       // Ignore dependencies that are resolveable
       require.resolve(dependency);
 
-      return false;
+      return;
     } catch(e) {
       var modulePaths = (dirs || []).map(function(dir) {
         return path.resolve(dir, dependency);
@@ -27,14 +36,15 @@ module.exports.check = function(dependencies, dirs) {
           // If it exists, Webpack can find it
           fs.statSync(modulePath);
 
-          return false;
+          return;
         } catch(e) {}
       }
 
       // Dependency must be missing
-      return true;
+      missing.push(dependency);
     }
   });
+  return missing;
 }
 
 module.exports.install = function install(dependencies) {
