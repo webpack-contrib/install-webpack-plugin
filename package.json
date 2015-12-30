@@ -8,10 +8,7 @@
     "changelog:add": "git add CHANGELOG.md",
     "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
     "coverage": "npm test && nyc report --reporter=text-lcov | coveralls",
-    "postversion": "npm run version:amend && npm run publish",
-    "publish": "npm run publish:git && npm run publish:npm",
-    "publish:git": "git push origin master --tags",
-    "publish:npm": "npm publish",
+    "postversion": "npm run version:amend && git push origin master --tags && npm publish",
     "test": "NODE_ENV=test nyc mocha",
     "version": "npm run changelog",
     "version:amend": "git commit --amend -m \"Release v${npm_package_version}\""
