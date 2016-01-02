@@ -52,6 +52,24 @@ save=true
 
 This will automatically save any dependencies anytime you run `npm install` (no need to pass `--save`).
 
+**Alternatively**, you can provide CLI arguments that get added directly to `npm install`:
+
+```js
+postLoaders: [
+  {
+    exclude: /node_modules/,
+    loader: "npm-install-loader",
+    query: {
+      cli: {
+        registry: "..."   // --registry='...'
+        save: true,       // --save
+        saveExact: true,  // --save-exact
+      },
+    },
+    test: /\.js$/,
+  },
+],
+
 
 ### License
 

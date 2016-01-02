@@ -1,6 +1,8 @@
 var child = require("child_process");
 var fs = require("fs");
+var kebabCase = require("lodash.kebabcase");
 var path = require("path");
+var util = require("util");
 
 module.exports.check = function(dependencies, dirs) {
   var missing = [];
@@ -47,10 +49,31 @@ module.exports.check = function(dependencies, dirs) {
   return missing;
 }
 
-module.exports.install = function install(dependencies) {
-  if (dependencies && dependencies.length) {
-    console.info("Installing missing dependencies %s...", dependencies.join(" "));
-
-    return child.spawnSync("npm", ["install"].concat(dependencies), { stdio: "inherit" });
+module.exports.install = function install(dependencies, options) {
+  if (!dependencies || !dependencies.length) {
+    return undefined;
   }
+
+  var args = ["install"].concat(dependencies);
+
+  if (options) {
+    for (option in options) {
+      var arg = util.format("--%s", kebabCase(option));
+      var value = options[option];
+
+      if (value === false) {
+        continue;
+      }
+
+      if (value === true) {
+        args.push(arg);
+      } else {
+        args.push(util.format("%s='%s'", arg, value));
+      }
+    }
+  }
+
+  console.info("Installing missing dependencies %s...", dependencies.join(" "));
+
+  return child.spawnSync("npm", args, { stdio: "inherit" });
 };

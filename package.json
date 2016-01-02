@@ -33,7 +33,9 @@
   },
   "homepage": "https://github.com/ericclemmons/webpack-npm-install-loader#readme",
   "dependencies": {
-    "babel-core": "^6.3.26"
+    "babel-core": "^6.3.26",
+    "loader-utils": "^0.2.12",
+    "lodash.kebabcase": "^3.0.1"
   },
   "devDependencies": {
     "coveralls": "^2.11.6",

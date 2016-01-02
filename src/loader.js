@@ -1,6 +1,8 @@
 var installer = require("./installer");
+var loaderUtils = require("loader-utils");
 var path = require("path");
 var parser = require("./parser");
+var util = require("util");
 
 module.exports = function loader(source, map) {
   if (this.cacheable) {
@@ -20,8 +22,9 @@ module.exports = function loader(source, map) {
   });
 
   var missing = installer.check(dependencies, modulePaths);
+  var query = loaderUtils.parseQuery(this.query);
 
-  installer.install(missing);
+  installer.install(missing, query.cli);
 
   this.callback(null, source, map);
 };
