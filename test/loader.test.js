@@ -7,6 +7,7 @@ describe("loader", function() {
   beforeEach(function() {
     expect.spyOn(console, "info");
 
+    this.cacheable = function() {};
     this.callback = expect.createSpy();
     this.check = expect.spyOn(installer, "check").andCallThrough();
     this.install = expect.spyOn(installer, "install");
