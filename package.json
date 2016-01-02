@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "Webpack loader to automatically npm install & save dependencies.",
   "main": "index.js",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "changelog": "npm run changelog:generate && npm run changelog:add",
     "changelog:add": "git add CHANGELOG.md",
