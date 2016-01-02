@@ -1,7 +1,15 @@
 # Change Log
 
-## [1.0.1](https://github.com/ericclemmons/npm-install-loader/tree/1.0.1) (2015-12-30)
-[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.0...1.0.1)
+## [1.0.2](https://github.com/ericclemmons/npm-install-loader/tree/1.0.2) (2016-01-02)
+[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.1...1.0.2)
+
+**Implemented enhancements:**
+
+- 100% Coverage [\#8](https://github.com/ericclemmons/npm-install-loader/pull/8) ([ericclemmons](https://github.com/ericclemmons))
+- Whitelist package.json "files" [\#7](https://github.com/ericclemmons/npm-install-loader/pull/7) ([ericclemmons](https://github.com/ericclemmons))
+
+## [v1.0.1](https://github.com/ericclemmons/npm-install-loader/tree/v1.0.1) (2015-12-30)
+[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.0...v1.0.1)
 
 **Fixed bugs:**
 
