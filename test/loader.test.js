@@ -7,6 +7,7 @@ describe("loader", function() {
   beforeEach(function() {
     expect.spyOn(console, "info");
 
+    this.cacheable = function() {};
     this.callback = expect.createSpy();
     this.check = expect.spyOn(installer, "check").andCallThrough();
     this.install = expect.spyOn(installer, "install");
@@ -26,6 +27,8 @@ describe("loader", function() {
       },
     };
 
+    this.query = '?{"cli":{"save":true,"saveExact":true}}';
+
     loader.call(this, this.source, this.map);
   });
 
@@ -44,12 +47,21 @@ describe("loader", function() {
     ]);
   });
 
-  it("should install missing", function() {
-    expect(this.install).toHaveBeenCalled();
-    expect(this.install.calls[0].arguments).toEqual([
-      ["missing"],
-    ]);
+  context("when calling .install", function() {
+    it("should pass dependencies as the first argument", function() {
+      expect(this.install).toHaveBeenCalled();
+      expect(this.install.calls[0].arguments[0]).toEqual(["missing"]);
+    });
+
+    it("should pass args as the second argument", function() {
+      expect(this.install).toHaveBeenCalled();
+      expect(this.install.calls[0].arguments[1]).toEqual({
+        save: true,
+        saveExact: true,
+      });
+    });
   });
+
 
   it("should callback source & map", function() {
     expect(this.callback).toHaveBeenCalled();

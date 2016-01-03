@@ -74,11 +74,29 @@ describe("installer", function() {
 
         expect(this.spy).toHaveBeenCalled();
         expect(this.spy.calls.length).toEqual(1);
-        expect(this.spy.calls[0].arguments).toEqual([
-          "npm",
-          ["install", "foo", "bar"],
-          { "stdio": "inherit" },
-        ]);
+        expect(this.spy.calls[0].arguments[0]).toEqual("npm");
+        expect(this.spy.calls[0].arguments[1]).toEqual(["install", "foo", "bar"]);
+      });
+
+      context("given options", function() {
+        it("should pass them to child process", function() {
+          var result = installer.install(["foo", "bar"], {
+            save: true,
+            saveExact: false,
+            registry: "https://registry.npmjs.com/",
+          });
+
+          expect(this.spy).toHaveBeenCalled();
+          expect(this.spy.calls.length).toEqual(1);
+          expect(this.spy.calls[0].arguments[0]).toEqual("npm");
+          expect(this.spy.calls[0].arguments[1]).toEqual([
+            "install",
+            "foo",
+            "bar",
+            "--save",
+            "--registry='https://registry.npmjs.com/'",
+          ]);
+        });
       });
     });
   });
