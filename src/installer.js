@@ -1,4 +1,4 @@
-var child = require("child_process");
+var spawn = require("cross-spawn");
 var fs = require("fs");
 var kebabCase = require("lodash.kebabcase");
 var path = require("path");
@@ -75,5 +75,5 @@ module.exports.install = function install(dependencies, options) {
 
   console.info("Installing missing dependencies %s...", dependencies.join(" "));
 
-  return child.spawnSync("npm", args, { stdio: "inherit" });
+  return spawn.sync("npm", args, { stdio: "inherit" });
 };
