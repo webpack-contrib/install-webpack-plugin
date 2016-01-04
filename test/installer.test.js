@@ -1,4 +1,4 @@
-var child = require("child_process");
+var spawn = require("cross-spawn");
 var expect = require("expect");
 var installer = require("../src/installer");
 
@@ -44,7 +44,7 @@ describe("installer", function() {
 
   describe(".install", function() {
     beforeEach(function() {
-      this.spy = expect.spyOn(child, "spawnSync");
+      this.spy = expect.spyOn(spawn, "sync");
 
       expect.spyOn(console, "info");
     });
