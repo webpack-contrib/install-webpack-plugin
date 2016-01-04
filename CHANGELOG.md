@@ -1,7 +1,14 @@
 # Change Log
 
-## [1.1.0](https://github.com/ericclemmons/npm-install-loader/tree/1.1.0) (2016-01-02)
-[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.2...1.1.0)
+## [1.1.1](https://github.com/ericclemmons/npm-install-loader/tree/1.1.1) (2016-01-04)
+[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.1.0...1.1.1)
+
+**Fixed bugs:**
+
+- Fix spawning npm on Windows [\#9](https://github.com/ericclemmons/npm-install-loader/pull/9) ([insin](https://github.com/insin))
+
+## [v1.1.0](https://github.com/ericclemmons/npm-install-loader/tree/v1.1.0) (2016-01-02)
+[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.2...v1.1.0)
 
 **Implemented enhancements:**
 
