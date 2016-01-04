@@ -21,5 +21,5 @@ Start the server that (that doesn't do anything yet):
 $ npm start
 ```
 
-Finally, make changes to `server.js` and watch dependencies get installed
-as you go!
+Finally, open <http://localhost:3000>, make changes to `server.js`
+and watch dependencies get installed as you go!

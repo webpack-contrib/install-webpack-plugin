@@ -9,6 +9,6 @@
   "scripts": {
     "link": "cd .. && npm link . && cd - && npm link npm-install-loader",
     "postinstall": "npm run link",
-    "start": "webpack --watch"
+    "start": "webpack --config webpack.config.server.js --watch"
   }
 }
