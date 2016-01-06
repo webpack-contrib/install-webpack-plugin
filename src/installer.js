@@ -73,7 +73,8 @@ module.exports.install = function install(dependencies, options) {
     }
   }
 
-  console.info("Installing missing dependencies %s...", dependencies.join(" "));
+  var suffix = dependencies.length === 1 ? "y" : "ies";
+  console.info("Installing missing dependenc%s %s...", suffix, dependencies.join(", "));
 
   return spawn.sync("npm", args, { stdio: "inherit" });
 };
