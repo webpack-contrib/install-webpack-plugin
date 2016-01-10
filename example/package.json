@@ -7,7 +7,7 @@
     "webpack": "1.12.9"
   },
   "scripts": {
-    "link": "cd .. && npm link . && cd - && npm link npm-install-loader",
+    "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
     "postinstall": "npm run link",
     "start": "webpack --config webpack.config.server.js --watch"
   }
