@@ -1,1 +1,1 @@
-module.exports = require("./src/loader.js");
+module.exports = require("./src/plugin.js");
