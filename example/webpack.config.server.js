@@ -1,3 +1,4 @@
+var NpmInstallPlugin = require("npm-install-webpack-plugin");
 var path = require("path");
 var ReloadServerPlugin = require("reload-server-webpack-plugin");
 var webpack = require("webpack");
@@ -31,20 +32,6 @@ module.exports = {
         test: /\.css$/,
       },
     ],
-
-    postLoaders: [
-      {
-        exclude: /node_modules/,
-        loader: "npm-install-loader",
-        query: {
-          cli: {
-            save: true,
-            saveExact: false,
-          },
-        },
-        test: /\.js$/,
-      },
-    ],
   },
 
   node: {
@@ -59,6 +46,13 @@ module.exports = {
   },
 
   plugins: [
+    new NpmInstallPlugin({
+      cli: {
+        save: true,
+        saveExact: true,
+      },
+    }),
+
     new ReloadServerPlugin({
       script: path.join(__dirname, "build/server.min.js"),
     }),

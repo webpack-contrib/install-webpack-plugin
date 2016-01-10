@@ -1,3 +1,4 @@
+var NpmInstallPlugin = require("npm-install-webpack-plugin");
 var path = require("path");
 var webpack = require("webpack");
 
@@ -18,10 +19,6 @@ module.exports = {
         test: /\.css$/,
       },
       {
-        loader: "npm-install-loader",
-        test: /\.css$/,
-      },
-      {
         loader: "css-loader",
         test: /\.css$/,
       },
@@ -39,6 +36,13 @@ module.exports = {
   },
 
   plugins: [
+    new NpmInstallPlugin({
+      cli: {
+        save: true,
+        saveExact: true,
+      },
+    }),
+
     new webpack.HotModuleReplacementPlugin(),
   ]
 };
