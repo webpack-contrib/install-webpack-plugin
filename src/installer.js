@@ -35,6 +35,17 @@ module.exports.check = function(request) {
     return;
   }
 
+  // Ignore linked modules
+  try {
+    var stats = fs.lstatSync(path.join(process.cwd(), "node_modules", dep));
+
+    if (stats.isSymbolicLink()) {
+      return;
+    }
+  } catch(e) {
+    // Module exists in node_modules, but isn't symlinked
+  }
+
   try {
     var resolved = require.resolve(dep);
 
