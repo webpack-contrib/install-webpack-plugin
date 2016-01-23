@@ -7,10 +7,12 @@ module.exports = {
 
   devtool: "#inline-source-map",
 
-  entry: [
-    "webpack-hot-middleware/client?reload=true",
-    "./client.js",
-  ],
+  entry: {
+    client: [
+      "webpack-hot-middleware/client?reload=true",
+      "./client.js",
+    ],
+  },
 
   module: {
     loaders: [
@@ -20,19 +22,53 @@ module.exports = {
       },
       {
         loader: "css-loader",
+        query: {
+          localIdentName: "[name]-[local]--[hash:base64:5]",
+        },
         test: /\.css$/,
       },
       {
-        loader: "less-loader",
-        test: /\.less$/,
+        loader: "url-loader",
+        query: {
+          mimetype: "application/font-woff",
+        },
+        test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+      },
+      {
+        loader: "url-loader",
+        query: {
+          mimetype: "application/octet-stream",
+        },
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+      },
+      {
+        loader: "file-loader",
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+      },
+      {
+        loader: "url-loader",
+        query: {
+          mimetype: "image/svg+xml",
+        },
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+      },
+      {
+        loader: "url-loader",
+        query: {
+          limit: 8192, // Inline base64 URLs for <= 8K images
+        },
+        test: /\.(png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
       },
     ],
   },
 
   output: {
-    filename: "client.min.js",
-    path: path.join(__dirname, "/public/build"),
-    publicPath: "/build/"
+    chunkFilename: "[id].[hash:5]-[chunkhash:7].js",
+    devtoolModuleFilenameTemplate: "[absolute-resource-path]",
+    filename: "[name].js",
+    path: path.join(__dirname, "build/client"),
+    publicPath: "/",
+    libaryTarget: "var",
   },
 
   plugins: [
@@ -44,5 +80,7 @@ module.exports = {
     }),
 
     new webpack.HotModuleReplacementPlugin(),
-  ]
+  ],
+
+  target: "web",
 };

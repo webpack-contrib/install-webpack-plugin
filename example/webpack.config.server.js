@@ -40,9 +40,9 @@ module.exports = {
   },
 
   output: {
-    filename: "[name].min.js",
+    filename: "[name].js",
     libraryTarget: "commonjs2",
-    path: path.join(__dirname, "build"),
+    path: path.join(__dirname, "build/server"),
   },
 
   plugins: [
@@ -54,7 +54,7 @@ module.exports = {
     }),
 
     new ReloadServerPlugin({
-      script: path.join(__dirname, "build/server.min.js"),
+      script: path.join(__dirname, "build/server/server.js"),
     }),
   ],
 

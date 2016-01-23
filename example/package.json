@@ -2,9 +2,11 @@
   "private": true,
   "devDependencies": {
     "css-loader": "0.23.1",
+    "file-loader": "0.8.5",
     "reload-server-webpack-plugin": "1.0.1",
     "style-loader": "0.13.0",
-    "webpack": "1.12.9"
+    "url-loader": "0.5.7",
+    "webpack": "1.12.11"
   },
   "scripts": {
     "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
