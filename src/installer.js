@@ -4,57 +4,39 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
-module.exports.check = function(dependencies, dirs) {
-  var missing = [];
-  dependencies.forEach(function(dependency) {
-    // Ignore relative modules, which aren't installed by NPM
-    if (/^\./.test(dependency)) {
-      return;
-    }
+module.exports.check = function(request) {
+  // Only look for the dependency directory
+  // @TODO Support namespaced NPM modules (e.g. @cycle/dom)
+  var dep = request.split("/").shift().toLowerCase();
 
-    // Only look for the dependency directory
-    dependency = dependency.split('/')[0];
-
-    // Bail early if we've already determined this is a missing dependency
-    if (missing.indexOf(dependency) !== -1) {
-      return;
-    }
-
-    try {
-      // Ignore dependencies that are resolveable
-      require.resolve(dependency);
-
-      return;
-    } catch(e) {
-      var modulePaths = (dirs || []).map(function(dir) {
-        return path.resolve(dir, dependency);
-      });
-
-      // Check all module directories for dependency directory
-      while (modulePaths.length) {
-        var modulePath = modulePaths.shift();
-
-        try {
-          // If it exists, Webpack can find it
-          fs.statSync(modulePath);
-
-          return;
-        } catch(e) {}
-      }
-
-      // Dependency must be missing
-      missing.push(dependency);
-    }
-  });
-  return missing;
-}
-
-module.exports.install = function install(dependencies, options) {
-  if (!dependencies || !dependencies.length) {
-    return undefined;
+  // Ignore relative modules, which aren't installed by NPM
+  if (!dep.match(/^[a-z\-0-9]+$/)) {
+    return;
   }
 
-  var args = ["install"].concat(dependencies);
+  try {
+    var packagePath = require.resolve(path.join(process.cwd(), "package.json"));
+    var package = require(packagePath);
+
+    // Remove cached copy for future checks
+    delete require.cache[packagePath];
+  } catch(e) {
+    throw e;
+  }
+
+  var hasDep = package.dependencies && package.dependencies[dep];
+  var hasDevDep = package.devDependencies && package.devDependencies[dep];
+
+  // Bail early if we've already installed this dependency
+  if (hasDep || hasDevDep) {
+    return;
+  }
+
+  return dep;
+}
+
+module.exports.install = function install(dep, options) {
+  var args = ["install"].concat([dep]).filter(Boolean);
 
   if (options) {
     for (option in options) {
@@ -73,8 +55,9 @@ module.exports.install = function install(dependencies, options) {
     }
   }
 
-  var suffix = dependencies.length === 1 ? "y" : "ies";
-  console.info("Installing missing dependenc%s %s...", suffix, dependencies.join(", "));
+  console.info("Installing missing dependency `%s`...", dep);
 
-  return spawn.sync("npm", args, { stdio: "inherit" });
+  var output = spawn.sync("npm", args, { stdio: "inherit" });
+
+  return output;
 };
