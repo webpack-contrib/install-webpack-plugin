@@ -4,9 +4,7 @@ import path from "path";
 export const defaults = {
   context: process.cwd(),
 
-  externals: [
-    "npm-install-webpack-plugin", // Symlinked project,
-  ],
+  externals: [],
 
   module: {
     loaders: [
@@ -29,11 +27,6 @@ export const defaults = {
   },
 
   plugins: [
-    new NpmInstallPlugin({
-      cli: {
-        save: true,
-        saveExact: true,
-      },
-    }),
+    new NpmInstallPlugin(),
   ],
 };
