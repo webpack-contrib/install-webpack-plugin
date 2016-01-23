@@ -4,13 +4,15 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
+var EXTERNAL = /^[a-z\-0-9]+$/;
+
 module.exports.check = function(request) {
   // Only look for the dependency directory
   // @TODO Support namespaced NPM modules (e.g. @cycle/dom)
   var dep = request.split("/").shift().toLowerCase();
 
   // Ignore relative modules, which aren't installed by NPM
-  if (!dep.match(/^[a-z\-0-9]+$/)) {
+  if (!dep.match(EXTERNAL)) {
     return;
   }
 
@@ -31,6 +33,16 @@ module.exports.check = function(request) {
   // Bail early if we've already installed this dependency
   if (hasDep || hasDevDep) {
     return;
+  }
+
+  try {
+    var resolved = require.resolve(dep);
+
+    if (resolved.match(EXTERNAL)) {
+      return;
+    }
+  } catch(e) {
+    // Module is not resolveable
   }
 
   return dep;
