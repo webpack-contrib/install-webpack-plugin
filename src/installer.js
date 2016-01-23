@@ -15,17 +15,18 @@ module.exports.check = function(request) {
   }
 
   try {
-    var packagePath = require.resolve(path.join(process.cwd(), "package.json"));
-    var package = require(packagePath);
+    var pkgPath = require.resolve(path.join(process.cwd(), "package.json"));
+    var pkg = require(pkgPath);
 
     // Remove cached copy for future checks
-    delete require.cache[packagePath];
+    delete require.cache[pkgPath];
   } catch(e) {
+    console.error(e);
     throw e;
   }
 
-  var hasDep = package.dependencies && package.dependencies[dep];
-  var hasDevDep = package.devDependencies && package.devDependencies[dep];
+  var hasDep = pkg.dependencies && pkg.dependencies[dep];
+  var hasDevDep = pkg.devDependencies && pkg.devDependencies[dep];
 
   // Bail early if we've already installed this dependency
   if (hasDep || hasDevDep) {
