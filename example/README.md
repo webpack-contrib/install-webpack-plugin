@@ -1,4 +1,8 @@
-# `npm-install-loader` Example
+# `npm-install-webpack-plugin` Example
+
+> This example shows how it's possible to start with a minimal project setup
+> and rapidly develop by auto-installing both Javascript & CSS dependencies
+> without ever leaving the editor.
 
 ## Usage
 
