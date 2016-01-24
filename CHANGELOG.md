@@ -1,38 +1,52 @@
 # Change Log
 
-## [1.1.1](https://github.com/ericclemmons/npm-install-loader/tree/1.1.1) (2016-01-04)
-[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.1.0...1.1.1)
+## [2.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/2.0.0) (2016-01-24)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.1.1...2.0.0)
+
+**Implemented enhancements:**
+
+- Tweak logging of installation info [\#10](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/10) ([insin](https://github.com/insin))
+- Convert to Webpack Plugin [\#5](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/5) ([ericclemmons](https://github.com/ericclemmons))
+
+**Closed issues:**
+
+- Transitive dependencies with npm3 [\#14](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/14)
+- Strip webpack directives before running npm install [\#12](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/12)
+- Missing require\(\) pattern [\#11](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/11)
+
+## [v1.1.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v1.1.1) (2016-01-04)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.1.0...v1.1.1)
 
 **Fixed bugs:**
 
-- Fix spawning npm on Windows [\#9](https://github.com/ericclemmons/npm-install-loader/pull/9) ([insin](https://github.com/insin))
+- Fix spawning npm on Windows [\#9](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/9) ([insin](https://github.com/insin))
 
-## [v1.1.0](https://github.com/ericclemmons/npm-install-loader/tree/v1.1.0) (2016-01-02)
-[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.2...v1.1.0)
-
-**Implemented enhancements:**
-
-- Use --save or --save-exact flags when installing based on loader query config [\#3](https://github.com/ericclemmons/npm-install-loader/pull/3) ([insin](https://github.com/insin))
-
-## [v1.0.2](https://github.com/ericclemmons/npm-install-loader/tree/v1.0.2) (2016-01-02)
-[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.1...v1.0.2)
+## [v1.1.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v1.1.0) (2016-01-02)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.0.2...v1.1.0)
 
 **Implemented enhancements:**
 
-- 100% Coverage [\#8](https://github.com/ericclemmons/npm-install-loader/pull/8) ([ericclemmons](https://github.com/ericclemmons))
-- Whitelist package.json "files" [\#7](https://github.com/ericclemmons/npm-install-loader/pull/7) ([ericclemmons](https://github.com/ericclemmons))
+- Use --save or --save-exact flags when installing based on loader query config [\#3](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/3) ([insin](https://github.com/insin))
 
-## [v1.0.1](https://github.com/ericclemmons/npm-install-loader/tree/v1.0.1) (2015-12-30)
-[Full Changelog](https://github.com/ericclemmons/npm-install-loader/compare/v1.0.0...v1.0.1)
+## [v1.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v1.0.2) (2016-01-02)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.0.1...v1.0.2)
+
+**Implemented enhancements:**
+
+- 100% Coverage [\#8](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/8) ([ericclemmons](https://github.com/ericclemmons))
+- Whitelist package.json "files" [\#7](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/7) ([ericclemmons](https://github.com/ericclemmons))
+
+## [v1.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v1.0.1) (2015-12-30)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.0.0...v1.0.1)
 
 **Fixed bugs:**
 
-- Support deep imports and multiple imports from the same module [\#4](https://github.com/ericclemmons/npm-install-loader/pull/4) ([insin](https://github.com/insin))
+- Support deep imports and multiple imports from the same module [\#4](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/4) ([insin](https://github.com/insin))
 
-## [v1.0.0](https://github.com/ericclemmons/npm-install-loader/tree/v1.0.0) (2015-12-29)
+## [v1.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v1.0.0) (2015-12-29)
 **Implemented enhancements:**
 
-- Initial Release [\#1](https://github.com/ericclemmons/npm-install-loader/pull/1) ([ericclemmons](https://github.com/ericclemmons))
+- Initial Release [\#1](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/1) ([ericclemmons](https://github.com/ericclemmons))
 
 
 
