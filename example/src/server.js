@@ -3,24 +3,28 @@ import webpack from "webpack";
 
 import client from "../webpack.config.client.babel";
 
-const app = express();
 const compiler = webpack(client);
 
-app
-  .use(express.static("build/client"))
-  .use(express.static("src/public"))
+export default express()
+  .get("/", (req, res) => res.send(`
+    <!doctype html>
+    <div id="app">
+      Waiting on <code>client.js</code> to execute...
+    </div>
+
+    <script src="client.js"></script>
+  `))
   .use(require("webpack-dev-middleware")(compiler, {
     noInfo: true,
     publicPath: client.output.publicPath,
     quiet: false,
   }))
-  .use(require("webpack-hot-middleware")(compiler, { reload: true }))
+  .use(require("webpack-hot-middleware")(compiler))
   .listen(3000, (err) => {
     if (err) {
-      console.error(err);
-      return;
+      return console.error(err);
     }
 
-    console.log("Listening on http://localhost:3000/");
+    console.info("Listening on http://localhost:3000/")
   })
 ;
