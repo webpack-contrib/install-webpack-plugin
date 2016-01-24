@@ -88,7 +88,9 @@ describe("installer", function() {
       });
     });
 
-        expect(installer.check(dep)).toBe(dep);
+    context("given a module already installed, but not saved", function() {
+      it("should return module", function() {
+        expect(installer.check("yargs")).toBe("yargs");
       });
     });
   });
