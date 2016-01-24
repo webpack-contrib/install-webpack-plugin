@@ -3,7 +3,7 @@
 > Webpack plugin that automatically **installs & saves missing dependencies**
 > while you work!
 
-Seamless works with:
+Seamlessly works with:
 - [x] Javascript
   (e.g. `require`, `import`)
 - [x] CSS
