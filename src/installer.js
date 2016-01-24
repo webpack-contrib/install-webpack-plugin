@@ -8,13 +8,14 @@ var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var EXTERNAL = /^[a-z\-0-9]+$/; // Match "react", "path", "fs", etc.
 
 module.exports.check = function(request) {
+  var namespaced = request.charAt(0) === "@";
   var dep = request.split("/")
-    .slice(0, request.charAt(0) === "@" ? 2 : 1)
+    .slice(0, namespaced ? 2 : 1)
     .join("/")
   ;
 
   // Ignore relative modules, which aren't installed by NPM
-  if (dep.match(INTERNAL)) {
+  if (!dep.match(EXTERNAL) && !namespaced) {
     return;
   }
 
