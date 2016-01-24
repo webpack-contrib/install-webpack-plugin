@@ -93,6 +93,12 @@ describe("installer", function() {
         expect(installer.check("yargs")).toBe("yargs");
       });
     });
+
+    context("given a webpack !!loader/module", function() {
+      it("should return undefined", function() {
+        expect(installer.check("!!./css-loader/index.js',")).toBe(undefined);
+      });
+    })
   });
 
   describe(".install", function() {
