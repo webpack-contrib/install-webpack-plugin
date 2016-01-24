@@ -34,12 +34,12 @@
   "homepage": "https://github.com/ericclemmons/webpack-npm-install-loader#readme",
   "dependencies": {
     "cross-spawn": "^2.1.4",
-    "lodash.kebabcase": "^3.0.1"
+    "lodash.kebabcase": "^3.1.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.6",
     "expect": "^1.13.4",
     "mocha": "^2.3.4",
-    "nyc": "^5.0.1"
+    "nyc": "^5.3.0"
   }
 }
