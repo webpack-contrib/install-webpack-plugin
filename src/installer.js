@@ -47,9 +47,11 @@ module.exports.check = function(request) {
     // Module exists in node_modules, but isn't symlinked
   }
 
+  // Ignore NPM global modules (e.g. "path", "fs", etc.)
   try {
     var resolved = require.resolve(dep);
 
+    // Global modules resolve to their name, not an actual path
     if (resolved.match(EXTERNAL)) {
       return;
     }
