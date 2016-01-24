@@ -12,5 +12,8 @@
     "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
     "postinstall": "npm run link",
     "start": "webpack --config webpack.config.server.babel.js --watch"
+  },
+  "dependencies": {
+    "react": "0.14.6",
   }
 }
