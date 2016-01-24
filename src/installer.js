@@ -4,57 +4,71 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
-module.exports.check = function(dependencies, dirs) {
-  var missing = [];
-  dependencies.forEach(function(dependency) {
-    // Ignore relative modules, which aren't installed by NPM
-    if (/^\./.test(dependency)) {
-      return;
-    }
+var INTERNAL = /^\./; // Match "./client", "../something", etc.
+var EXTERNAL = /^[a-z\-0-9]+$/; // Match "react", "path", "fs", etc.
 
-    // Only look for the dependency directory
-    dependency = dependency.split('/')[0];
+module.exports.check = function(request) {
+  var namespaced = request.charAt(0) === "@";
+  var dep = request.split("/")
+    .slice(0, namespaced ? 2 : 1)
+    .join("/")
+  ;
 
-    // Bail early if we've already determined this is a missing dependency
-    if (missing.indexOf(dependency) !== -1) {
-      return;
-    }
-
-    try {
-      // Ignore dependencies that are resolveable
-      require.resolve(dependency);
-
-      return;
-    } catch(e) {
-      var modulePaths = (dirs || []).map(function(dir) {
-        return path.resolve(dir, dependency);
-      });
-
-      // Check all module directories for dependency directory
-      while (modulePaths.length) {
-        var modulePath = modulePaths.shift();
-
-        try {
-          // If it exists, Webpack can find it
-          fs.statSync(modulePath);
-
-          return;
-        } catch(e) {}
-      }
-
-      // Dependency must be missing
-      missing.push(dependency);
-    }
-  });
-  return missing;
-}
-
-module.exports.install = function install(dependencies, options) {
-  if (!dependencies || !dependencies.length) {
-    return undefined;
+  // Ignore relative modules, which aren't installed by NPM
+  if (!dep.match(EXTERNAL) && !namespaced) {
+    return;
   }
 
-  var args = ["install"].concat(dependencies);
+  try {
+    var pkgPath = require.resolve(path.join(process.cwd(), "package.json"));
+    var pkg = require(pkgPath);
+
+    // Remove cached copy for future checks
+    delete require.cache[pkgPath];
+  } catch(e) {
+    throw e;
+  }
+
+  var hasDep = pkg.dependencies && pkg.dependencies[dep];
+  var hasDevDep = pkg.devDependencies && pkg.devDependencies[dep];
+
+  // Bail early if we've already installed this dependency
+  if (hasDep || hasDevDep) {
+    return;
+  }
+
+  // Ignore linked modules
+  try {
+    var stats = fs.lstatSync(path.join(process.cwd(), "node_modules", dep));
+
+    if (stats.isSymbolicLink()) {
+      return;
+    }
+  } catch(e) {
+    // Module exists in node_modules, but isn't symlinked
+  }
+
+  // Ignore NPM global modules (e.g. "path", "fs", etc.)
+  try {
+    var resolved = require.resolve(dep);
+
+    // Global modules resolve to their name, not an actual path
+    if (resolved.match(EXTERNAL)) {
+      return;
+    }
+  } catch(e) {
+    // Module is not resolveable
+  }
+
+  return dep;
+}
+
+module.exports.install = function install(dep, options) {
+  if (!dep) {
+    return;
+  }
+
+  var args = ["install"].concat([dep]).filter(Boolean);
 
   if (options) {
     for (option in options) {
@@ -73,8 +87,9 @@ module.exports.install = function install(dependencies, options) {
     }
   }
 
-  var suffix = dependencies.length === 1 ? "y" : "ies";
-  console.info("Installing missing dependenc%s %s...", suffix, dependencies.join(", "));
+  console.info("Installing `%s`...", dep);
 
-  return spawn.sync("npm", args, { stdio: "inherit" });
+  var output = spawn.sync("npm", args, { stdio: "inherit" });
+
+  return output;
 };

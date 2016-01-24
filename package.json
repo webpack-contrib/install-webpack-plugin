@@ -1,5 +1,5 @@
 {
-  "name": "npm-install-loader",
+  "name": "npm-install-webpack-plugin",
   "version": "1.1.1",
   "description": "Webpack loader to automatically npm install & save dependencies.",
   "main": "index.js",
@@ -18,30 +18,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ericclemmons/webpack-npm-install-loader.git"
+    "url": "git+https://github.com/ericclemmons/npm-install-webpack-plugin.git"
   },
   "keywords": [
     "webpack",
-    "webpack-loader",
+    "webpack-plugin",
     "npm",
     "install"
   ],
   "author": "Eric Clemmons <eric@smarterspam.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ericclemmons/webpack-npm-install-loader/issues"
+    "url": "https://github.com/ericclemmons/npm-install-webpack-plugin/issues"
   },
-  "homepage": "https://github.com/ericclemmons/webpack-npm-install-loader#readme",
+  "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
-    "babel-core": "^6.3.26",
     "cross-spawn": "^2.1.4",
-    "loader-utils": "^0.2.12",
-    "lodash.kebabcase": "^3.0.1"
+    "lodash.kebabcase": "^3.1.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.6",
     "expect": "^1.13.4",
     "mocha": "^2.3.4",
-    "nyc": "^5.0.1"
+    "nyc": "^5.3.0"
   }
 }

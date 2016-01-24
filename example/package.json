@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "devDependencies": {
+    "babel-preset-es2015": "6.3.13",
+    "babel-preset-react": "6.3.13",
+    "babel-preset-react-hmre": "1.0.1",
+    "babel-preset-stage-0": "6.3.13",
+    "reload-server-webpack-plugin": "1.0.1",
+    "webpack": "1.12.11"
+  },
+  "scripts": {
+    "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
+    "postinstall": "npm run link",
+    "start": "webpack --config webpack.config.server.babel.js --watch"
+  },
+  "dependencies": {
+    "react": "0.14.6"
+  }
+}
