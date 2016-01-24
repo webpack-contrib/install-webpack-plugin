@@ -1,45 +1,82 @@
-var spawn = require("cross-spawn");
 var expect = require("expect");
+var fs = require("fs");
+var spawn = require("cross-spawn");
+
 var installer = require("../src/installer");
 
 describe("installer", function() {
   describe(".check", function() {
-    context("given resolveable dependencies", function() {
-      it("should return []", function() {
-        expect(installer.check(["expect", "mocha"])).toEqual([]);
+    context("given a local module", function() {
+      it("should return undefined", function() {
+        expect(installer.check("./foo")).toBe(undefined);
       });
     });
 
-    context("given relative paths", function() {
-      it("should return []", function() {
-        expect(installer.check(["./something"])).toEqual([]);
+    context("when process.cwd() is missing package.json", function() {
+      before(function() {
+        this.cwd = process.cwd();
+
+        process.chdir(__dirname);
+      });
+
+      after(function() {
+        process.chdir(this.cwd);
+      });
+
+      it("should throw", function() {
+        expect(function() {
+          installer.check("anything");
+        }).toThrow(/Cannot find module/);
       });
     });
 
-    context("given un-resolveable dependencies", function() {
-      it("should return them", function() {
-        expect(installer.check(["does-not-exist"])).toEqual(["does-not-exist"]);
-      });
-
-      context("that import deeply", function() {
-        it("should return their module name", function() {
-          expect(installer.check(["does-not-exist/lib/test"])).toEqual(["does-not-exist"]);
-        });
-      });
-
-      context("that import multiple times from the same module", function() {
-        it("should return their module name once", function() {
-          expect(installer.check(["d-n-e/a", "d-n-e/b"])).toEqual(["d-n-e"]);
-        });
-      });
-
-      context("that exists in alternative directories", function() {
-        it("should return []", function() {
-          expect(installer.check(["test"], [process.cwd()])).toEqual([]);
-        });
+    context("given a dependency in package.json", function() {
+      it("should return undefined", function() {
+        expect(installer.check("cross-spawn")).toBe(undefined);
       });
     });
 
+    context("given a devDependency in package.json", function() {
+      it("should return undefined", function() {
+        expect(installer.check("expect")).toBe(undefined);
+      });
+    });
+
+    context("given a linked dependency", function() {
+      beforeEach(function() {
+        this.lstatSync = expect.spyOn(fs, "lstatSync").andReturn({
+          isSymbolicLink: function() {
+            return true;
+          },
+        });
+      });
+
+      afterEach(function() {
+        this.lstatSync.restore();
+      });
+
+      it("should return undefined", function() {
+        expect(installer.check("something-linked")).toBe(undefined);
+        expect(this.lstatSync.calls.length).toBe(1);
+        expect(this.lstatSync.calls[0].arguments).toEqual([
+          [process.cwd(), "node_modules", "something-linked"].join("/"),
+        ]);
+      });
+    });
+
+    context("given a global module", function() {
+      it("should return undefined", function () {
+        expect(installer.check("path")).toBe(undefined);
+      });
+    });
+
+    context("given anything else", function() {
+      it("should return it", function() {
+        var dep = "some-module-that-is-not-installed-yet";
+
+        expect(installer.check(dep)).toBe(dep);
+      });
+    });
   });
 
   describe(".install", function() {
@@ -53,34 +90,29 @@ describe("installer", function() {
       expect.restoreSpies();
     });
 
-    context("given falsey values", function() {
+    context("given a falsey value", function() {
       it("should return undefined", function() {
         expect(installer.install()).toEqual(undefined);
         expect(installer.install(0)).toEqual(undefined);
+        expect(installer.install(false)).toEqual(undefined);
+        expect(installer.install(null)).toEqual(undefined);
         expect(installer.install("")).toEqual(undefined);
-        expect(installer.install([])).toEqual(undefined);
       });
     });
 
-    context("given empty dependencies", function() {
-      it("should return undefined", function() {
-        expect(installer.install([])).toEqual(undefined);
-      });
-    });
-
-    context("given dependencies", function() {
-      it("should install them", function() {
-        var result = installer.install(["foo", "bar"]);
+    context("given a dependency", function() {
+      it("should install it", function() {
+        var result = installer.install("foo");
 
         expect(this.spy).toHaveBeenCalled();
         expect(this.spy.calls.length).toEqual(1);
         expect(this.spy.calls[0].arguments[0]).toEqual("npm");
-        expect(this.spy.calls[0].arguments[1]).toEqual(["install", "foo", "bar"]);
+        expect(this.spy.calls[0].arguments[1]).toEqual(["install", "foo"]);
       });
 
       context("given options", function() {
         it("should pass them to child process", function() {
-          var result = installer.install(["foo", "bar"], {
+          var result = installer.install("foo", {
             save: true,
             saveExact: false,
             registry: "https://registry.npmjs.com/",
@@ -92,7 +124,6 @@ describe("installer", function() {
           expect(this.spy.calls[0].arguments[1]).toEqual([
             "install",
             "foo",
-            "bar",
             "--save",
             "--registry='https://registry.npmjs.com/'",
           ]);
