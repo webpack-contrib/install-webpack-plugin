@@ -22,7 +22,7 @@
   },
   "keywords": [
     "webpack",
-    "webpack-loader",
+    "webpack-plugin",
     "npm",
     "install"
   ],
