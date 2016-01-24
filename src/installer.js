@@ -7,9 +7,10 @@ var util = require("util");
 var EXTERNAL = /^[a-z\-0-9]+$/;
 
 module.exports.check = function(request) {
-  // Only look for the dependency directory
-  // @TODO Support namespaced NPM modules (e.g. @cycle/dom)
-  var dep = request.split("/").shift().toLowerCase();
+  var dep = request.split("/")
+    .slice(0, request.charAt(0) === "@" ? 2 : 1)
+    .join("/")
+  ;
 
   // Ignore relative modules, which aren't installed by NPM
   if (!dep.match(EXTERNAL)) {

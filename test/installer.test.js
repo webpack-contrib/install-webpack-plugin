@@ -70,9 +70,23 @@ describe("installer", function() {
       });
     });
 
-    context("given anything else", function() {
-      it("should return it", function() {
-        var dep = "some-module-that-is-not-installed-yet";
+    context("given a module", function() {
+      it("should return module", function() {
+        expect(installer.check("react")).toBe("react");
+      });
+    });
+
+    context("given a module/and/path", function() {
+      it("should return module", function() {
+        expect(installer.check("react/proptypes")).toBe("react");
+      });
+    });
+
+    context("given a @namespaced/module", function() {
+      it("should return @namespaced/module", function() {
+        expect(installer.check("@namespaced/module")).toBe("@namespaced/module");
+      });
+    });
 
         expect(installer.check(dep)).toBe(dep);
       });
