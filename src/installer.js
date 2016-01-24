@@ -59,6 +59,10 @@ module.exports.check = function(request) {
 }
 
 module.exports.install = function install(dep, options) {
+  if (!dep) {
+    return;
+  }
+
   var args = ["install"].concat([dep]).filter(Boolean);
 
   if (options) {
