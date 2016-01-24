@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ericclemmons/webpack-npm-install-loader.git"
+    "url": "git+https://github.com/ericclemmons/npm-install-webpack-plugin.git"
   },
   "keywords": [
     "webpack",
@@ -29,9 +29,9 @@
   "author": "Eric Clemmons <eric@smarterspam.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ericclemmons/webpack-npm-install-loader/issues"
+    "url": "https://github.com/ericclemmons/npm-install-webpack-plugin/issues"
   },
-  "homepage": "https://github.com/ericclemmons/webpack-npm-install-loader#readme",
+  "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
     "cross-spawn": "^2.1.4",
     "lodash.kebabcase": "^3.1.0"
