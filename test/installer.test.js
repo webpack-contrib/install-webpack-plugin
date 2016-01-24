@@ -97,7 +97,7 @@ describe("installer", function() {
 
   describe(".install", function() {
     beforeEach(function() {
-      this.spy = expect.spyOn(spawn, "sync");
+      this.sync = expect.spyOn(spawn, "sync");
 
       expect.spyOn(console, "info");
     });
@@ -120,10 +120,10 @@ describe("installer", function() {
       it("should install it", function() {
         var result = installer.install("foo");
 
-        expect(this.spy).toHaveBeenCalled();
-        expect(this.spy.calls.length).toEqual(1);
-        expect(this.spy.calls[0].arguments[0]).toEqual("npm");
-        expect(this.spy.calls[0].arguments[1]).toEqual(["install", "foo"]);
+        expect(this.sync).toHaveBeenCalled();
+        expect(this.sync.calls.length).toEqual(1);
+        expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+        expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
       });
 
       context("given options", function() {
@@ -134,10 +134,10 @@ describe("installer", function() {
             registry: "https://registry.npmjs.com/",
           });
 
-          expect(this.spy).toHaveBeenCalled();
-          expect(this.spy.calls.length).toEqual(1);
-          expect(this.spy.calls[0].arguments[0]).toEqual("npm");
-          expect(this.spy.calls[0].arguments[1]).toEqual([
+          expect(this.sync).toHaveBeenCalled();
+          expect(this.sync.calls.length).toEqual(1);
+          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+          expect(this.sync.calls[0].arguments[1]).toEqual([
             "install",
             "foo",
             "--save",
