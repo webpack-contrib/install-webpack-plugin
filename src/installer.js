@@ -87,7 +87,7 @@ module.exports.install = function install(dep, options) {
     }
   }
 
-  console.info("Installing missing dependency `%s`...", dep);
+  console.info("Installing `%s`...", dep);
 
   var output = spawn.sync("npm", args, { stdio: "inherit" });
 
