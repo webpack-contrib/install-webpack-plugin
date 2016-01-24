@@ -4,7 +4,8 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
-var EXTERNAL = /^[a-z\-0-9]+$/;
+var INTERNAL = /^\./; // Match "./client", "../something", etc.
+var EXTERNAL = /^[a-z\-0-9]+$/; // Match "react", "path", "fs", etc.
 
 module.exports.check = function(request) {
   var dep = request.split("/")
@@ -13,7 +14,7 @@ module.exports.check = function(request) {
   ;
 
   // Ignore relative modules, which aren't installed by NPM
-  if (!dep.match(EXTERNAL)) {
+  if (dep.match(INTERNAL)) {
     return;
   }
 
