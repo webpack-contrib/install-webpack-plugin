@@ -64,4 +64,4 @@ plugins: [
 
 ### License
 
-> MIT License 2015 © Eric Clemmons
+> MIT License 2016 © Eric Clemmons
