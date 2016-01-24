@@ -23,7 +23,6 @@ module.exports.check = function(request) {
     // Remove cached copy for future checks
     delete require.cache[pkgPath];
   } catch(e) {
-    console.error(e);
     throw e;
   }
 
