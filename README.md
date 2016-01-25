@@ -29,6 +29,12 @@ a dependency you didn't know you needed until now.
 Instead, use `require` or `import` how you normally would and `npm install`
 will happen **automatically install & save missing dependencies** while you work!
 
+### Installation
+
+```shell
+$ npm install --save-dev npm-install-webpack-plugin
+```
+
 ### Usage
 
 In your `webpack.config.js`:
