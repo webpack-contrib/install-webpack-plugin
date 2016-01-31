@@ -30,7 +30,7 @@ NpmInstallPlugin.prototype.resolve = function(result) {
   var dep = installer.check(result.request);
 
   if (dep) {
-    installer.install(dep, this.options.cli);
+    installer.install(dep, this.options);
   }
 
   return dep;
