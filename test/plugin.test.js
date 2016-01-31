@@ -24,6 +24,11 @@ describe("plugin", function() {
           loader: { plugin: expect.createSpy() },
           normal: { plugin: expect.createSpy() },
         },
+        options: {
+          resolveLoader: {
+            moduleTemplates: []
+          }
+        }
       };
 
       this.plugin.apply(this.compiler);
@@ -45,7 +50,7 @@ describe("plugin", function() {
       expect(this.compiler.resolvers.loader.plugin.calls.length).toBe(1);
       expect(this.compiler.resolvers.loader.plugin.calls[0].arguments).toEqual([
         "module",
-        this.plugin.resolveLoader.bind(this.plugin)
+        this.plugin.resolveLoader.bind(this.plugin, this.compiler.options.resolveLoader.moduleTemplates)
       ]);
     });
 
@@ -185,19 +190,30 @@ describe("plugin", function() {
 
   describe(".resolveLoader", function() {
     beforeEach(function() {
+      this.check = expect.spyOn(installer, "check");
       this.resolve = expect.spyOn(this.plugin, "resolve");
       this.next = expect.createSpy();
     });
 
     afterEach(function() {
       this.resolve.restore();
+      this.check.restore();
       this.next.restore();
     });
 
-    it("should call .resolve", function() {
+    it("should not call .resolve when found in moduleTemplates", function() {
+      var result = { path: "node_modules", request: "foo" };
+      this.check.andReturn();
+      this.plugin.resolveLoader(["*"], result, this.next);
+
+      expect(this.check.calls.length).toBe(1);
+      expect(this.resolve.calls.length).toBe(0);
+    });
+
+    it("should call .resolve if module not found in moduleTemplates", function() {
       var result = { path: "node_modules", request: "foo" };
 
-      this.plugin.resolveLoader(result, this.next);
+      this.plugin.resolveLoader([], result, this.next);
 
       expect(this.resolve.calls.length).toBe(1);
       expect(this.resolve.calls[0].arguments).toEqual([result]);

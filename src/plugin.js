@@ -11,7 +11,7 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   compiler.plugin("normal-module-factory", this.listenToFactory);
 
   // Install loaders on demand
-  compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
+  compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this, compiler.options.resolveLoader.moduleTemplates));
 
   // Install project dependencies on demand
   compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
@@ -45,7 +45,16 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
   next();
 };
 
-NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
+NpmInstallPlugin.prototype.resolveLoader = function(moduleTemplates, result, next) {
+  for(var i=0; i < moduleTemplates.length; i++) {
+    var dep = installer.check(moduleTemplates[i].replace("*",result.request));
+    console.log(dep);
+    if (!dep) {
+      next();
+      return;
+    }
+  }
+
   this.resolve(result);
 
   next();
