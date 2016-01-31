@@ -5,10 +5,8 @@ var Plugin = require("../src/plugin");
 describe("plugin", function() {
   beforeEach(function() {
     this.options = {
-      cli: {
-        save: true,
-        saveDev: false,
-      },
+      save: true,
+      saveDev: false,
     };
 
     this.plugin = new Plugin(this.options);
@@ -147,7 +145,7 @@ describe("plugin", function() {
       expect(this.install.calls.length).toBe(1);
       expect(this.install.calls[0].arguments).toEqual([
         this.result.request,
-        this.options.cli
+        this.options
       ]);
     });
   });
