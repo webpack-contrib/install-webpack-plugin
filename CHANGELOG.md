@@ -1,7 +1,14 @@
 # Change Log
 
-## [2.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/2.0.0) (2016-01-24)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.1.1...2.0.0)
+## [2.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/2.0.1) (2016-01-31)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.0...2.0.1)
+
+**Fixed bugs:**
+
+- Mismatch between code and documentation [\#18](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/18) ([DLMR](https://github.com/DLMR))
+
+## [v2.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v2.0.0) (2016-01-24)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.1.1...v2.0.0)
 
 **Implemented enhancements:**
 
