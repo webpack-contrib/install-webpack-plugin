@@ -8,15 +8,15 @@ export const defaults = {
 
   module: {
     loaders: [
-      { test: /\.css$/, loader: "style-loader" },
-      { test: /\.css$/, loader: "css-loader", query: { localIdentName: "[name]-[local]--[hash:base64:5]" } },
-      { test: /\.eot$/, loader: "file-loader" },
-      { test: /\.js$/, loader: "babel-loader", query: { cacheDirectory: true }, exclude: /node_modules/ },
-      { test: /\.json$/, loader: "json-loader" },
-      { test: /\.(png|jpg)$/, loader: "url-loader", query: { limit: 8192 } }, // Inline base64 URLs for <= 8K images
-      { test: /\.svg$/, loader: "url-loader", query: { mimetype: "image/svg+xml" } },
-      { test: /\.ttf$/, loader: "url-loader", query: { mimetype: "application/octet-stream" } },
-      { test: /\.(woff|woff2)$/, loader: "url-loader", query: { mimetype: "application/font-woff" } },
+      { test: /\.css$/, loader: "style" },
+      { test: /\.css$/, loader: "css", query: { localIdentName: "[name]-[local]--[hash:base64:5]" } },
+      { test: /\.eot$/, loader: "file" },
+      { test: /\.js$/, loader: "babel", query: { cacheDirectory: true }, exclude: /node_modules/ },
+      { test: /\.json$/, loader: "json" },
+      { test: /\.(png|jpg)$/, loader: "url", query: { limit: 8192 } }, // Inline base64 URLs for <= 8K images
+      { test: /\.svg$/, loader: "url", query: { mimetype: "image/svg+xml" } },
+      { test: /\.ttf$/, loader: "url", query: { mimetype: "application/octet-stream" } },
+      { test: /\.(woff|woff2)$/, loader: "url", query: { mimetype: "application/font-woff" } },
     ],
   },
 
