@@ -48,6 +48,11 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
   var loader = result.request;
 
+  // Ensure loaders end with `-loader` (e.g. `babel` => `babel-loader`)
+  if (!loader.match(/\-loader$/)) {
+    loader += "-loader";
+  }
+
   this.resolve(loader);
 
   next();
