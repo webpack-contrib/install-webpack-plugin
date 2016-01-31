@@ -26,8 +26,8 @@ NpmInstallPlugin.prototype.listenToFactory = function(factory) {
   });
 };
 
-NpmInstallPlugin.prototype.resolve = function(result) {
-  var dep = installer.check(result.request);
+NpmInstallPlugin.prototype.resolve = function(request) {
+  var dep = installer.check(request);
 
   if (dep) {
     installer.install(dep, this.options);
@@ -39,14 +39,21 @@ NpmInstallPlugin.prototype.resolve = function(result) {
 NpmInstallPlugin.prototype.resolveModule = function(result, next) {
   // Only install direct dependencies, not sub-dependencies
   if (!result.path.match("node_modules")) {
-    this.resolve(result);
+    this.resolve(result.request);
   }
 
   next();
 };
 
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
-  this.resolve(result);
+  var loader = result.request;
+
+  // Ensure loaders end with `-loader` (e.g. `babel` => `babel-loader`)
+  if (!loader.match(/\-loader$/)) {
+    loader += "-loader";
+  }
+
+  this.resolve(loader);
 
   next();
 };
