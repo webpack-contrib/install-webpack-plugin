@@ -115,7 +115,7 @@ describe("plugin", function() {
     });
 
     it("should check if request is installed", function() {
-      this.plugin.resolve(this.result);
+      this.plugin.resolve(this.result.request);
 
       expect(this.check.calls.length).toBe(1);
       expect(this.check.calls[0].arguments).toEqual([this.result.request]);
@@ -124,7 +124,7 @@ describe("plugin", function() {
     it("should return the value of the check", function() {
       this.check.andReturn(this.result.request);
 
-      var result = this.plugin.resolve(this.result);
+      var result = this.plugin.resolve(this.result.request);
 
       expect(this.check.calls.length).toBe(1);
       expect(this.check.calls[0].arguments).toEqual([this.result.request]);
@@ -167,7 +167,7 @@ describe("plugin", function() {
       this.plugin.resolveModule(result, this.next);
 
       expect(this.resolve.calls.length).toBe(1);
-      expect(this.resolve.calls[0].arguments).toEqual([result]);
+      expect(this.resolve.calls[0].arguments).toEqual(["foo"]);
       expect(this.next.calls.length).toBe(1);
       expect(this.next.calls[0].arguments).toEqual([]);
     });
@@ -195,12 +195,21 @@ describe("plugin", function() {
     });
 
     it("should call .resolve", function() {
-      var result = { path: "node_modules", request: "foo" };
+      var result = { path: "node_modules", request: "babel-loader" };
 
       this.plugin.resolveLoader(result, this.next);
 
       expect(this.resolve.calls.length).toBe(1);
-      expect(this.resolve.calls[0].arguments).toEqual([result]);
+      expect(this.resolve.calls[0].arguments).toEqual(["babel-loader"]);
+    });
+
+    it("should ensure loaders end with `-loader`", function() {
+      var result = { path: "node_modules", request: "babel" };
+
+      this.plugin.resolveLoader(result, this.next);
+
+      expect(this.resolve.calls.length).toBe(1);
+      expect(this.resolve.calls[0].arguments).toEqual(["babel-loader"]);
     });
   });
 });
