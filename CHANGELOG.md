@@ -1,7 +1,14 @@
 # Change Log
 
-## [2.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/2.0.1) (2016-01-31)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.0...2.0.1)
+## [2.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/2.0.2) (2016-01-31)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.1...2.0.2)
+
+**Implemented enhancements:**
+
+- Support loader shorthand \(e.g. "babel" vs. "babel-loader"\) [\#16](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/16) ([fritx](https://github.com/fritx))
+
+## [v2.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v2.0.1) (2016-01-31)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.0...v2.0.1)
 
 **Fixed bugs:**
 
