@@ -31,6 +31,10 @@ export const defaults = {
   ],
 
   resolve: {
+    alias: {
+      "react": "react-lite",
+      "react-dom": "react-lite",
+    },
     root: [
       path.join(process.cwd(), "lib"),
     ],

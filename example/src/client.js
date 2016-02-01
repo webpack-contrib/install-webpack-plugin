@@ -1,3 +1,4 @@
+// Aliased via webpack's resolve.alias
 import React from "react";
 import DOM from "react-dom";
 
