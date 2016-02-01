@@ -29,4 +29,10 @@ export const defaults = {
   plugins: [
     new NpmInstallPlugin(),
   ],
+
+  resolve: {
+    root: [
+      path.join(process.cwd(), "lib"),
+    ],
+  },
 };
