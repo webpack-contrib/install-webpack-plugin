@@ -26,7 +26,7 @@ var depFromErr = function(err) {
 function NpmInstallPlugin(options) {
   this.compiler = null;
   this.options = options || {};
-  this.requests = [];
+  this.resolving = {};
 }
 
 NpmInstallPlugin.prototype.apply = function(compiler) {
@@ -74,25 +74,27 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
     return next();
   }
 
-  if (this.requests.indexOf(result.request) !== -1) {
+  if (this.resolving[result.request]) {
     return next();
   }
 
-  this.requests.push(result.request);
+  this.resolving[result.request] = true;
 
   this.compiler.resolvers.normal.resolve(
     result.path,
     result.request,
     function(err, filepath) {
+      this.resolving[result.request] = false;
+
       if (err) {
         var dep = installer.check(depFromErr(err));
 
         if (dep) {
           installer.install(dep, this.options);
+
+          return this.resolveModule(result, next);
         }
       }
-
-      this.requests = [];
 
       next();
     }.bind(this)
