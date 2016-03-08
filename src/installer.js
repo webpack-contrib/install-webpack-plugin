@@ -8,6 +8,10 @@ var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var EXTERNAL = /^[a-z\-0-9]+$/; // Match "react", "path", "fs", etc.
 
 module.exports.check = function(request) {
+  if (!request) {
+    return;
+  }
+
   var namespaced = request.charAt(0) === "@";
   var dep = request.split("/")
     .slice(0, namespaced ? 2 : 1)

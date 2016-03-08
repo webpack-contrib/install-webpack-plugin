@@ -4,6 +4,20 @@ var Plugin = require("../src/plugin");
 
 describe("plugin", function() {
   beforeEach(function() {
+    this.compiler = {
+      plugin: expect.createSpy(),
+      resolvers: {
+        loader: {
+          plugin: expect.createSpy(),
+          resolve: expect.createSpy(),
+        },
+        normal: {
+          plugin: expect.createSpy(),
+          resolve: expect.createSpy(),
+        },
+      },
+    };
+
     this.options = {
       save: true,
       saveDev: false,
@@ -17,19 +31,11 @@ describe("plugin", function() {
   });
 
   describe(".apply", function() {
-    before(function() {
-      this.compiler = {
-        plugin: expect.createSpy(),
-        resolvers: {
-          loader: { plugin: expect.createSpy() },
-          normal: { plugin: expect.createSpy() },
-        },
-      };
-
+    beforeEach(function() {
       this.plugin.apply(this.compiler);
     });
 
-    after(function() {
+    afterEach(function() {
       expect.restoreSpies();
     });
 
@@ -102,72 +108,95 @@ describe("plugin", function() {
     });
   });
 
-  describe(".resolve", function() {
+  describe(".resolveLoader", function() {
     beforeEach(function() {
       this.check = expect.spyOn(installer, "check");
       this.install = expect.spyOn(installer, "install");
-      this.result = { request: "foo "};
+      this.next = expect.createSpy();
     });
 
     afterEach(function() {
       this.check.restore();
       this.install.restore();
+      this.next.restore();
     });
 
-    it("should check if request is installed", function() {
-      this.plugin.resolve(this.result.request);
+    it("should call installer.check", function() {
+      var result = { path: "node_modules", request: "babel-loader" };
+
+      this.plugin.resolveLoader(result, this.next);
 
       expect(this.check.calls.length).toBe(1);
-      expect(this.check.calls[0].arguments).toEqual([this.result.request]);
+      expect(this.check.calls[0].arguments).toEqual(["babel-loader"]);
     });
 
-    it("should return the value of the check", function() {
-      this.check.andReturn(this.result.request);
+    it("should skip installer.install if existing", function() {
+      var result = { path: "node_modules", request: "babel-loader" };
 
-      var result = this.plugin.resolve(this.result.request);
+      this.check.andCall(function(dep) {
+        return false;
+      });
 
-      expect(this.check.calls.length).toBe(1);
-      expect(this.check.calls[0].arguments).toEqual([this.result.request]);
+      this.plugin.resolveLoader(result, this.next);
 
-      expect(result).toEqual(this.result.request);
+      expect(this.install.calls.length).toBe(0);
     });
 
-    it("should not install if it exists", function() {
-      this.plugin.resolve(this.result);
+    it("should call installer.install if missing", function() {
+      var result = { path: "node_modules", request: "babel-loader" };
 
-      expect(this.install.calls.length).toEqual(0);
-    });
+      this.check.andCall(function(dep) {
+        return dep;
+      });
 
-    it("should install if missing", function() {
-      this.check.andReturn(this.result.request);
-      this.plugin.resolve(this.result);
+      this.plugin.resolveLoader(result, this.next);
 
       expect(this.install.calls.length).toBe(1);
-      expect(this.install.calls[0].arguments).toEqual([
-        this.result.request,
-        this.options
-      ]);
+      expect(this.install.calls[0].arguments).toEqual(["babel-loader", this.options]);
+    });
+
+    it("should ensure loaders end with `-loader`", function() {
+      var result = { path: "node_modules", request: "babel" };
+
+      this.plugin.resolveLoader(result, this.next);
+
+      expect(this.check.calls.length).toBe(1);
+      expect(this.check.calls[0].arguments).toEqual(["babel-loader"]);
     });
   });
 
   describe(".resolveModule", function() {
     beforeEach(function() {
-      this.resolve = expect.spyOn(this.plugin, "resolve");
       this.next = expect.createSpy();
+
+      this.plugin.apply(this.compiler);
     });
 
     afterEach(function() {
-      this.resolve.restore();
       this.next.restore();
+    });
+
+    it("should prevent cyclical installs", function() {
+      var result = { path: "/", request: "foo" };
+
+      this.plugin.resolving.foo = true;
+
+      this.plugin.resolveModule(result, this.next);
+
+      expect(this.compiler.resolvers.normal.resolve.calls.length).toBe(0);
+      expect(this.next.calls.length).toBe(1);
     });
 
     it("should call .resolve if direct dependency", function() {
       var result = { path: "/", request: "foo" };
 
+      this.compiler.resolvers.normal.resolve.andCall(function(path, request, callback) {
+        callback(new Error("Cannot resolve module '@cycle/core'"));
+      }.bind(this));
+
       this.plugin.resolveModule(result, this.next);
 
-      expect(this.resolve.calls.length).toBe(1);
-      expect(this.resolve.calls[0].arguments).toEqual(["foo"]);
+      expect(this.compiler.resolvers.normal.resolve.calls.length).toBe(1);
       expect(this.next.calls.length).toBe(1);
       expect(this.next.calls[0].arguments).toEqual([]);
     });
@@ -177,39 +206,8 @@ describe("plugin", function() {
 
       this.plugin.resolveModule(result, this.next);
 
-      expect(this.resolve.calls.length).toBe(0);
+      expect(this.compiler.resolvers.normal.resolve.calls.length).toBe(0);
       expect(this.next.calls.length).toBe(1);
-      expect(this.next.calls[0].arguments).toEqual([]);
-    });
-  });
-
-  describe(".resolveLoader", function() {
-    beforeEach(function() {
-      this.resolve = expect.spyOn(this.plugin, "resolve");
-      this.next = expect.createSpy();
-    });
-
-    afterEach(function() {
-      this.resolve.restore();
-      this.next.restore();
-    });
-
-    it("should call .resolve", function() {
-      var result = { path: "node_modules", request: "babel-loader" };
-
-      this.plugin.resolveLoader(result, this.next);
-
-      expect(this.resolve.calls.length).toBe(1);
-      expect(this.resolve.calls[0].arguments).toEqual(["babel-loader"]);
-    });
-
-    it("should ensure loaders end with `-loader`", function() {
-      var result = { path: "node_modules", request: "babel" };
-
-      this.plugin.resolveLoader(result, this.next);
-
-      expect(this.resolve.calls.length).toBe(1);
-      expect(this.resolve.calls[0].arguments).toEqual(["babel-loader"]);
     });
   });
 });

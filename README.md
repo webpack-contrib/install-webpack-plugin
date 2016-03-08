@@ -11,6 +11,12 @@ Seamlessly works with:
   (e.g. `@import "~bootstrap"`)
 - [x] Webpack loaders
   (e.g. `babel-loader`, `file-loader`, etc.)
+- [x] Webpack's `resolve.alias` & `resolve.root` configuration.
+
+Currently does _not_ support:
+
+- Inline loaders (e.g. `bundle?lazy!./App.js`)
+
 
 [![travis build](https://img.shields.io/travis/ericclemmons/npm-install-webpack-plugin.svg)](https://travis-ci.org/ericclemmons/npm-install-webpack-plugin)
 [![Coverage Status](https://coveralls.io/repos/ericclemmons/npm-install-webpack-plugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/ericclemmons/npm-install-webpack-plugin?branch=master)
