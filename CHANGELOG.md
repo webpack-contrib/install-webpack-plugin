@@ -1,7 +1,24 @@
 # Change Log
 
-## [2.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/2.0.2) (2016-01-31)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.1...2.0.2)
+## [3.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.0.0) (2016-03-07)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.2...3.0.0)
+
+**Implemented enhancements:**
+
+- Webpack resolve support [\#17](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/17) ([fritx](https://github.com/fritx))
+
+**Fixed bugs:**
+
+- repeatedly installs same modules [\#20](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/20)
+
+**Closed issues:**
+
+- Exclude some packages [\#27](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/27)
+- Working with relative imports using 'resolve' [\#24](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/24)
+- Allow save/saveDev/saveExact behavior to be customized based on context [\#22](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/22)
+
+## [v2.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v2.0.2) (2016-01-31)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.1...v2.0.2)
 
 **Implemented enhancements:**
 
