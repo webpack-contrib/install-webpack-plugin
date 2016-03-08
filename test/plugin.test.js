@@ -133,7 +133,9 @@ describe("plugin", function() {
     it("should skip installer.install if existing", function() {
       var result = { path: "node_modules", request: "babel-loader" };
 
-      this.check.andCall((dep) => false);
+      this.check.andCall(function(dep) {
+        return false;
+      });
 
       this.plugin.resolveLoader(result, this.next);
 
@@ -143,7 +145,9 @@ describe("plugin", function() {
     it("should call installer.install if missing", function() {
       var result = { path: "node_modules", request: "babel-loader" };
 
-      this.check.andCall((dep) => dep);
+      this.check.andCall(function(dep) {
+        return dep;
+      });
 
       this.plugin.resolveLoader(result, this.next);
 
