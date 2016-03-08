@@ -33,13 +33,13 @@
   },
   "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
-    "cross-spawn": "^2.1.4",
-    "lodash.kebabcase": "^3.1.0"
+    "cross-spawn": "^2.1.5",
+    "lodash.kebabcase": "^4.0.0"
   },
   "devDependencies": {
-    "coveralls": "^2.11.6",
-    "expect": "^1.13.4",
-    "mocha": "^2.3.4",
-    "nyc": "^5.3.0"
+    "coveralls": "^2.11.8",
+    "expect": "^1.14.0",
+    "mocha": "^2.4.5",
+    "nyc": "^6.0.0"
   }
 }
