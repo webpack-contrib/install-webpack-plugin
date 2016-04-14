@@ -1,9 +1,9 @@
 import express from "express";
 import webpack from "webpack";
 
-import client from "../webpack.config.client.babel";
-
-const compiler = webpack(client);
+// import client from "../webpack.config.client.babel";
+//
+// const compiler = webpack(client);
 
 export default express()
   .get("/", (req, res) => res.send(`
@@ -14,12 +14,12 @@ export default express()
 
     <script src="client.js"></script>
   `))
-  .use(require("webpack-dev-middleware")(compiler, {
-    noInfo: true,
-    publicPath: client.output.publicPath,
-    quiet: false,
-  }))
-  .use(require("webpack-hot-middleware")(compiler))
+  // .use(require("webpack-dev-middleware")(compiler, {
+  //   noInfo: true,
+  //   publicPath: client.output.publicPath,
+  //   quiet: false,
+  // }))
+  // .use(require("webpack-hot-middleware")(compiler))
   .listen(3000, (err) => {
     if (err) {
       return console.error(err);
