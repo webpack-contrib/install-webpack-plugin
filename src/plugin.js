@@ -68,7 +68,8 @@ NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
 
   var dryrun = webpack(Object.assign(
     {},
-    options
+    options,
+    { plugins: [] }
   ));
 
   dryrun.outputFileSystem = new MemoryFS();
