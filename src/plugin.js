@@ -26,8 +26,6 @@ var depFromErr = function(err) {
   return matches[1];
 }
 
-var installing = false;
-
 function NpmInstallPlugin(options) {
   this.compiler = null;
   this.dryrun = false;
@@ -38,15 +36,8 @@ function NpmInstallPlugin(options) {
 NpmInstallPlugin.prototype.apply = function(compiler) {
   this.compiler = compiler;
 
-  // Avoid multiple installs when recursively building
-  if (!installing) {
-    compiler.plugin("watch-run", this.preInstall.bind(this));
-  }
-
-  // Safe to share cache between compilers with the same options
-  if (!compiler.options.cache) {
-    compiler.options.cache = {};
-  }
+  // Recursively install missing dependencies so primary build doesn't fail
+  compiler.plugin("watch-run", this.preInstall.bind(this));
 
   // Install externals that wouldn't normally be resolved
   compiler.options.externals.unshift(this.resolveExternal.bind(this));
@@ -59,8 +50,6 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
 };
 
 NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
-  installing = true;
-
   var options = this.compiler.options;
   var plugins = options.plugins.filter(function(plugin) {
     return plugin.constructor !== NpmInstallPlugin;
@@ -68,19 +57,14 @@ NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
 
   var dryrun = webpack(Object.assign(
     {},
-    options,
-    { plugins: [] }
+    { cache: {} },
+    options
   ));
 
   dryrun.outputFileSystem = new MemoryFS();
 
   dryrun.run(function(err, stats) {
-    console.log("\n\t", "dryrun.run");
-    console.log("\terrors", stats.toJson().errors);
-
-    installing = false;
-
-    next();
+    next(err);
   });
 };
 
