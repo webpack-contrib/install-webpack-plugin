@@ -28,9 +28,10 @@ var depFromErr = function(err) {
 
 function NpmInstallPlugin(options) {
   this.compiler = null;
-  this.dryrun = false;
   this.options = options || {};
   this.resolving = {};
+
+  installer.checkBabel();
 }
 
 NpmInstallPlugin.prototype.apply = function(compiler) {

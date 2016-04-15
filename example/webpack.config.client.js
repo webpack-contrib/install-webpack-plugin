@@ -1,11 +1,9 @@
-import path from "path";
-import webpack from "webpack";
+var path = require("path");
+var webpack = require("webpack");
 
-import { defaults } from "./webpack.config.babel";
+var defaults = require("./webpack.config.defaults");
 
-export default {
-  ...defaults,
-
+module.exports = Object.assign({}, defaults, {
   entry: {
     client: [
       "webpack-hot-middleware/client?reload=true",
@@ -13,17 +11,15 @@ export default {
     ],
   },
 
-  output: {
-    ...defaults.output,
+  output: Object.assign({}, defaults.output, {
     libaryTarget: "var",
     path: path.join(defaults.context, "build/client"),
     publicPath: "/",
-  },
+  }),
 
-  plugins: [
-    ...defaults.plugins,
+  plugins: defaults.plugins.concat([
     new webpack.HotModuleReplacementPlugin(),
-  ],
+  ]),
 
   target: "web",
-}
+});

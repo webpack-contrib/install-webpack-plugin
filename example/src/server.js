@@ -1,7 +1,7 @@
 import express from "express";
 import webpack from "webpack";
 
-import client from "../webpack.config.client.babel";
+import client from "../webpack.config.client";
 
 const compiler = webpack(client);
 
