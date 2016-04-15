@@ -1,4 +1,6 @@
+var MemoryFS = require("memory-fs");
 var path = require("path");
+var webpack = require("webpack");
 
 var installer = require("./installer");
 
@@ -13,6 +15,7 @@ var depFromErr = function(err) {
    * - react-lite
    * - @cycle/core
    * - bootswatch/lumen/bootstrap.css
+   * - lodash.random
    */
   var matches = /Cannot resolve module '([@\w\/\.-]+)' in/.exec(err);
 
@@ -25,6 +28,7 @@ var depFromErr = function(err) {
 
 function NpmInstallPlugin(options) {
   this.compiler = null;
+  this.dryrun = false;
   this.options = options || {};
   this.resolving = {};
 }
@@ -32,8 +36,11 @@ function NpmInstallPlugin(options) {
 NpmInstallPlugin.prototype.apply = function(compiler) {
   this.compiler = compiler;
 
-  // Plugin needs to intercept module resolution before the "official" resolve
-  compiler.plugin("normal-module-factory", this.listenToFactory);
+  // Recursively install missing dependencies so primary build doesn't fail
+  compiler.plugin("watch-run", this.preInstall.bind(this));
+
+  // Install externals that wouldn't normally be resolved
+  compiler.options.externals.unshift(this.resolveExternal.bind(this));
 
   // Install loaders on demand
   compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
@@ -42,13 +49,51 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
 };
 
-NpmInstallPlugin.prototype.listenToFactory = function(factory) {
-  factory.plugin("before-resolve", function(result, next) {
-    // Trigger early-module resolution
-    factory.resolvers.normal.resolve(result.context, result.request, function(err, filepath) {
-      next(null, result);
-    });
+NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
+  var options = this.compiler.options;
+  var plugins = options.plugins.filter(function(plugin) {
+    return plugin.constructor !== NpmInstallPlugin;
   });
+
+  var dryrun = webpack(Object.assign(
+    {},
+    { cache: {} },
+    options
+  ));
+
+  dryrun.outputFileSystem = new MemoryFS();
+
+  dryrun.run(function(err, stats) {
+    next(err);
+  });
+};
+
+NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback) {
+  // Only install direct dependencies, not sub-dependencies
+  if (context.match("node_modules")) {
+    return callback();
+  }
+
+  // Ignore !!bundle?lazy!./something
+  if (request.match(/(\?|\!)/)) {
+    return callback();
+  }
+
+  this.compiler.resolvers.normal.resolve(
+    context,
+    request,
+    function(err, filepath) {
+      if (err) {
+        var dep = installer.check(depFromErr(err));
+
+        if (dep) {
+          installer.install(dep, this.options);
+        }
+      }
+
+      callback();
+    }.bind(this)
+  );
 };
 
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
@@ -63,9 +108,11 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
 
   if (dep) {
     installer.install(dep, this.options);
+
+    return this.resolveLoader(result, next);
   }
 
-  next();
+  return next();
 };
 
 NpmInstallPlugin.prototype.resolveModule = function(result, next) {
@@ -96,7 +143,7 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
         }
       }
 
-      next();
+      return next();
     }.bind(this)
   );
 };

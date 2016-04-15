@@ -24,7 +24,9 @@ export default {
 
   plugins: [
     ...defaults.plugins,
-    new ReloadServerPlugin({ script: "./build/server/server.js" }),
+    new ReloadServerPlugin({
+      script: "build/server/server.js",
+    }),
   ],
 
   target: "node",

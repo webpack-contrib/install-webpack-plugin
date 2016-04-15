@@ -34,12 +34,14 @@
   "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
     "cross-spawn": "^2.1.5",
-    "lodash.kebabcase": "^4.0.0"
+    "lodash.kebabcase": "^4.0.0",
+    "memory-fs": "^0.3.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.8",
     "expect": "^1.14.0",
     "mocha": "^2.4.5",
-    "nyc": "^6.0.0"
+    "nyc": "^6.0.0",
+    "webpack": "^1.12.15"
   }
 }
