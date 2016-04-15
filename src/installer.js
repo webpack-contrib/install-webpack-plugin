@@ -5,7 +5,7 @@ var path = require("path");
 var util = require("util");
 
 var INTERNAL = /^\./; // Match "./client", "../something", etc.
-var EXTERNAL = /^[a-z\-0-9]+$/; // Match "react", "path", "fs", etc.
+var EXTERNAL = /^[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
 
 module.exports.check = function(request) {
   if (!request) {
