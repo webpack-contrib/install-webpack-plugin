@@ -115,6 +115,19 @@ module.exports.checkBabel = function checkBabel() {
   }.bind(this));
 };
 
+module.exports.checkPackage = function checkPackage() {
+  try {
+    require.resolve(path.join(process.cwd(), "package.json"));
+
+    return;
+  } catch (e) {
+    // package.json does not exist
+  }
+
+  console.info("Initializing `%s`...", "package.json");
+  spawn.sync("npm", ["init -y"], { stdio: "inherit" });
+};
+
 module.exports.install = function install(dep, options) {
   if (!dep) {
     return;
