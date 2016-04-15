@@ -1,3 +1,4 @@
+import capitalize from "lodash.capitalize";
 import React from "react";
 
 import "./App.css";
@@ -16,7 +17,7 @@ export default class App extends React.Component {
 
         <div className="jumbotron">
           <h1>
-            It Works!
+            {capitalize("it works!")}
           </h1>
 
           <p>
