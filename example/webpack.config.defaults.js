@@ -1,7 +1,7 @@
-import NpmInstallPlugin from "npm-install-webpack-plugin";
-import path from "path";
+var NpmInstallPlugin = require("npm-install-webpack-plugin");
+var path = require("path");
 
-export const defaults = {
+module.exports = {
   context: process.cwd(),
 
   externals: [],

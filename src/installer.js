@@ -65,7 +65,55 @@ module.exports.check = function(request) {
   }
 
   return dep;
-}
+};
+
+module.exports.checkBabel = function checkBabel() {
+  try {
+    var babelrc = require.resolve(path.join(process.cwd(), ".babelrc"));
+  } catch (e) {
+    // Babel isn't installed, don't install deps
+    return;
+  }
+
+  // `babel-core` is required for `babel-loader`
+  this.install(this.check("babel-core"));
+
+  // Default plugins/presets
+  var options = Object.assign({
+    plugins: [],
+    presets: [],
+  }, JSON.parse(fs.readFileSync(babelrc, "utf8")));
+
+  if (!options.env) {
+    options.env = {};
+  }
+
+  if (!options.env.development) {
+    options.env.development = {};
+  }
+
+  // Default env.development plugins/presets
+  options.env.development = Object.assign({
+    plugins: [],
+    presets: [],
+  }, options.env.development);
+
+  // Accumulate all dependencies
+  var deps = options.plugins.map(function(plugin) {
+    return "babel-plugin-" + plugin;
+  }).concat(options.presets.map(function(preset) {
+    return "babel-preset-" + preset;
+  })).concat(options.env.development.plugins.map(function(plugin) {
+    return "babel-plugin-" + plugin;
+  })).concat(options.env.development.presets.map(function(preset) {
+    return "babel-preset-" + preset;
+  }));
+
+  // Check for & install dependencies
+  deps.forEach(function(dep) {
+    this.install(this.check(dep));
+  }.bind(this));
+};
 
 module.exports.install = function install(dep, options) {
   if (!dep) {
