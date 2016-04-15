@@ -13,6 +13,8 @@ $ nvm install
 $ nvm use
 ```
 
+Clone the `npm-install-webpack-plugin` repo and change directory to the example folder.
+
 Install dependencies required to start working:
 
 ```shell
