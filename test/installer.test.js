@@ -7,6 +7,12 @@ var installer = require("../src/installer");
 
 describe("installer", function() {
   describe(".check", function() {
+    context("given nothing", function() {
+      it("should return undefined", function() {
+        expect(installer.check()).toBe(undefined);
+      });
+    });
+
     context("given a local module", function() {
       it("should return undefined", function() {
         expect(installer.check("./foo")).toBe(undefined);
