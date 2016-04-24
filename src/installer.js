@@ -4,8 +4,9 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
-var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var EXTERNAL = /^[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
+var INTERNAL = /^\./; // Match "./client", "../something", etc.
+var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
 module.exports.check = function(request) {
   if (!request) {
@@ -75,9 +76,6 @@ module.exports.checkBabel = function checkBabel() {
     return;
   }
 
-  // `babel-core` is required for `babel-loader`
-  this.install(this.check("babel-core"));
-
   // Default plugins/presets
   var options = Object.assign({
     plugins: [],
@@ -98,10 +96,10 @@ module.exports.checkBabel = function checkBabel() {
     presets: [],
   }, options.env.development);
 
-  // Accumulate all dependencies
-  var deps = options.plugins.map(function(plugin) {
+  // Accumulate babel-core (required for babel-loader)+ all dependencies
+  var deps = ["babel-core"].concat(options.plugins.map(function(plugin) {
     return "babel-plugin-" + plugin;
-  }).concat(options.presets.map(function(preset) {
+  })).concat(options.presets.map(function(preset) {
     return "babel-preset-" + preset;
   })).concat(options.env.development.plugins.map(function(plugin) {
     return "babel-plugin-" + plugin;
@@ -110,9 +108,7 @@ module.exports.checkBabel = function checkBabel() {
   }));
 
   // Check for & install dependencies
-  deps.forEach(function(dep) {
-    this.install(this.check(dep));
-  }.bind(this));
+  this.install(deps.filter(this.check.bind(this)));
 };
 
 module.exports.checkPackage = function checkPackage() {
@@ -128,12 +124,16 @@ module.exports.checkPackage = function checkPackage() {
   spawn.sync("npm", ["init -y"], { stdio: "inherit" });
 };
 
-module.exports.install = function install(dep, options) {
-  if (!dep) {
+module.exports.install = function install(deps, options) {
+  if (!deps) {
     return;
   }
 
-  var args = ["install"].concat([dep]).filter(Boolean);
+  if (!Array.isArray(deps)) {
+    deps = [deps];
+  }
+
+  var args = ["install"].concat(deps).filter(Boolean);
 
   if (options) {
     for (option in options) {
@@ -152,9 +152,36 @@ module.exports.install = function install(dep, options) {
     }
   }
 
-  console.info("Installing `%s`...", dep);
+  deps.forEach(function(dep) {
+    console.info("Installing %s...", dep);
+  });
 
-  var output = spawn.sync("npm", args, { stdio: "inherit" });
+  // Ignore input, capture output, show errors
+  var output = spawn.sync("npm", args, {
+    stdio: ["ignore", "pipe", "inherit"]
+  });
+
+  var matches = null;
+  var peers = [];
+
+  // RegExps track return a single result each time
+  while (matches = PEERS.exec(output.stdout)) {
+    var dep = matches[1];
+    var version = matches[2];
+
+    // Wrap expressions in quotes
+    if (version.match(" ")) {
+      version = util.format('"%s"', version);
+    }
+
+    peers.push(util.format("%s@%s", dep, version));
+  }
+
+  if (peers.length) {
+    console.info("Installing peerDependencies...");
+    this.install(peers, options);
+    console.info("");
+  }
 
   return output;
 };
