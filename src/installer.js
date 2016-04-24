@@ -128,12 +128,16 @@ module.exports.checkPackage = function checkPackage() {
   spawn.sync("npm", ["init -y"], { stdio: "inherit" });
 };
 
-module.exports.install = function install(dep, options) {
-  if (!dep) {
+module.exports.install = function install(deps, options) {
+  if (!deps) {
     return;
   }
 
-  var args = ["install"].concat([dep]).filter(Boolean);
+  if (!Array.isArray(deps)) {
+    deps = [deps];
+  }
+
+  var args = ["install"].concat(deps).filter(Boolean);
 
   if (options) {
     for (option in options) {
@@ -152,9 +156,14 @@ module.exports.install = function install(dep, options) {
     }
   }
 
-  console.info("Installing `%s`...", dep);
+  deps.forEach(function(dep) {
+    console.info("Installing %s...", dep);
+  });
 
-  var output = spawn.sync("npm", args, { stdio: "inherit" });
+  // Ignore input, capture output, show errors
+  var output = spawn.sync("npm", args, {
+    stdio: ["ignore", "pipe", "inherit"]
+  });
 
   return output;
 };
