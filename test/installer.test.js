@@ -103,7 +103,7 @@ describe("installer", function() {
 
   describe(".install", function() {
     beforeEach(function() {
-      this.sync = expect.spyOn(spawn, "sync");
+      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
 
       expect.spyOn(console, "info");
     });
@@ -151,6 +151,34 @@ describe("installer", function() {
           ]);
         });
       });
+
+      context("with missing peerDependencies", function() {
+        beforeEach(function() {
+          this.sync.andCall(function(bin, args) {
+            var dep = args[1];
+
+            if (dep === "redbox-react") {
+              return {
+                stdout: new Buffer([
+                  "/test",
+                  "├── redbox-react@1.2.3",
+                  "└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc",
+                ].join("\n")),
+              };
+            }
+
+            return { stdout: null };
+          });
+        });
+
+        it("should install peerDependencies", function() {
+          var result = installer.install("redbox-react");
+
+          expect(this.sync.calls.length).toEqual(2);
+          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react"]);
+          expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react@\">=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc\""]);
+        });
+      })
     });
   });
 });

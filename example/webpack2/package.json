@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "devDependencies": {
+    "reload-server-webpack-plugin": "1.0.1",
+    "webpack": "2.1.0-beta.6"
+  },
+  "scripts": {
+    "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
+    "postinstall": "npm run link",
+    "start": "webpack --config webpack.config.server.js --watch"
+  }
+}
