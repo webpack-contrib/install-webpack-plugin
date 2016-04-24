@@ -1,5 +1,6 @@
 var expect = require("expect");
 var fs = require("fs");
+var path = require("path");
 var spawn = require("cross-spawn");
 
 var installer = require("../src/installer");
@@ -101,6 +102,86 @@ describe("installer", function() {
     })
   });
 
+  describe(".checkBabel", function() {
+    beforeEach(function() {
+      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
+
+      expect.spyOn(console, "info");
+    });
+
+    afterEach(function() {
+      expect.restoreSpies();
+    });
+
+    context("when .babelrc doesn't exist", function() {
+      beforeEach(function() {
+        process.chdir(path.join(process.cwd(), "test"));
+      });
+
+      afterEach(function() {
+        process.chdir(path.join(process.cwd(), ".."));
+      });
+
+      it("should return early", function() {
+        var result = installer.checkBabel();
+
+        expect(result).toBe(undefined);
+        expect(this.sync).toNotHaveBeenCalled();
+      });
+    });
+
+    context("when .babelrc exists", function() {
+      beforeEach(function() {
+        process.chdir(path.join(process.cwd(), "example/webpack1"));
+
+        this.check = expect.spyOn(installer, "check").andCall(function(dep) {
+          return dep;
+        });
+
+        this.install = expect.spyOn(installer, "install");
+      });
+
+      afterEach(function() {
+        process.chdir(path.join(process.cwd(), "../../"));
+      });
+
+      it("should check plugins & presets", function() {
+        installer.checkBabel();
+
+        var checked = this.check.calls.map(function(call) {
+          return call.arguments[0];
+        });
+
+        expect(this.check).toHaveBeenCalled();
+        expect(this.check.calls.length).toEqual(6);
+        expect(checked).toEqual([
+          'babel-core',
+          'babel-plugin-react-html-attrs',
+          'babel-preset-react',
+          'babel-preset-es2015',
+          'babel-preset-stage-0',
+          'babel-preset-react-hmre'
+        ]);
+      });
+
+      it("should install missing plugins & presets", function() {
+        installer.checkBabel();
+
+        expect(this.install).toHaveBeenCalled();
+        expect(this.install.calls.length).toEqual(1);
+        expect(this.install.calls[0].arguments).toEqual([
+          [
+            'babel-core',
+            'babel-plugin-react-html-attrs',
+            'babel-preset-react',
+            'babel-preset-es2015',
+            'babel-preset-stage-0',
+            'babel-preset-react-hmre'
+          ],
+        ]);
+      });
+    });
+  });
   describe(".install", function() {
     beforeEach(function() {
       this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
