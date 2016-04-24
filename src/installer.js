@@ -4,8 +4,9 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
-var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var EXTERNAL = /^[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
+var INTERNAL = /^\./; // Match "./client", "../something", etc.
+var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
 module.exports.check = function(request) {
   if (!request) {
@@ -159,6 +160,28 @@ module.exports.install = function install(deps, options) {
   var output = spawn.sync("npm", args, {
     stdio: ["ignore", "pipe", "inherit"]
   });
+
+  var matches = null;
+  var peers = [];
+
+  // RegExps track return a single result each time
+  while (matches = PEERS.exec(output.stdout)) {
+    var dep = matches[1];
+    var version = matches[2];
+
+    // Wrap expressions in quotes
+    if (version.match(" ")) {
+      version = util.format('"%s"', version);
+    }
+
+    peers.push(util.format("%s@%s", dep, version));
+  }
+
+  if (peers.length) {
+    console.info("Installing peerDependencies...");
+    this.install(peers, options);
+    console.info("");
+  }
 
   return output;
 };
