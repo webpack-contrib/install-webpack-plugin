@@ -182,6 +182,50 @@ describe("installer", function() {
       });
     });
   });
+
+  describe(".checkPackage", function() {
+    beforeEach(function() {
+      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
+
+      expect.spyOn(console, "info");
+    });
+
+    afterEach(function() {
+      expect.restoreSpies();
+    });
+
+    context("when package.json exists", function() {
+      it("should return early", function() {
+        var result = installer.checkPackage();
+
+        expect(result).toBe(undefined);
+        expect(this.sync).toNotHaveBeenCalled();
+      });
+    });
+
+    context("when package.json does not exist", function() {
+      beforeEach(function() {
+        process.chdir(path.join(process.cwd(), "test"));
+      });
+
+      afterEach(function() {
+        process.chdir(path.join(process.cwd(), ".."));
+      });
+
+      it("should initialize NPM", function() {
+        installer.checkPackage();
+
+        expect(this.sync).toHaveBeenCalled();
+        expect(this.sync.calls.length).toEqual(1);
+        expect(this.sync.calls[0].arguments).toEqual([
+          "npm",
+          ["init -y"],
+          { stdio: "inherit" },
+        ]);
+      });
+    });
+  });
+
   describe(".install", function() {
     beforeEach(function() {
       this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
