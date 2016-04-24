@@ -4,7 +4,7 @@ var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
-var EXTERNAL = /^[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
+var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
 var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
