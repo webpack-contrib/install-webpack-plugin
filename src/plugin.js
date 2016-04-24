@@ -17,7 +17,7 @@ var depFromErr = function(err) {
    * - bootswatch/lumen/bootstrap.css
    * - lodash.random
    */
-  var matches = /Cannot resolve module '([@\w\/\.-]+)' in/.exec(err);
+  var matches = /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(err);
 
   if (!matches) {
     return undefined;
@@ -81,22 +81,48 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
     return callback();
   }
 
-  this.compiler.resolvers.normal.resolve(
-    context,
-    request,
-    function(err, filepath) {
-      if (err) {
-        var dep = installer.check(depFromErr(err));
+  var result = {
+    context: {},
+    path: context,
+    request: request,
+  };
 
-        if (dep) {
-          installer.install(dep, this.options);
-        }
+  this.resolve(result, function(err, filepath) {
+    if (err) {
+      var dep = installer.check(depFromErr(err));
+
+      if (dep) {
+        installer.install(dep, this.options);
       }
+    }
 
-      callback();
-    }.bind(this)
-  );
+    callback();
+  }.bind(this));
 };
+
+NpmInstallPlugin.prototype.resolve = function(result, callback) {
+  var version = require("webpack/package.json").version;
+  var major = version.split(".").shift();
+
+  if (major === "1") {
+    return this.compiler.resolvers.normal.resolve(
+      result.path,
+      result.request,
+      callback
+    );
+  }
+
+  if (major === "2") {
+    return this.compiler.resolvers.normal.resolve(
+      result.context || {},
+      result.path,
+      result.request,
+      callback
+    );
+  }
+
+  throw new Error("Unsupport Webpack version: " + version);
+}
 
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
   var loader = result.request;
@@ -129,25 +155,21 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
 
   this.resolving[result.request] = true;
 
-  this.compiler.resolvers.normal.resolve(
-    result.path,
-    result.request,
-    function(err, filepath) {
-      this.resolving[result.request] = false;
+  this.resolve(result, function(err, filepath) {
+    this.resolving[result.request] = false;
 
-      if (err) {
-        var dep = installer.check(depFromErr(err));
+    if (err) {
+      var dep = installer.check(depFromErr(err));
 
-        if (dep) {
-          installer.install(dep, this.options);
+      if (dep) {
+        installer.install(dep, this.options);
 
-          return this.resolveModule(result, next);
-        }
+        return this.resolveModule(result, next);
       }
+    }
 
-      return next();
-    }.bind(this)
-  );
+    return next();
+  }.bind(this));
 };
 
 module.exports = NpmInstallPlugin;
