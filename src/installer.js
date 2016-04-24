@@ -75,9 +75,6 @@ module.exports.checkBabel = function checkBabel() {
     return;
   }
 
-  // `babel-core` is required for `babel-loader`
-  this.install(this.check("babel-core"));
-
   // Default plugins/presets
   var options = Object.assign({
     plugins: [],
@@ -98,10 +95,10 @@ module.exports.checkBabel = function checkBabel() {
     presets: [],
   }, options.env.development);
 
-  // Accumulate all dependencies
-  var deps = options.plugins.map(function(plugin) {
+  // Accumulate babel-core (required for babel-loader)+ all dependencies
+  var deps = ["babel-core"].concat(options.plugins.map(function(plugin) {
     return "babel-plugin-" + plugin;
-  }).concat(options.presets.map(function(preset) {
+  })).concat(options.presets.map(function(preset) {
     return "babel-preset-" + preset;
   })).concat(options.env.development.plugins.map(function(plugin) {
     return "babel-plugin-" + plugin;
@@ -110,9 +107,7 @@ module.exports.checkBabel = function checkBabel() {
   }));
 
   // Check for & install dependencies
-  deps.forEach(function(dep) {
-    this.install(this.check(dep));
-  }.bind(this));
+  this.install(deps.filter(this.check.bind(this)));
 };
 
 module.exports.checkPackage = function checkPackage() {
