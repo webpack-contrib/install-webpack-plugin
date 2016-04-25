@@ -159,8 +159,6 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
 
       if (dep) {
         installer.install(dep, this.options);
-
-        return this.resolveModule(result, next);
       }
     }
 
