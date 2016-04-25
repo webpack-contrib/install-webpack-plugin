@@ -1,6 +1,7 @@
 var expect = require("expect");
 var installer = require("../src/installer");
 var Plugin = require("../src/plugin");
+var webpack = require("webpack");
 
 describe("plugin", function() {
   beforeEach(function() {
@@ -82,47 +83,24 @@ describe("plugin", function() {
     });
   });
 
-  describe(".listenToFactory", function() {
-    before(function() {
-      this.next = expect.createSpy().andCall(function(err, result) {
-        return result;
+  describe(".preInstall", function () {
+    beforeEach(function() {
+      this.run = expect.spyOn(webpack.Compiler.prototype, "run").andCall(function(callback) {
+        callback();
       });
-
-      this.result = {
-        context: "/",
-        request: "foo",
-        path: "node_modules"
-      };
-
-      this.factory = {
-        plugin: expect.createSpy().andCall(function(event, factoryPlugin) {
-          factoryPlugin(this.result, this.next);
-        }.bind(this)),
-
-        resolvers: {
-          normal: {
-            resolve: expect.createSpy().andCall(function(context, request, callback) {
-              callback(null, [context, request].join("/"));
-            }.bind(this)),
-          },
-        },
-      };
-
-      this.plugin.listenToFactory(this.factory);
     });
 
-    it("should hook into `before-resolve`", function() {
-      expect(this.factory.plugin.calls.length).toBe(1);
-      expect(this.factory.plugin.calls[0].arguments[0]).toBe("before-resolve");
+    afterEach(function() {
+      this.run.restore();
     });
 
-    it("should immediately resolve", function() {
-      expect(this.factory.resolvers.normal.resolve.calls.length).toBe(1);
-    });
+    it("should perform dryrun", function(done) {
+      var compilation = {};
 
-    it("should pass result through", function() {
-      expect(this.next.calls.length).toBe(1);
-      expect(this.next.calls[0].arguments).toEqual([null, this.result]);
+      this.plugin.preInstall(compilation, function() {
+        expect(this.run).toHaveBeenCalled();
+        done();
+      }.bind(this));
     });
   });
 
