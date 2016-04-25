@@ -43,6 +43,11 @@ describe("plugin", function() {
     this.install.restore();
     this.next.restore();
   });
+
+  it("should checkBabel", function() {
+    expect(this.checkBabel).toHaveBeenCalled();
+  });
+
   });
 
   it("should accept options", function() {
