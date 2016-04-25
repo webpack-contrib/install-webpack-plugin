@@ -4,7 +4,12 @@ var Plugin = require("../src/plugin");
 
 describe("plugin", function() {
   beforeEach(function() {
+    this.check = expect.spyOn(installer, "check");
+    this.checkBabel = expect.spyOn(installer, "checkBabel");
+    this.checkPackage = expect.spyOn(installer, "checkPackage");
+
     this.compiler = {
+      options: {},
       plugin: expect.createSpy(),
       resolvers: {
         loader: {
@@ -18,12 +23,26 @@ describe("plugin", function() {
       },
     };
 
+    this.install = expect.spyOn(installer, "install");
+    this.next = expect.createSpy();
+
     this.options = {
       save: true,
       saveDev: false,
     };
 
     this.plugin = new Plugin(this.options);
+
+    this.plugin.apply(this.compiler);
+  });
+
+  afterEach(function() {
+    this.check.restore();
+    this.checkBabel.restore();
+    this.checkPackage.restore();
+    this.install.restore();
+    this.next.restore();
+  });
   });
 
   it("should accept options", function() {
@@ -31,14 +50,6 @@ describe("plugin", function() {
   });
 
   describe(".apply", function() {
-    beforeEach(function() {
-      this.plugin.apply(this.compiler);
-    });
-
-    afterEach(function() {
-      expect.restoreSpies();
-    });
-
     it("should hook into `normal-module-factory`", function() {
       expect(this.compiler.plugin.calls.length).toBe(1);
       expect(this.compiler.plugin.calls[0].arguments).toEqual([
@@ -109,18 +120,6 @@ describe("plugin", function() {
   });
 
   describe(".resolveLoader", function() {
-    beforeEach(function() {
-      this.check = expect.spyOn(installer, "check");
-      this.install = expect.spyOn(installer, "install");
-      this.next = expect.createSpy();
-    });
-
-    afterEach(function() {
-      this.check.restore();
-      this.install.restore();
-      this.next.restore();
-    });
-
     it("should call installer.check", function() {
       var result = { path: "node_modules", request: "babel-loader" };
 
@@ -166,16 +165,6 @@ describe("plugin", function() {
   });
 
   describe(".resolveModule", function() {
-    beforeEach(function() {
-      this.next = expect.createSpy();
-
-      this.plugin.apply(this.compiler);
-    });
-
-    afterEach(function() {
-      this.next.restore();
-    });
-
     it("should prevent cyclical installs", function() {
       var result = { path: "/", request: "foo" };
 
