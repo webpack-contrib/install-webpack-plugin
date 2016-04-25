@@ -5,18 +5,23 @@
 > [![npm-install-webpack-plugin mp4](https://cloud.githubusercontent.com/assets/15182/12540538/6a4e8f1a-c2d0-11e5-97ee-4ddaf6892645.gif)](https://dl.dropboxusercontent.com/u/55764/npm-install-webpack-plugin.mp4)
 
 Seamlessly works with:
-- [x] Javascript
+- [x] Webpack `^v1.12.0` and `^2.1.0-beta.0`
+- [x] ES5 & ES6 Modules
   (e.g. `require`, `import`)
+- [x] Namespace packages
+  (e.g. `@cycle/dom`)
+- [x] Dot-delimited packages
+  (e.g. `lodash.capitalize`)
 - [x] CSS
   (e.g. `@import "~bootstrap"`)
 - [x] Webpack loaders
   (e.g. `babel-loader`, `file-loader`, etc.)
+- [x] Inline-loaders
+  (e.g. `bundle?lazy!./App`)
+- [x] `peerDependencies`
+  (e.g. `@cycle/core` will automatically install `rx@*`)
 - [x] Webpack's `resolve.alias` & `resolve.root` configuration.
-
-Currently does _not_ support:
-
-- Inline loaders (e.g. `bundle?lazy!./App.js`)
-
+  (e.g. `require("react")` can alias to `react-lite`)
 
 [![travis build](https://img.shields.io/travis/ericclemmons/npm-install-webpack-plugin.svg)](https://travis-ci.org/ericclemmons/npm-install-webpack-plugin)
 [![Coverage Status](https://coveralls.io/repos/ericclemmons/npm-install-webpack-plugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/ericclemmons/npm-install-webpack-plugin?branch=master)
