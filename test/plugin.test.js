@@ -1,11 +1,15 @@
 var expect = require("expect");
 var installer = require("../src/installer");
 var Plugin = require("../src/plugin");
+var util = require("util");
 var webpack = require("webpack");
 
 describe("plugin", function() {
   beforeEach(function() {
-    this.check = expect.spyOn(installer, "check");
+    this.check = expect.spyOn(installer, "check").andCall(function(dep) {
+      return dep;
+    });
+
     this.checkBabel = expect.spyOn(installer, "checkBabel");
     this.checkPackage = expect.spyOn(installer, "checkPackage");
 
@@ -83,7 +87,7 @@ describe("plugin", function() {
     });
   });
 
-  describe(".preInstall", function () {
+  describe(".preInstall", function() {
     beforeEach(function() {
       this.run = expect.spyOn(webpack.Compiler.prototype, "run").andCall(function(callback) {
         callback();
@@ -99,6 +103,44 @@ describe("plugin", function() {
 
       this.plugin.preInstall(compilation, function() {
         expect(this.run).toHaveBeenCalled();
+        done();
+      }.bind(this));
+    });
+  });
+
+  describe(".resolveExternal", function() {
+    beforeEach(function() {
+      this.resolve = expect.spyOn(this.plugin, "resolve").andCall(function(result, callback) {
+        callback(new Error(util.format("Can't resolve '%s' in '%s'", result.request, result.path)));
+      });
+    });
+
+    afterEach(function() {
+      this.resolve.restore();
+    });
+
+    it("should ignore node_modules", function(done) {
+      this.plugin.resolveExternal("node_modules", "express", function() {
+        expect(this.resolve).toNotHaveBeenCalled();
+        done();
+      }.bind(this));
+    });
+
+    it("should ignore inline-loaders", function(done) {
+      this.plugin.resolveExternal("src", "bundle?lazy!express", function() {
+        expect(this.resolve).toNotHaveBeenCalled();
+        done();
+      }.bind(this));
+    });
+
+    it("should resolve external deps", function(done) {
+      this.plugin.resolveExternal("src", "express", function() {
+        expect(this.resolve).toHaveBeenCalled();
+        expect(this.check).toHaveBeenCalled();
+        expect(this.install).toHaveBeenCalled();
+
+        expect(this.check.calls[0].arguments[0]).toEqual("express");
+        expect(this.install.calls[0].arguments[0]).toEqual("express");
         done();
       }.bind(this));
     });
@@ -165,7 +207,7 @@ describe("plugin", function() {
       var result = { path: "/", request: "foo" };
 
       this.compiler.resolvers.normal.resolve.andCall(function(context, path, request, callback) {
-        callback(new Error("Cannot resolve module '@cycle/core'"));
+        callback(new Error("Can't resolve '@cycle/core' in '/'"));
       }.bind(this));
 
       this.plugin.resolveModule(result, this.next);
