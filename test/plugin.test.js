@@ -57,11 +57,11 @@ describe("plugin", function() {
   });
 
   describe(".apply", function() {
-    it("should hook into `normal-module-factory`", function() {
+    it("should hook into `watch-run`", function() {
       expect(this.compiler.plugin.calls.length).toBe(1);
       expect(this.compiler.plugin.calls[0].arguments).toEqual([
-        "normal-module-factory",
-        this.plugin.listenToFactory
+        "watch-run",
+        this.plugin.preInstall.bind(this.plugin)
       ]);
     });
 
