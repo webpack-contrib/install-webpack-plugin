@@ -48,6 +48,8 @@ describe("plugin", function() {
     expect(this.checkBabel).toHaveBeenCalled();
   });
 
+  it("should checkPackage", function() {
+    expect(this.checkPackage).toHaveBeenCalled();
   });
 
   it("should accept options", function() {
