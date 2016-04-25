@@ -42,7 +42,9 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   compiler.plugin("watch-run", this.preInstall.bind(this));
 
   // Install externals that wouldn't normally be resolved
-  compiler.options.externals.unshift(this.resolveExternal.bind(this));
+  if (Array.isArray(compiler.options.externals)) {
+    compiler.options.externals.unshift(this.resolveExternal.bind(this));
+  }
 
   // Install loaders on demand
   compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
