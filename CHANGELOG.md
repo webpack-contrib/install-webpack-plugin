@@ -1,7 +1,35 @@
 # Change Log
 
-## [3.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.0.0) (2016-03-07)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.2...3.0.0)
+## [3.1.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.0) (2016-04-24)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.0.0...3.1.0)
+
+**Implemented enhancements:**
+
+- Support .eslintrc [\#36](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/36)
+- Install peerDependencies [\#40](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/40) ([chadrien](https://github.com/chadrien))
+- Support Webpack 2.x [\#30](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/30) ([bhavinkamani](https://github.com/bhavinkamani))
+- Support `import loadThing from "bundle?lazy!./thing"` [\#29](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/29) ([ryanflorence](https://github.com/ryanflorence))
+- Initialize missing `package.json` [\#28](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/28) ([satya164](https://github.com/satya164))
+- Support .babelrc [\#23](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/23) ([bebraw](https://github.com/bebraw))
+
+**Fixed bugs:**
+
+- webpack-dev-server doesn't find packages right after they're installed [\#34](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/34)
+- Seems to add extra packages to package.json [\#26](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/26)
+- Passing tests + README [\#39](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/39) ([ericclemmons](https://github.com/ericclemmons))
+- Support installation of packages with a period in their name, e.g. lodash.random [\#33](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/33) ([insin](https://github.com/insin))
+
+**Closed issues:**
+
+- Feature request: support for webpack resolve.alias and resolve.root [\#31](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/31)
+
+**Merged pull requests:**
+
+- enhance the example readme [\#38](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/38) ([poeticninja](https://github.com/poeticninja))
+- Update README.md [\#25](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/25) ([coryhouse](https://github.com/coryhouse))
+
+## [v3.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v3.0.0) (2016-03-08)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v2.0.2...v3.0.0)
 
 **Implemented enhancements:**
 
