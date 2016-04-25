@@ -134,8 +134,6 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
 
   if (dep) {
     installer.install(dep, this.options);
-
-    return this.resolveLoader(result, next);
   }
 
   return next();
