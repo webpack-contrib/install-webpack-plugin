@@ -55,10 +55,6 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
 
 NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
   var options = this.compiler.options;
-  var plugins = options.plugins.filter(function(plugin) {
-    return plugin.constructor !== NpmInstallPlugin;
-  });
-
   var dryrun = webpack(Object.assign(
     {},
     { cache: {} },
