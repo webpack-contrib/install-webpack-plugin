@@ -190,7 +190,7 @@ describe("plugin", function() {
     it("should call .resolve if direct dependency", function() {
       var result = { path: "/", request: "foo" };
 
-      this.compiler.resolvers.normal.resolve.andCall(function(path, request, callback) {
+      this.compiler.resolvers.normal.resolve.andCall(function(context, path, request, callback) {
         callback(new Error("Cannot resolve module '@cycle/core'"));
       }.bind(this));
 
