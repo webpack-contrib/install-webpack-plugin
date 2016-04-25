@@ -1,6 +1,6 @@
 {
   "name": "npm-install-webpack-plugin",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Webpack loader to automatically npm install & save dependencies.",
   "main": "index.js",
   "files": [
