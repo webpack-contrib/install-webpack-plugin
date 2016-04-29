@@ -55,11 +55,22 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
 
 NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
   var options = this.compiler.options;
-  var dryrun = webpack(Object.assign(
+  var config = Object.assign(
+    // Start with new config object
     {},
-    { cache: {} },
-    options
-  ));
+    // Inherit the current config
+    options,
+    {
+      // Ensure fresh cache
+      cache:{},
+      // Register plugin to install missing deps
+      plugins: [
+        new NpmInstallPlugin(this.options),
+      ],
+    }
+  );
+
+  var dryrun = webpack(config);
 
   dryrun.outputFileSystem = new MemoryFS();
 
