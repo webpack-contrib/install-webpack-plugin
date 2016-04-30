@@ -1,11 +1,17 @@
 # Change Log
 
-## [3.1.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.0) (2016-04-24)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.0.0...3.1.0)
+## [3.1.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.1) (2016-04-30)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.0...3.1.1)
+
+**Fixed bugs:**
+
+- v3.1.0 seems to break webpack-dev-server behavior [\#43](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/43) ([cafreeman](https://github.com/cafreeman))
+
+## [v3.1.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v3.1.0) (2016-04-25)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.0.0...v3.1.0)
 
 **Implemented enhancements:**
 
-- Support .eslintrc [\#36](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/36)
 - Install peerDependencies [\#40](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/40) ([chadrien](https://github.com/chadrien))
 - Support Webpack 2.x [\#30](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/30) ([bhavinkamani](https://github.com/bhavinkamani))
 - Support `import loadThing from "bundle?lazy!./thing"` [\#29](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/29) ([ryanflorence](https://github.com/ryanflorence))
