@@ -138,6 +138,10 @@ module.exports.install = function install(deps, options) {
     deps = [deps];
   }
 
+  if (!deps.length) {
+    return;
+  }
+
   var args = ["install"].concat(deps).filter(Boolean);
 
   if (options) {
