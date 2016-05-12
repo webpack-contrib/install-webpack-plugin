@@ -66,7 +66,7 @@ describe("plugin", function() {
       expect(this.compiler.plugin.calls.length).toBe(1);
       expect(this.compiler.plugin.calls[0].arguments).toEqual([
         "watch-run",
-        this.plugin.preInstall.bind(this.plugin)
+        this.plugin.preCompile.bind(this.plugin)
       ]);
     });
 
@@ -87,7 +87,7 @@ describe("plugin", function() {
     });
   });
 
-  describe(".preInstall", function() {
+  describe(".preCompile", function() {
     beforeEach(function() {
       this.run = expect.spyOn(webpack.Compiler.prototype, "run").andCall(function(callback) {
         callback();
@@ -101,7 +101,7 @@ describe("plugin", function() {
     it("should perform dryrun", function(done) {
       var compilation = {};
 
-      this.plugin.preInstall(compilation, function() {
+      this.plugin.preCompile(compilation, function() {
         expect(this.run).toHaveBeenCalled();
         done();
       }.bind(this));
