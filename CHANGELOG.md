@@ -1,7 +1,22 @@
 # Change Log
 
-## [3.1.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.1) (2016-04-30)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.0...3.1.1)
+## [3.1.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.2) (2016-05-11)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.1...3.1.2)
+
+**Implemented enhancements:**
+
+- Performance [\#45](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/45) ([bebraw](https://github.com/bebraw))
+
+**Fixed bugs:**
+
+- Performance [\#45](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/45) ([bebraw](https://github.com/bebraw))
+
+**Closed issues:**
+
+- Trying to install webpack loaders with `-loader` in it [\#44](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/44)
+
+## [v3.1.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v3.1.1) (2016-04-30)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.0...v3.1.1)
 
 **Fixed bugs:**
 
@@ -63,7 +78,7 @@
 
 **Fixed bugs:**
 
-- Mismatch between code and documentation [\#18](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/18) ([DLMR](https://github.com/DLMR))
+- Mismatch between code and documentation [\#18](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/18) ([dlmr](https://github.com/dlmr))
 
 ## [v2.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v2.0.0) (2016-01-24)
 [Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v1.1.1...v2.0.0)
