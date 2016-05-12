@@ -27,6 +27,7 @@ var depFromErr = function(err) {
 }
 
 function NpmInstallPlugin(options) {
+  this.preCompiler = null;
   this.compiler = null;
   this.options = options || {};
   this.resolving = {};
@@ -39,7 +40,7 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   this.compiler = compiler;
 
   // Recursively install missing dependencies so primary build doesn't fail
-  compiler.plugin("watch-run", this.preInstall.bind(this));
+  compiler.plugin("watch-run", this.preCompile.bind(this));
 
   // Install externals that wouldn't normally be resolved
   if (Array.isArray(compiler.options.externals)) {
@@ -53,30 +54,29 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
 };
 
-NpmInstallPlugin.prototype.preInstall = function(compilation, next) {
-  var options = this.compiler.options;
-  var config = Object.assign(
-    // Start with new config object
-    {},
-    // Inherit the current config
-    options,
-    {
-      // Ensure fresh cache
-      cache:{},
-      // Register plugin to install missing deps
-      plugins: [
-        new NpmInstallPlugin(this.options),
-      ],
-    }
-  );
+NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
+  if (!this.preCompiler) {
+    var options = this.compiler.options;
+    var config = Object.assign(
+      // Start with new config object
+      {},
+      // Inherit the current config
+      options,
+      {
+        // Ensure fresh cache
+        cache: {},
+        // Register plugin to install missing deps
+        plugins: [
+          new NpmInstallPlugin(this.options),
+        ],
+      }
+    );
 
-  var dryrun = webpack(config);
+    this.preCompiler = webpack(config);
+    this.preCompiler.outputFileSystem = new MemoryFS();
+  }
 
-  dryrun.outputFileSystem = new MemoryFS();
-
-  dryrun.run(function(err, stats) {
-    next(err);
-  });
+  this.preCompiler.run(next);
 };
 
 NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback) {

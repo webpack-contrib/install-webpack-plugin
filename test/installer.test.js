@@ -253,6 +253,12 @@ describe("installer", function() {
       });
     });
 
+    context("given an empty array", function() {
+      it("should return undefined", function () {
+        expect(installer.install([])).toEqual(undefined);
+      });
+    });
+
     context("given a dependency", function() {
       it("should install it", function() {
         var result = installer.install("foo");
