@@ -1,7 +1,18 @@
 # Change Log
 
-## [3.1.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.2) (2016-05-11)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.1...3.1.2)
+## [3.1.3](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.3) (2016-05-13)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.2...3.1.3)
+
+**Implemented enhancements:**
+
+- Require Node v4.2.0  [\#47](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/47) ([bebraw](https://github.com/bebraw))
+
+**Closed issues:**
+
+- Feature request: the dependancy should be removed if no import statements are present [\#46](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/46)
+
+## [v3.1.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v3.1.2) (2016-05-12)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.1...v3.1.2)
 
 **Implemented enhancements:**
 
