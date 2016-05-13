@@ -3,6 +3,9 @@
   "version": "3.1.2",
   "description": "Webpack loader to automatically npm install & save dependencies.",
   "main": "index.js",
+  "engines": {
+    "node": ">=4.2.0"
+  },
   "files": [
     "src"
   ],
