@@ -178,7 +178,10 @@ module.exports.install = function install(deps, options) {
   });
 
   if (output.status) {
-    deps.forEach(erroneous.push.bind(erroneous));
+    deps.forEach(function(dep) {
+      console.warn("Ignoring %s due to errors installing...", dep);
+      erroneous.push(dep);
+    });
   }
 
   var matches = null;
