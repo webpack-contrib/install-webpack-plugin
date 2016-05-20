@@ -106,6 +106,7 @@ describe("installer", function() {
         expect(installer.check("!!./css-loader/index.js',")).toBe(undefined);
       });
     })
+
   });
 
   describe(".checkBabel", function() {
@@ -237,6 +238,7 @@ describe("installer", function() {
       this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
 
       expect.spyOn(console, "info");
+      expect.spyOn(console, "warn");
     });
 
     afterEach(function() {
@@ -256,6 +258,24 @@ describe("installer", function() {
     context("given an empty array", function() {
       it("should return undefined", function () {
         expect(installer.install([])).toEqual(undefined);
+      });
+    });
+
+    context("given a non-existant module", function() {
+      beforeEach(function() {
+        this.sync.andReturn({ status: 1 });
+      });
+
+      it("should attempt to install once", function() {
+        installer.install("does.not.exist.jsx")
+
+        expect(this.sync).toHaveBeenCalled();
+      });
+
+      it("should not attempt to install it again", function() {
+        installer.install("does.not.exist.jsx")
+
+        expect(this.sync).toNotHaveBeenCalled();
       });
     });
 

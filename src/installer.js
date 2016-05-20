@@ -8,6 +8,8 @@ var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.rand
 var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
+var erroneous = [];
+
 module.exports.check = function(request) {
   if (!request) {
     return;
@@ -138,6 +140,11 @@ module.exports.install = function install(deps, options) {
     deps = [deps];
   }
 
+  // Ignore known, erroneous modules
+  deps = deps.filter(function(dep) {
+    return erroneous.indexOf(dep) === -1;
+  });
+
   if (!deps.length) {
     return;
   }
@@ -169,6 +176,12 @@ module.exports.install = function install(deps, options) {
   var output = spawn.sync("npm", args, {
     stdio: ["ignore", "pipe", "inherit"]
   });
+
+  if (output.status) {
+    deps.forEach(function(dep) {
+      erroneous.push(dep);
+    });
+  }
 
   var matches = null;
   var peers = [];
