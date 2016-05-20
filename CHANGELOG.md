@@ -1,7 +1,14 @@
 # Change Log
 
-## [3.1.3](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.3) (2016-05-13)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.2...3.1.3)
+## [3.1.4](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.4) (2016-05-20)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.3...3.1.4)
+
+**Implemented enhancements:**
+
+- Warn on missing NPM packages [\#48](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/48) ([bebraw](https://github.com/bebraw))
+
+## [v3.1.3](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v3.1.3) (2016-05-13)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.2...v3.1.3)
 
 **Implemented enhancements:**
 
