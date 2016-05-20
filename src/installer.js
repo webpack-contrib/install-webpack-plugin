@@ -109,13 +109,13 @@ module.exports.checkBabel = function checkBabel() {
     return "babel-preset-" + preset;
   }));
 
-  // Check for erroneous dependencies
-  var erroneous = deps.filter(function(dep) {
+  // Check for missing dependencies
+  var missing = deps.filter(function(dep) {
     return this.check(dep);
   }.bind(this));
 
-  // Install erroneous dependencies
-  this.install(erroneous);
+  // Install missing dependencies
+  this.install(missing);
 };
 
 module.exports.checkPackage = function checkPackage() {
