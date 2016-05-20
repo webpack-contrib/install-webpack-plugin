@@ -76,7 +76,19 @@ NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
     this.preCompiler.outputFileSystem = new MemoryFS();
   }
 
-  this.preCompiler.run(next);
+  this.preCompiler.run(function(err, stats) {
+    if (err) {
+      return next(err);
+    }
+
+    var preError = stats.compilation.errors[0];
+
+    if (preError) {
+      return next(preError);
+    }
+
+    next(err, stats);
+  });
 };
 
 NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback) {
