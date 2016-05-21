@@ -29,7 +29,7 @@ var depFromErr = function(err) {
 function NpmInstallPlugin(options) {
   this.preCompiler = null;
   this.compiler = null;
-  this.options = options || {};
+  this.options = Object.assign(installer.defaultOptions, options);
   this.resolving = {};
 
   installer.checkPackage();
@@ -62,7 +62,13 @@ NpmInstallPlugin.prototype.install = function(result) {
   var dep = installer.check(result.request);
 
   if (dep) {
-    installer.install(dep, this.options);
+    var dev = this.options.dev;
+
+    if (typeof this.options.dev === "function") {
+      dev = !!this.options.dev(result.request, result.path);
+    }
+
+    installer.install(dep, Object.assign({}, this.options, { dev: dev }));
   }
 }
 
