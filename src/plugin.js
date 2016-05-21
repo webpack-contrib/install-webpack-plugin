@@ -54,6 +54,18 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
 };
 
+NpmInstallPlugin.prototype.install = function(result) {
+  if (!result) {
+    return;
+  }
+
+  var dep = installer.check(result.request);
+
+  if (dep) {
+    installer.install(dep, this.options);
+  }
+}
+
 NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
   if (!this.preCompiler) {
     var options = this.compiler.options;
@@ -98,11 +110,7 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
 
   this.resolve(result, function(err, filepath) {
     if (err) {
-      var dep = installer.check(depFromErr(err));
-
-      if (dep) {
-        installer.install(dep, this.options);
-      }
+      this.install(Object.assign({}, result, { request: depFromErr(err) }));
     }
 
     callback();
@@ -141,11 +149,7 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
     loader += "-loader";
   }
 
-  var dep = installer.check(loader);
-
-  if (dep) {
-    installer.install(dep, this.options);
-  }
+  this.install(Object.assign({}, result, { request: loader }));
 
   return next();
 };
@@ -166,11 +170,7 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
     this.resolving[result.request] = false;
 
     if (err) {
-      var dep = installer.check(depFromErr(err));
-
-      if (dep) {
-        installer.install(dep, this.options);
-      }
+      this.install(Object.assign({}, result, { request: depFromErr(err) }));
     }
 
     return next();
