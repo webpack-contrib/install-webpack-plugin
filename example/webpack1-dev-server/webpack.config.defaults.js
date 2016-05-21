@@ -27,7 +27,15 @@ module.exports = {
   },
 
   plugins: [
-    new NpmInstallPlugin(),
+    new NpmInstallPlugin({
+      dev: function(module, path) {
+        return [
+          "babel-preset-react-hmre",
+          "webpack-dev-middleware",
+          "webpack-hot-middleware",
+        ].indexOf(module) !== -1;
+      },
+    }),
   ],
 
   resolve: {
