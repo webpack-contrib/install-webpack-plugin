@@ -8,6 +8,7 @@ var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.rand
 var INTERNAL = /^\./; // Match "./client", "../something", etc.
 var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
+var defaultOptions = { dev: false, peerDependencies: true };
 var erroneous = [];
 
 module.exports.check = function(request) {
@@ -131,6 +132,8 @@ module.exports.checkPackage = function checkPackage() {
   spawn.sync("npm", ["init -y"], { stdio: "inherit" });
 };
 
+module.exports.defaultOptions = defaultOptions;
+
 module.exports.install = function install(deps, options) {
   if (!deps) {
     return;
@@ -139,6 +142,8 @@ module.exports.install = function install(deps, options) {
   if (!Array.isArray(deps)) {
     deps = [deps];
   }
+
+  options = Object.assign({}, defaultOptions, options);
 
   // Ignore known, erroneous modules
   deps = deps.filter(function(dep) {
@@ -151,22 +156,7 @@ module.exports.install = function install(deps, options) {
 
   var args = ["install"].concat(deps).filter(Boolean);
 
-  if (options) {
-    for (option in options) {
-      var arg = util.format("--%s", kebabCase(option));
-      var value = options[option];
-
-      if (value === false) {
-        continue;
-      }
-
-      if (value === true) {
-        args.push(arg);
-      } else {
-        args.push(util.format("%s='%s'", arg, value));
-      }
-    }
-  }
+  args.push(options.dev ? "--save-dev" : "--save");
 
   deps.forEach(function(dep) {
     console.info("Installing %s...", dep);
@@ -199,7 +189,7 @@ module.exports.install = function install(deps, options) {
     peers.push(util.format("%s@%s", dep, version));
   }
 
-  if (peers.length) {
+  if (options.peerDependencies && peers.length) {
     console.info("Installing peerDependencies...");
     this.install(peers, options);
     console.info("");
