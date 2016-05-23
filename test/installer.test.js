@@ -290,32 +290,27 @@ describe("installer", function() {
     });
 
     context("given a dependency", function() {
-      it("should install it", function() {
-        var result = installer.install("foo");
+      context("with no options", function() {
+        it("should install it with --save", function() {
+          var result = installer.install("foo");
 
-        expect(this.sync).toHaveBeenCalled();
-        expect(this.sync.calls.length).toEqual(1);
-        expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-        expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
+          expect(this.sync).toHaveBeenCalled();
+          expect(this.sync.calls.length).toEqual(1);
+          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save"]);
+        });
       });
 
-      context("given options", function() {
-        it("should pass them to child process", function() {
+      context("with dev set to true", function() {
+        it("should install it with --save-dev", function() {
           var result = installer.install("foo", {
-            save: true,
-            saveExact: false,
-            registry: "https://registry.npmjs.com/",
+            dev: true,
           });
 
           expect(this.sync).toHaveBeenCalled();
           expect(this.sync.calls.length).toEqual(1);
           expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-          expect(this.sync.calls[0].arguments[1]).toEqual([
-            "install",
-            "foo",
-            "--save",
-            "--registry='https://registry.npmjs.com/'",
-          ]);
+          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save-dev"]);
         });
       });
 
@@ -338,14 +333,27 @@ describe("installer", function() {
           });
         });
 
-        it("should install peerDependencies", function() {
-          var result = installer.install("redbox-react");
+        context("given no options", function() {
+          it("should install peerDependencies", function() {
+            var result = installer.install("redbox-react");
 
-          expect(this.sync.calls.length).toEqual(2);
-          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react"]);
-          expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react@\">=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc\""]);
+            expect(this.sync.calls.length).toEqual(2);
+            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+            expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react@\">=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc\"", "--save"]);
+          });
         });
-      })
+
+        context("given peerDependencies set to false", function() {
+          it("should not install peerDependencies", function() {
+            var result = installer.install("redbox-react", {
+              peerDependencies: false,
+            });
+
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+          });
+        });
+      });
     });
   });
 });
