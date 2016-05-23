@@ -6,6 +6,16 @@ var spawn = require("cross-spawn");
 var installer = require("../src/installer");
 
 describe("installer", function() {
+  describe(".defaultOptions", function() {
+    it("should default dev to false", function() {
+      expect(installer.defaultOptions.dev).toEqual(false);
+    });
+
+    it("should default peerDependencies to true", function() {
+      expect(installer.defaultOptions.peerDependencies).toEqual(true);
+    });
+  })
+
   describe(".check", function() {
     context("given nothing", function() {
       it("should return undefined", function() {
