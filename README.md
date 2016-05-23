@@ -54,33 +54,39 @@ In your `webpack.config.js`:
 
 ```js
 plugins: [
-  new NpmInstallPlugin(),
+  new NpmInstallPlugin();
 ],
 ```
 
-**If you have an `.npmrc` file in your project,
-those arguments will be used:**
-
-```
-save=true
-save-exact=true
-```
-
-Alternatively, you can provide your own arguments to `npm install`:
+**This is equivalent to**:
 
 ```js
 plugins: [
   new NpmInstallPlugin({
-    ...
-    cacheMin: 999999  // --cache-min=999999 (prefer NPM cached version)
-    registry: "..."   // --registry="..."
-    save: true,       // --save
-    saveDev: true,    // --save-dev
-    saveExact: true,  // --save-exact
-    ...
+    // Use --save or --save-dev
+    dev: false,
+    // Install missing peerDependencies
+    peerDependencies: true,
+  });
+],
+```
+
+You can provide a `Function` to the `dev` to make it dynamic:
+
+```js
+plugins: [
+  new NpmInstallPlugin({
+    dev: function(module, path) {
+      return [
+        "babel-preset-react-hmre",
+        "webpack-dev-middleware",
+        "webpack-hot-middleware",
+      ].indexOf(module) !== -1;
+    },
   }),
 ],
 ```
+
 
 ### License
 
