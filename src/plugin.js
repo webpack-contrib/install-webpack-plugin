@@ -29,7 +29,7 @@ var depFromErr = function(err) {
 function NpmInstallPlugin(options) {
   this.preCompiler = null;
   this.compiler = null;
-  this.options = options || {};
+  this.options = Object.assign(installer.defaultOptions, options);
   this.resolving = {};
 
   installer.checkPackage();
@@ -53,6 +53,24 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   // Install project dependencies on demand
   compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
 };
+
+NpmInstallPlugin.prototype.install = function(result) {
+  if (!result) {
+    return;
+  }
+
+  var dep = installer.check(result.request);
+
+  if (dep) {
+    var dev = this.options.dev;
+
+    if (typeof this.options.dev === "function") {
+      dev = !!this.options.dev(result.request, result.path);
+    }
+
+    installer.install(dep, Object.assign({}, this.options, { dev: dev }));
+  }
+}
 
 NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
   if (!this.preCompiler) {
@@ -98,11 +116,7 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
 
   this.resolve(result, function(err, filepath) {
     if (err) {
-      var dep = installer.check(depFromErr(err));
-
-      if (dep) {
-        installer.install(dep, this.options);
-      }
+      this.install(Object.assign({}, result, { request: depFromErr(err) }));
     }
 
     callback();
@@ -141,11 +155,7 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
     loader += "-loader";
   }
 
-  var dep = installer.check(loader);
-
-  if (dep) {
-    installer.install(dep, this.options);
-  }
+  this.install(Object.assign({}, result, { request: loader }));
 
   return next();
 };
@@ -166,11 +176,7 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
     this.resolving[result.request] = false;
 
     if (err) {
-      var dep = installer.check(depFromErr(err));
-
-      if (dep) {
-        installer.install(dep, this.options);
-      }
+      this.install(Object.assign({}, result, { request: depFromErr(err) }));
     }
 
     return next();

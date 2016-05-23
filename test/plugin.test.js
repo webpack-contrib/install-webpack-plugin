@@ -32,8 +32,8 @@ describe("plugin", function() {
     this.next = expect.createSpy();
 
     this.options = {
-      save: true,
-      saveDev: false,
+      dev: false,
+      peerDependencies: true,
     };
 
     this.plugin = new Plugin(this.options);
