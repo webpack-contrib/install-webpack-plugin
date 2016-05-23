@@ -1,7 +1,15 @@
 # Change Log
 
-## [3.1.4](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/3.1.4) (2016-05-20)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.3...3.1.4)
+## [4.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.0) (2016-05-23)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.4...4.0.0)
+
+**Implemented enhancements:**
+
+- installPeers Option [\#41](https://github.com/ericclemmons/npm-install-webpack-plugin/issues/41)
+- New Options \(dev, peerDependencies\) [\#13](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/13) ([insin](https://github.com/insin))
+
+## [v3.1.4](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v3.1.4) (2016-05-20)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.3...v3.1.4)
 
 **Implemented enhancements:**
 
