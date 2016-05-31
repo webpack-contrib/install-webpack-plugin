@@ -324,6 +324,7 @@ describe("installer", function() {
                 stdout: new Buffer([
                   "/test",
                   "├── redbox-react@1.2.3",
+                  "├── UNMET PEER DEPENDENCY foo@^1.2.3",
                   "└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc",
                 ].join("\n")),
               };
@@ -339,7 +340,7 @@ describe("installer", function() {
 
             expect(this.sync.calls.length).toEqual(2);
             expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
-            expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react@\">=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc\"", "--save"]);
+            expect(this.sync.calls[1].arguments[1]).toEqual(["install", "foo@^1.2.3", "--save"]);
           });
         });
 
