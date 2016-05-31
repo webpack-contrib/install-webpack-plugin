@@ -119,6 +119,47 @@ module.exports.checkBabel = function checkBabel() {
   this.install(missing);
 };
 
+module.exports.checkESLint = function checkESLint() {
+  try {
+    var options = JSON.parse(
+      fs.readFileSync(
+        path.join(process.cwd(), ".eslintrc"),
+        "utf8"
+      )
+    );
+  } catch (e) {
+    // ESLint isn't installed, don't install deps
+    return;
+  }
+
+  if (!options.extends) {
+    return;
+  }
+
+  if (!Array.isArray(options.extends)) {
+    options.extends = [options.extends];
+  }
+
+  var deps = options.extends
+    // eslint:recommended => eslint
+    .map(function(dep) {
+      return dep === "eslint:recommended" ? "eslint" : dep;
+    })
+    // "airbnb" => "eslint-config-airbnb"
+    .map(function(dep) {
+      return dep.match(/eslint-config/) ? dep : "eslint-config-" + dep;
+    })
+    .filter(function(dep) {
+      return this.check(dep);
+    }.bind(this))
+  ;
+
+  this.install(deps, {
+    dev: true,
+    peerDependencies: true,
+  });
+}
+
 module.exports.checkPackage = function checkPackage() {
   try {
     require.resolve(path.join(process.cwd(), "package.json"));

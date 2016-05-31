@@ -200,6 +200,134 @@ describe("installer", function() {
     });
   });
 
+  describe(".checkESLint", function() {
+    var readFileSync = fs.readFileSync;
+
+    var mockReadFileSync = function(expected, actual) {
+      expect.spyOn(fs, "readFileSync").andCall(function(file, enc) {
+        if (file.match(expected)) {
+          return readFileSync(path.join(__dirname, actual), enc);
+        }
+
+        return readFileSync(file, enc);
+      });
+    };
+
+    beforeEach(function() {
+      this.check = expect.spyOn(installer, "check").andCall(function(dep) {
+        return dep;
+      });
+
+      this.install = expect.spyOn(installer, "install");
+    });
+
+    afterEach(function() {
+      expect.restoreSpies();
+    });
+
+    context("when nothing is extended", function() {
+      beforeEach(function() {
+        mockReadFileSync(/\.eslintrc$/, "./fixtures/eslintrc.empty.json");
+      });
+
+      it("should not install anything", function() {
+        installer.checkESLint();
+
+        expect(this.check).toNotHaveBeenCalled();
+        expect(this.install).toNotHaveBeenCalled();
+      });
+    });
+
+    context("when airbnb is extended", function() {
+      beforeEach(function() {
+        mockReadFileSync(/\.eslintrc$/, "./fixtures/eslintrc.airbnb.json");
+      });
+
+      afterEach(function() {
+        expect.restoreSpies();
+      });
+
+      it("should .check eslint-config-airbnb", function() {
+        installer.checkESLint();
+
+        expect(this.check).toHaveBeenCalled();
+        expect(this.check.calls.length).toEqual(1);
+        expect(this.check.calls[0].arguments).toEqual(["eslint-config-airbnb"]);
+      });
+
+      it("should .install eslint-config-airbnb + peers as dev", function() {
+        installer.checkESLint();
+
+        expect(this.install).toHaveBeenCalled();
+        expect(this.install.calls.length).toEqual(1);
+        expect(this.install.calls[0].arguments).toEqual([
+          ["eslint-config-airbnb"],
+          {
+            dev: true,
+            peerDependencies: true,
+          }
+        ]);
+      });
+    });
+
+    context("when eslint:recommended is extended", function() {
+      beforeEach(function() {
+        mockReadFileSync(/\.eslintrc$/, "./fixtures/eslintrc.recommended.json");
+      });
+
+      afterEach(function() {
+        expect.restoreSpies();
+      });
+
+      it("should .check eslint-config-eslint", function() {
+        installer.checkESLint();
+
+        expect(this.check).toHaveBeenCalled();
+        expect(this.check.calls.length).toEqual(1);
+        expect(this.check.calls[0].arguments).toEqual(["eslint-config-eslint"]);
+      });
+    });
+
+    context("when multiple configs are extended", function() {
+      beforeEach(function() {
+        mockReadFileSync(/\.eslintrc$/, "./fixtures/eslintrc.array.json");
+      });
+
+      afterEach(function() {
+        expect.restoreSpies();
+      });
+
+      it("should .install eslint-config-airbnb", function() {
+        installer.checkESLint();
+
+        expect(this.install).toHaveBeenCalled();
+        expect(this.install.calls.length).toEqual(1);
+        expect(this.install.calls[0].arguments[0]).toEqual([
+          "eslint-config-eslint",
+          "eslint-config-airbnb",
+        ]);
+      });
+    });
+
+    context("when @highereducation/eslint-config is extended", function() {
+      beforeEach(function() {
+        mockReadFileSync(/\.eslintrc$/, "./fixtures/eslintrc.namespace.json");
+      });
+
+      afterEach(function() {
+        expect.restoreSpies();
+      });
+
+      it("should .check @highereducation/eslint-config", function() {
+        installer.checkESLint();
+
+        expect(this.check).toHaveBeenCalled();
+        expect(this.check.calls.length).toEqual(1);
+        expect(this.check.calls[0].arguments).toEqual(["@highereducation/eslint-config"])
+      });
+    });
+  });
+
   describe(".checkPackage", function() {
     beforeEach(function() {
       this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
