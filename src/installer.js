@@ -2,6 +2,7 @@ var spawn = require("cross-spawn");
 var fs = require("fs");
 var kebabCase = require("lodash.kebabcase");
 var path = require("path");
+var semver = require("semver");
 var util = require("util");
 
 var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
@@ -181,12 +182,11 @@ module.exports.install = function install(deps, options) {
     var dep = matches[1];
     var version = matches[2];
 
-    // Wrap expressions in quotes
-    if (version.match(" ")) {
-      version = util.format('"%s"', version);
+    if (semver.valid(version.replace("^", "").replace("~", ""))) {
+      peers.push(util.format("%s@%s", dep, version));
+    } else {
+      console.warn(util.format("%s@\"dep\" is not valid semver. Please install manually.", dep, version));
     }
-
-    peers.push(util.format("%s@%s", dep, version));
   }
 
   if (options.peerDependencies && peers.length) {
