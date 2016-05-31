@@ -34,6 +34,7 @@ function NpmInstallPlugin(options) {
 
   installer.checkPackage();
   installer.checkBabel();
+  installer.checkESLint();
 }
 
 NpmInstallPlugin.prototype.apply = function(compiler) {
