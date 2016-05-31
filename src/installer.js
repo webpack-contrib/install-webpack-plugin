@@ -1,6 +1,5 @@
 var spawn = require("cross-spawn");
 var fs = require("fs");
-var kebabCase = require("lodash.kebabcase");
 var path = require("path");
 var util = require("util");
 
