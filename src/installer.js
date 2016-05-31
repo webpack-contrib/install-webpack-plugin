@@ -184,6 +184,8 @@ module.exports.install = function install(deps, options) {
 
     if (semver.valid(version.replace("^", "").replace("~", ""))) {
       peers.push(util.format("%s@%s", dep, version));
+    } else {
+      console.warn(util.format("%s@\"dep\" is not valid semver. Please install manually.", dep, version));
     }
   }
 
