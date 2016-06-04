@@ -129,7 +129,7 @@ module.exports.checkPackage = function checkPackage() {
   }
 
   console.info("Initializing `%s`...", "package.json");
-  spawn.sync("npm", ["init -y"], { stdio: "inherit" });
+  spawn.sync("npm", ["init", "-y"], { stdio: "inherit" });
 };
 
 module.exports.defaultOptions = defaultOptions;

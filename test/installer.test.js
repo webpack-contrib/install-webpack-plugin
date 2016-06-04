@@ -236,7 +236,7 @@ describe("installer", function() {
         expect(this.sync.calls.length).toEqual(1);
         expect(this.sync.calls[0].arguments).toEqual([
           "npm",
-          ["init -y"],
+          ["init", "-y"],
           { stdio: "inherit" },
         ]);
       });
