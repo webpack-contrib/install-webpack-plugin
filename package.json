@@ -15,7 +15,7 @@
     "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
     "coverage": "npm test && nyc report --reporter=text-lcov | coveralls",
     "postversion": "npm run version:amend && git push origin master --tags && npm publish",
-    "test": "NODE_ENV=test nyc mocha",
+    "test": "cross-env NODE_ENV=test nyc mocha",
     "version": "npm run changelog",
     "version:amend": "git commit --amend -m \"Release v${npm_package_version}\""
   },
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.8",
+    "cross-env": "^1.0.8",
     "expect": "^1.14.0",
     "mocha": "^2.4.5",
     "nyc": "^6.0.0",
