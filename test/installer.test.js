@@ -76,7 +76,7 @@ describe("installer", function() {
         expect(installer.check("something-linked")).toBe(undefined);
         expect(this.lstatSync.calls.length).toBe(1);
         expect(this.lstatSync.calls[0].arguments).toEqual([
-          [process.cwd(), "node_modules", "something-linked"].join("/"),
+          path.join(process.cwd(), "node_modules", "something-linked"),
         ]);
       });
     });
@@ -236,7 +236,7 @@ describe("installer", function() {
         expect(this.sync.calls.length).toEqual(1);
         expect(this.sync.calls[0].arguments).toEqual([
           "npm",
-          ["init -y"],
+          ["init", "-y"],
           { stdio: "inherit" },
         ]);
       });
