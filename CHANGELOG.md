@@ -1,7 +1,14 @@
 # Change Log
 
-## [4.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.0) (2016-05-23)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.4...4.0.0)
+## [4.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.1) (2016-06-06)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.0...4.0.1)
+
+**Fixed bugs:**
+
+- Fix failure to initialise package.json in Windows [\#52](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/52) ([insin](https://github.com/insin))
+
+## [v4.0.0](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v4.0.0) (2016-05-23)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v3.1.4...v4.0.0)
 
 **Implemented enhancements:**
 
