@@ -1,7 +1,14 @@
 # Change Log
 
-## [4.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.1) (2016-06-06)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.0...4.0.1)
+## [4.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.2) (2016-06-13)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.1...4.0.2)
+
+**Merged pull requests:**
+
+- Update all dependencies 🌴 [\#54](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/54) ([greenkeeperio-bot](https://github.com/greenkeeperio-bot))
+
+## [v4.0.1](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v4.0.1) (2016-06-07)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.0...v4.0.1)
 
 **Fixed bugs:**
 
