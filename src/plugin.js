@@ -1,5 +1,4 @@
 var MemoryFS = require("memory-fs");
-var path = require("path");
 var webpack = require("webpack");
 
 var installer = require("./installer");
