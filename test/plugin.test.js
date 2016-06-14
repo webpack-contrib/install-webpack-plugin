@@ -181,13 +181,22 @@ describe("plugin", function() {
       expect(this.install.calls[0].arguments).toEqual(["babel-loader", this.options]);
     });
 
-    it("should ensure loaders end with `-loader`", function() {
+    it("should convert `babel` to `babel-loader`", function() {
       var result = { path: "node_modules", request: "babel" };
 
       this.plugin.resolveLoader(result, this.next);
 
       expect(this.check.calls.length).toBe(1);
       expect(this.check.calls[0].arguments).toEqual(["babel-loader"]);
+    });
+
+    it("should convert ignore `react-hot-loader/webpack`", function() {
+      var result = { path: "node_modules", request: "react-hot-loader/webpack" };
+
+      this.plugin.resolveLoader(result, this.next);
+
+      expect(this.check.calls.length).toBe(1);
+      expect(this.check.calls[0].arguments).toEqual(["react-hot-loader"]);
     });
   });
 

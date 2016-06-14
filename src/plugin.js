@@ -148,12 +148,13 @@ NpmInstallPlugin.prototype.resolve = function(result, callback) {
 
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
   // Ensure loaders end with `-loader` (e.g. `babel` => `babel-loader`)
-  // Also force Webpack2's
-  var loader = result.request
-      .split("-loader")
-      .filter(Boolean)
-      .concat("loader")
-      .join("-")
+  // Also force Webpack2's duplication of `-loader` to a single occurrence
+  var loader = result.request // e.g. react-hot-loader/webpack
+      .split("/")             // ["react-hot-loader", "webpack"]
+      .shift()                // "react-hot-loader"
+      .split("-loader")       // ["react-hot", ""]
+      .shift()                // "react-hot"
+      .concat("-loader")       // "react-hot-loader"
   ;
 
   this.install(Object.assign({}, result, { request: loader }));
