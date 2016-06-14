@@ -148,12 +148,14 @@ NpmInstallPlugin.prototype.resolve = function(result, callback) {
 }
 
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
-  var loader = result.request;
-
   // Ensure loaders end with `-loader` (e.g. `babel` => `babel-loader`)
-  if (!loader.match(/\-loader$/)) {
-    loader += "-loader";
-  }
+  // Also force Webpack2's
+  var loader = result.request
+      .split("-loader")
+      .filter(Boolean)
+      .concat("loader")
+      .join("-")
+  ;
 
   this.install(Object.assign({}, result, { request: loader }));
 
