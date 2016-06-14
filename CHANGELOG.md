@@ -1,7 +1,14 @@
 # Change Log
 
-## [4.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.2) (2016-06-13)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.1...4.0.2)
+## [4.0.3](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.3) (2016-06-13)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.2...4.0.3)
+
+**Fixed bugs:**
+
+- Fix react-hot-loader/webpack lookup [\#55](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/55) ([ericclemmons](https://github.com/ericclemmons))
+
+## [v4.0.2](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v4.0.2) (2016-06-14)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.1...v4.0.2)
 
 **Merged pull requests:**
 
