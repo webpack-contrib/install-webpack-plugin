@@ -179,12 +179,12 @@ module.exports.install = function install(deps, options) {
     var dep = matches[1];
     var version = matches[2];
 
-    // Wrap expressions in quotes
+    // Ranges don't work well, so let NPM pick
     if (version.match(" ")) {
-      version = util.format('"%s"', version);
+      peers.push(dep);
+    } else {
+      peers.push(util.format("%s@%s", dep, version));
     }
-
-    peers.push(util.format("%s@%s", dep, version));
   }
 
   if (options.peerDependencies && peers.length) {
