@@ -1,7 +1,14 @@
 # Change Log
 
-## [4.0.3](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.3) (2016-06-13)
-[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.2...4.0.3)
+## [4.0.4](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/4.0.4) (2016-06-30)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.3...4.0.4)
+
+**Fixed bugs:**
+
+- Install peerDependency without version when given a range [\#58](https://github.com/ericclemmons/npm-install-webpack-plugin/pull/58) ([ericclemmons](https://github.com/ericclemmons))
+
+## [v4.0.3](https://github.com/ericclemmons/npm-install-webpack-plugin/tree/v4.0.3) (2016-06-14)
+[Full Changelog](https://github.com/ericclemmons/npm-install-webpack-plugin/compare/v4.0.2...v4.0.3)
 
 **Fixed bugs:**
 
