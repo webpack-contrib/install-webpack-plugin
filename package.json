@@ -44,7 +44,7 @@
     "cross-env": "^2.0.0",
     "expect": "^1.14.0",
     "mocha": "^3.0.0",
-    "nyc": "^8.1.0",
+    "nyc": "^9.0.1",
     "webpack": "^1.13.0"
   },
   "peerDependencies": {
