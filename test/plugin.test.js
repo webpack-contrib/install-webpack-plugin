@@ -12,6 +12,7 @@ describe("plugin", function() {
 
     this.checkBabel = expect.spyOn(installer, "checkBabel");
     this.checkPackage = expect.spyOn(installer, "checkPackage");
+    this.checkNodeModules = expect.spyOn(installer, "checkNodeModules");
 
     this.compiler = {
       options: {},
@@ -44,6 +45,7 @@ describe("plugin", function() {
   afterEach(function() {
     this.check.restore();
     this.checkBabel.restore();
+    this.checkNodeModules.restore();
     this.checkPackage.restore();
     this.install.restore();
     this.next.restore();
@@ -51,6 +53,10 @@ describe("plugin", function() {
 
   it("should checkBabel", function() {
     expect(this.checkBabel).toHaveBeenCalled();
+  });
+
+  it("should checkNodeModules", function() {
+    expect(this.checkNodeModules).toHaveBeenCalled();
   });
 
   it("should checkPackage", function() {

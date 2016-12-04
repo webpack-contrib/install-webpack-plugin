@@ -69,6 +69,24 @@ module.exports.check = function(request) {
   return dep;
 };
 
+module.exports.checkNodeModules = function checkNodeModules() {
+   try {
+    var stats = fs.lstatSync(path.join(process.cwd(), "node_modules"));
+
+    if (stats.isDirectory()) {
+      return;
+    }
+  } catch(e) { }
+
+  var pkgPath = require.resolve(path.join(process.cwd(), "package.json"));
+  var pkg = require(pkgPath);
+
+  if (!pkg.dependencies && !pkg.devDependencies) return;
+
+  console.info("Installing modules from `%s`...", "package.json");
+  spawn.sync("npm", ["install"], { stdio: "inherit" });
+};
+
 module.exports.checkBabel = function checkBabel() {
   try {
     var babelrc = require.resolve(path.join(process.cwd(), ".babelrc"));
