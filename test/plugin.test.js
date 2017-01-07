@@ -40,6 +40,7 @@ describe("plugin", function() {
     this.options = {
       dev: false,
       peerDependencies: true,
+      quiet: false,
     };
 
     this.plugin = new Plugin(this.options);
