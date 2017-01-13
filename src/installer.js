@@ -9,6 +9,17 @@ var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 var defaultOptions = { dev: false, peerDependencies: true };
 var erroneous = [];
 
+function normalizeBabelPlugin(plugin, prefix) {
+  // Babel plugins can be configured as [plugin, options]
+  if (Array.isArray(plugin)) {
+    plugin = plugin[0];
+  }
+  if (plugin.indexOf(prefix) === 0) {
+    return plugin;
+  }
+  return prefix + plugin;
+}
+
 module.exports.check = function(request) {
   if (!request) {
     return;
@@ -99,13 +110,13 @@ module.exports.checkBabel = function checkBabel() {
 
   // Accumulate babel-core (required for babel-loader)+ all dependencies
   var deps = ["babel-core"].concat(options.plugins.map(function(plugin) {
-    return "babel-plugin-" + plugin;
+    return normalizeBabelPlugin(plugin, "babel-plugin-");
   })).concat(options.presets.map(function(preset) {
-    return "babel-preset-" + preset;
+    return normalizeBabelPlugin(preset, "babel-preset-");
   })).concat(options.env.development.plugins.map(function(plugin) {
-    return "babel-plugin-" + plugin;
+    return normalizeBabelPlugin(plugin, "babel-plugin-");
   })).concat(options.env.development.presets.map(function(preset) {
-    return "babel-preset-" + preset;
+    return normalizeBabelPlugin(preset, "babel-preset-");
   }));
 
   // Check for missing dependencies

@@ -149,7 +149,7 @@ describe("installer", function() {
 
     context("when .babelrc exists", function() {
       beforeEach(function() {
-        process.chdir(path.join(process.cwd(), "example/webpack1"));
+        process.chdir(path.join(process.cwd(), "example/webpack2"));
 
         this.check = expect.spyOn(installer, "check").andCall(function(dep) {
           return dep;
