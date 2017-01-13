@@ -6,7 +6,7 @@ var util = require("util");
 var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
 var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
-var defaultOptions = { dev: false, peerDependencies: true };
+var defaultOptions = { dev: false, peerDependencies: true, ignoredPeerDependencies: [] };
 var erroneous = [];
 
 module.exports.check = function(request) {
@@ -178,6 +178,10 @@ module.exports.install = function install(deps, options) {
   while (matches = PEERS.exec(output.stdout)) {
     var dep = matches[1];
     var version = matches[2];
+
+    if (options.ignoredPeerDependencies.indexOf(dep) !== -1) {
+      continue;
+    }
 
     // Ranges don't work well, so let NPM pick
     if (version.match(" ")) {

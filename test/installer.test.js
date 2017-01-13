@@ -14,6 +14,10 @@ describe("installer", function() {
     it("should default peerDependencies to true", function() {
       expect(installer.defaultOptions.peerDependencies).toEqual(true);
     });
+
+    it("should default ignoredPeerDependencies to []", function() {
+      expect(installer.defaultOptions.ignoredPeerDependencies).toEqual([]);
+    });
   })
 
   describe(".check", function() {
@@ -349,6 +353,17 @@ describe("installer", function() {
           it("should not install peerDependencies", function() {
             var result = installer.install("redbox-react", {
               peerDependencies: false,
+            });
+
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+          });
+        });
+
+        context("given ignoredPeerDependencies", function() {
+          it("should not install an ignored peerDependency", function() {
+            var result = installer.install("redbox-react", {
+              ignoredPeerDependencies: ['react'],
             });
 
             expect(this.sync.calls.length).toEqual(1);

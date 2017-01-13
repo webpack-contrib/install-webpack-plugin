@@ -34,6 +34,7 @@ describe("plugin", function() {
     this.options = {
       dev: false,
       peerDependencies: true,
+      ignoredPeerDependencies: [],
     };
 
     this.plugin = new Plugin(this.options);
