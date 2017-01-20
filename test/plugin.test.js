@@ -14,8 +14,15 @@ describe("plugin", function() {
     this.checkPackage = expect.spyOn(installer, "checkPackage");
 
     this.compiler = {
-      options: {},
-      plugin: expect.createSpy(),
+      // Webpack 2 will reject config without an entry
+      options: {
+        entry: function() { return {} }
+      },
+      plugin: expect.createSpy().andCall(function(event, cb) {
+        if (event === "after-resolvers") {
+          cb(this.compiler);
+        }
+      }.bind(this)),
       resolvers: {
         loader: {
           plugin: expect.createSpy(),
@@ -63,22 +70,21 @@ describe("plugin", function() {
 
   describe(".apply", function() {
     it("should hook into `watch-run`", function() {
-      expect(this.compiler.plugin.calls.length).toBe(1);
+      expect(this.compiler.plugin.calls.length).toBe(2);
       expect(this.compiler.plugin.calls[0].arguments).toEqual([
         "watch-run",
         this.plugin.preCompile.bind(this.plugin)
       ]);
     });
 
-    it("should hook into loader resolvers", function() {
+    it("should hook into `after-resolvers`", function() {
+      expect(this.compiler.plugin.calls.length).toBe(2);
+      expect(this.compiler.plugin.calls[1].arguments[0]).toEqual("after-resolvers");
       expect(this.compiler.resolvers.loader.plugin.calls.length).toBe(1);
       expect(this.compiler.resolvers.loader.plugin.calls[0].arguments).toEqual([
         "module",
         this.plugin.resolveLoader.bind(this.plugin)
       ]);
-    });
-
-    it("should hook into normal resolvers", function() {
       expect(this.compiler.resolvers.normal.plugin.calls.length).toBe(1);
       expect(this.compiler.resolvers.normal.plugin.calls[0].arguments).toEqual([
         "module",
@@ -215,7 +221,7 @@ describe("plugin", function() {
     it("should call .resolve if direct dependency", function() {
       var result = { path: "/", request: "foo" };
 
-      this.compiler.resolvers.normal.resolve.andCall(function(path, request, callback) {
+      this.compiler.resolvers.normal.resolve.andCall(function(context, path, request, callback) {
         callback(new Error("Can't resolve '@cycle/core' in '/'"));
       }.bind(this));
 
