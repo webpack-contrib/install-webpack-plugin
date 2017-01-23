@@ -46,11 +46,13 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
     compiler.options.externals.unshift(this.resolveExternal.bind(this));
   }
 
-  // Install loaders on demand
-  compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
+  compiler.plugin("after-resolvers", function(compiler) {
+    // Install loaders on demand
+    compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
 
-  // Install project dependencies on demand
-  compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
+    // Install project dependencies on demand
+    compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
+  }.bind(this))
 };
 
 NpmInstallPlugin.prototype.install = function(result) {
