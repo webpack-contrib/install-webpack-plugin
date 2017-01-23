@@ -116,7 +116,7 @@ describe("plugin", function() {
 
   describe(".resolveExternal", function() {
     beforeEach(function() {
-      this.resolve = expect.spyOn(this.plugin, "resolve").andCall(function(result, callback) {
+      this.resolve = expect.spyOn(this.plugin, "resolve").andCall(function(resolver, result, callback) {
         callback(new Error(util.format("Can't resolve '%s' in '%s'", result.request, result.path)));
       });
     });
@@ -153,56 +153,37 @@ describe("plugin", function() {
   });
 
   describe(".resolveLoader", function() {
-    it("should call installer.check", function() {
-      var result = { path: "node_modules", request: "babel-loader" };
+    it("should call .resolve", function() {
+      var result = { path: "/", request: "babel-loader" };
+
+      this.compiler.resolvers.loader.resolve.andCall(function(context, path, request, callback) {
+        callback(null);
+      }.bind(this));
+
+      var install = expect.spyOn(this.plugin, 'install')
 
       this.plugin.resolveLoader(result, this.next);
 
-      expect(this.check.calls.length).toBe(1);
-      expect(this.check.calls[0].arguments).toEqual(["babel-loader"]);
+      expect(this.compiler.resolvers.loader.resolve.calls.length).toBe(1);
+      expect(install.calls.length).toBe(0)
+      expect(this.next.calls.length).toBe(1);
+      expect(this.next.calls[0].arguments).toEqual([]);
     });
+    it("should call .resolve and install if not resolved", function() {
+      var result = { path: "/", request: "babel-loader" };
 
-    it("should skip installer.install if existing", function() {
-      var result = { path: "node_modules", request: "babel-loader" };
+      this.compiler.resolvers.loader.resolve.andCall(function(context, path, request, callback) {
+        callback(new Error("Can't resolve 'babel-loader' in 'node_modules'"));
+      }.bind(this));
 
-      this.check.andCall(function(dep) {
-        return false;
-      });
-
-      this.plugin.resolveLoader(result, this.next);
-
-      expect(this.install.calls.length).toBe(0);
-    });
-
-    it("should call installer.install if missing", function() {
-      var result = { path: "node_modules", request: "babel-loader" };
-
-      this.check.andCall(function(dep) {
-        return dep;
-      });
+      var install = expect.spyOn(this.plugin, 'install')
 
       this.plugin.resolveLoader(result, this.next);
 
-      expect(this.install.calls.length).toBe(1);
-      expect(this.install.calls[0].arguments).toEqual(["babel-loader", this.options]);
-    });
-
-    it("should convert `babel` to `babel-loader`", function() {
-      var result = { path: "node_modules", request: "babel" };
-
-      this.plugin.resolveLoader(result, this.next);
-
-      expect(this.check.calls.length).toBe(1);
-      expect(this.check.calls[0].arguments).toEqual(["babel-loader"]);
-    });
-
-    it("should convert ignore `react-hot-loader/webpack`", function() {
-      var result = { path: "node_modules", request: "react-hot-loader/webpack" };
-
-      this.plugin.resolveLoader(result, this.next);
-
-      expect(this.check.calls.length).toBe(1);
-      expect(this.check.calls[0].arguments).toEqual(["react-hot-loader"]);
+      expect(this.compiler.resolvers.loader.resolve.calls.length).toBe(1);
+      expect(install.calls.length).toBe(1)
+      expect(this.next.calls.length).toBe(1);
+      expect(this.next.calls[0].arguments).toEqual([]);
     });
   });
 
