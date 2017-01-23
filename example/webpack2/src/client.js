@@ -2,6 +2,6 @@
 import App from "App";
 
 // Testing inline-loaders
-import loadRender from "bundle?lazy!./render";
+import loadRender from "bundle-loader?lazy!./render";
 
 loadRender(({ render }) => render(App));

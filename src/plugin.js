@@ -2,6 +2,7 @@ var MemoryFS = require("memory-fs");
 var webpack = require("webpack");
 
 var installer = require("./installer");
+var utils = require("./utils");
 
 var depFromErr = function(err) {
   if (!err) {
@@ -115,7 +116,7 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
     request: request,
   };
 
-  this.resolve(result, function(err, filepath) {
+  this.resolve('normal', result, function(err, filepath) {
     if (err) {
       this.install(Object.assign({}, result, { request: depFromErr(err) }));
     }
@@ -124,12 +125,12 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
   }.bind(this));
 };
 
-NpmInstallPlugin.prototype.resolve = function(result, callback) {
+NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
   var version = require("webpack/package.json").version;
   var major = version.split(".").shift();
 
   if (major === "1") {
-    return this.compiler.resolvers.normal.resolve(
+    return this.compiler.resolvers[resolver].resolve(
       result.path,
       result.request,
       callback
@@ -137,7 +138,7 @@ NpmInstallPlugin.prototype.resolve = function(result, callback) {
   }
 
   if (major === "2") {
-    return this.compiler.resolvers.normal.resolve(
+    return this.compiler.resolvers[resolver].resolve(
       result.context || {},
       result.path,
       result.request,
@@ -145,23 +146,31 @@ NpmInstallPlugin.prototype.resolve = function(result, callback) {
     );
   }
 
-  throw new Error("Unsupport Webpack version: " + version);
+  throw new Error("Unsupported Webpack version: " + version);
 }
 
 NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
-  // Ensure loaders end with `-loader` (e.g. `babel` => `babel-loader`)
-  // Also force Webpack2's duplication of `-loader` to a single occurrence
-  var loader = result.request // e.g. react-hot-loader/webpack
-      .split("/")             // ["react-hot-loader", "webpack"]
-      .shift()                // "react-hot-loader"
-      .split("-loader")       // ["react-hot", ""]
-      .shift()                // "react-hot"
-      .concat("-loader")       // "react-hot-loader"
-  ;
+  // Only install direct dependencies, not sub-dependencies
+  if (result.path.match("node_modules")) {
+    return next();
+  }
 
-  this.install(Object.assign({}, result, { request: loader }));
+  if (this.resolving[result.request]) {
+    return next();
+  }
 
-  return next();
+  this.resolving[result.request] = true;
+
+  this.resolve("loader", result, function(err, filepath) {
+    this.resolving[result.request] = false;
+
+    if (err) {
+      var loader = utils.normalizeLoader(result.request);
+      this.install(Object.assign({}, result, { request: loader }));
+    }
+
+    return next();
+  }.bind(this));
 };
 
 NpmInstallPlugin.prototype.resolveModule = function(result, next) {
@@ -176,7 +185,7 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
 
   this.resolving[result.request] = true;
 
-  this.resolve(result, function(err, filepath) {
+  this.resolve('normal', result, function(err, filepath) {
     this.resolving[result.request] = false;
 
     if (err) {

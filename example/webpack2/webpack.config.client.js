@@ -12,7 +12,7 @@ module.exports = Object.assign({}, defaults, {
   },
 
   output: Object.assign({}, defaults.output, {
-    libaryTarget: "var",
+    libraryTarget: "var",
     path: path.join(defaults.context, "build/client"),
     publicPath: "/",
   }),
