@@ -1,0 +1,7 @@
+{
+  "name": "noneempty_package_json",
+  "version": "1.0.0",
+  "dependencies": {
+    "react": "15.4.1"
+  }
+}

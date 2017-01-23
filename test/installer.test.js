@@ -243,6 +243,57 @@ describe("installer", function() {
     });
   });
 
+  describe('.checkNodeModules', function() {
+    beforeEach(function() {
+      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
+
+      expect.spyOn(console, "info");
+    });
+
+    afterEach(function() {
+      expect.restoreSpies();
+    });
+
+    context("when node_modules exists", function() {
+      it("should bail early", function() {
+        expect(installer.checkNodeModules()).toEqual(undefined);
+        expect(this.sync).toNotHaveBeenCalled();
+      });
+    });
+
+    context("when node_modules does not exist", function() {
+      afterEach(function() {
+        process.chdir(path.join(process.cwd(), "..", "..", ".."));
+      });
+
+      context("when package.json does contain some dependencies", function() {
+        it("should run 'npm install'", function() {
+          process.chdir(path.join(process.cwd(), "test", "mock", "noneempty_package_json"));
+
+          installer.checkNodeModules();
+
+          expect(this.sync).toHaveBeenCalled();
+          expect(this.sync.calls.length).toEqual(1);
+          expect(this.sync.calls[0].arguments).toEqual([
+            "npm",
+            ["install"],
+            { stdio: "inherit" },
+          ]);
+        });
+      });
+
+      context("when package.json does not contain any dependencies", function() {
+        it("should not run 'npm install'", function() {
+          process.chdir(path.join(process.cwd(), "test", "mock", "empty_package_json"));
+
+          installer.checkNodeModules();
+
+          expect(this.sync).toNotHaveBeenCalled();
+        });
+      });
+    });
+  });
+
   describe(".install", function() {
     beforeEach(function() {
       this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });

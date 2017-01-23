@@ -33,6 +33,7 @@ function NpmInstallPlugin(options) {
   this.resolving = {};
 
   installer.checkPackage();
+  installer.checkNodeModules();
   installer.checkBabel();
 }
 
