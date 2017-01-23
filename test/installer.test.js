@@ -29,55 +29,9 @@ describe("installer", function() {
       });
     });
 
-    context("when process.cwd() is missing package.json", function() {
-      before(function() {
-        this.cwd = process.cwd();
-
-        process.chdir(__dirname);
-      });
-
-      after(function() {
-        process.chdir(this.cwd);
-      });
-
-      it("should throw", function() {
-        expect(function() {
-          installer.check("anything");
-        }).toThrow(/Cannot find module/);
-      });
-    });
-
-    context("given a dependency in package.json", function() {
+    context("given a resolvable dependency", function() {
       it("should return undefined", function() {
         expect(installer.check("cross-spawn")).toBe(undefined);
-      });
-    });
-
-    context("given a devDependency in package.json", function() {
-      it("should return undefined", function() {
-        expect(installer.check("expect")).toBe(undefined);
-      });
-    });
-
-    context("given a linked dependency", function() {
-      beforeEach(function() {
-        this.lstatSync = expect.spyOn(fs, "lstatSync").andReturn({
-          isSymbolicLink: function() {
-            return true;
-          },
-        });
-      });
-
-      afterEach(function() {
-        this.lstatSync.restore();
-      });
-
-      it("should return undefined", function() {
-        expect(installer.check("something-linked")).toBe(undefined);
-        expect(this.lstatSync.calls.length).toBe(1);
-        expect(this.lstatSync.calls[0].arguments).toEqual([
-          path.join(process.cwd(), "node_modules", "something-linked"),
-        ]);
       });
     });
 
@@ -102,12 +56,6 @@ describe("installer", function() {
     context("given a @namespaced/module", function() {
       it("should return @namespaced/module", function() {
         expect(installer.check("@namespaced/module")).toBe("@namespaced/module");
-      });
-    });
-
-    context("given a module already installed, but not saved", function() {
-      it("should return module", function() {
-        expect(installer.check("yargs")).toBe("yargs");
       });
     });
 
@@ -200,49 +148,6 @@ describe("installer", function() {
     });
   });
 
-  describe(".checkPackage", function() {
-    beforeEach(function() {
-      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
-
-      expect.spyOn(console, "info");
-    });
-
-    afterEach(function() {
-      expect.restoreSpies();
-    });
-
-    context("when package.json exists", function() {
-      it("should return early", function() {
-        var result = installer.checkPackage();
-
-        expect(result).toBe(undefined);
-        expect(this.sync).toNotHaveBeenCalled();
-      });
-    });
-
-    context("when package.json does not exist", function() {
-      beforeEach(function() {
-        process.chdir(path.join(process.cwd(), "test"));
-      });
-
-      afterEach(function() {
-        process.chdir(path.join(process.cwd(), ".."));
-      });
-
-      it("should initialize NPM", function() {
-        installer.checkPackage();
-
-        expect(this.sync).toHaveBeenCalled();
-        expect(this.sync.calls.length).toEqual(1);
-        expect(this.sync.calls[0].arguments).toEqual([
-          "npm",
-          ["init", "-y"],
-          { stdio: "inherit" },
-        ]);
-      });
-    });
-  });
-
   describe(".install", function() {
     beforeEach(function() {
       this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
@@ -313,6 +218,25 @@ describe("installer", function() {
           expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save-dev"]);
         });
       });
+
+      context("without a package.json present", function() {
+        beforeEach(function() {
+          expect.spyOn(installer, "packageExists").andReturn(false);
+        });
+
+        afterEach(function() {
+          expect.restoreSpies();
+        });
+
+        it("should install without --save", function() {
+          var result = installer.install("foo");
+
+          expect(this.sync).toHaveBeenCalled();
+          expect(this.sync.calls.length).toEqual(1);
+          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
+        });
+      })
 
       context("with missing peerDependencies", function() {
         beforeEach(function() {
