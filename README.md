@@ -67,6 +67,8 @@ plugins: [
     dev: false,
     // Install missing peerDependencies
     peerDependencies: true,
+    // Don't install specified peerDependencies
+    ignoredPeerDependencies: [],
   });
 ],
 ```
