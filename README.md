@@ -67,6 +67,8 @@ plugins: [
     dev: false,
     // Install missing peerDependencies
     peerDependencies: true,
+    // Reduce amount of console logging
+    quiet: false,
   });
 ],
 ```

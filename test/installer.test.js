@@ -14,6 +14,10 @@ describe("installer", function() {
     it("should default peerDependencies to true", function() {
       expect(installer.defaultOptions.peerDependencies).toEqual(true);
     });
+
+    it("should default quiet to false", function() {
+      expect(installer.defaultOptions.quiet).toEqual(false);
+    });
   })
 
   describe(".check", function() {
@@ -230,13 +234,27 @@ describe("installer", function() {
 
         it("should install without --save", function() {
           var result = installer.install("foo");
-
           expect(this.sync).toHaveBeenCalled();
           expect(this.sync.calls.length).toEqual(1);
           expect(this.sync.calls[0].arguments[0]).toEqual("npm");
           expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
         });
-      })
+      });
+
+      context("with quiet set to true", function() {
+        it("should install it with --silent --noprogress", function() {
+          var result = installer.install("foo", {
+            quiet: true,
+          });
+
+          expect(this.sync).toHaveBeenCalled();
+          expect(this.sync.calls.length).toEqual(1);
+          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+          expect(this.sync.calls[0].arguments[1]).toEqual(
+            ["install", "foo", "--save", "--silent", "--no-progress"]
+          );
+        });
+      });
 
       context("with missing peerDependencies", function() {
         beforeEach(function() {

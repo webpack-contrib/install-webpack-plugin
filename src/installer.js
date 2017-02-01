@@ -7,7 +7,7 @@ var util = require("util");
 var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
 var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
-var defaultOptions = { dev: false, peerDependencies: true };
+var defaultOptions = { dev: false, peerDependencies: true, quiet: false };
 var erroneous = [];
 
 function normalizeBabelPlugin(plugin, prefix) {
@@ -134,6 +134,10 @@ module.exports.install = function install(deps, options) {
 
   if (module.exports.packageExists()) {
     args.push(options.dev ? "--save-dev" : "--save");
+  }
+
+  if (options.quiet) {
+    args.push("--silent", "--no-progress");
   }
 
   deps.forEach(function(dep) {
