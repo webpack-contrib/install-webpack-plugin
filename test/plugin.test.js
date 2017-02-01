@@ -11,7 +11,6 @@ describe("plugin", function() {
     });
 
     this.checkBabel = expect.spyOn(installer, "checkBabel");
-    this.checkPackage = expect.spyOn(installer, "checkPackage");
 
     this.compiler = {
       // Webpack 2 will reject config without an entry
@@ -51,17 +50,12 @@ describe("plugin", function() {
   afterEach(function() {
     this.check.restore();
     this.checkBabel.restore();
-    this.checkPackage.restore();
     this.install.restore();
     this.next.restore();
   });
 
   it("should checkBabel", function() {
     expect(this.checkBabel).toHaveBeenCalled();
-  });
-
-  it("should checkPackage", function() {
-    expect(this.checkPackage).toHaveBeenCalled();
   });
 
   it("should accept options", function() {

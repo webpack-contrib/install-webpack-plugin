@@ -32,7 +32,6 @@ function NpmInstallPlugin(options) {
   this.options = Object.assign(installer.defaultOptions, options);
   this.resolving = {};
 
-  installer.checkPackage();
   installer.checkBabel();
 }
 

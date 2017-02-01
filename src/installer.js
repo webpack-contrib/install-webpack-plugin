@@ -1,6 +1,7 @@
 var spawn = require("cross-spawn");
 var fs = require("fs");
 var path = require("path");
+var resolve = require("resolve");
 var util = require("util");
 
 var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
@@ -20,7 +21,19 @@ function normalizeBabelPlugin(plugin, prefix) {
   return prefix + plugin;
 }
 
-module.exports.check = function(request) {
+module.exports.packageExists = function packageExists() {
+  var pkgPath = path.resolve("package.json");
+  try {
+    require.resolve(pkgPath);
+    // Remove cached copy for future checks
+    delete require.cache[pkgPath];
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+module.exports.check = function check(request) {
   if (!request) {
     return;
   }
@@ -36,43 +49,10 @@ module.exports.check = function(request) {
     return;
   }
 
+  // Ignore modules which can be resolved using require.resolve()'s algorithm
   try {
-    var pkgPath = require.resolve(path.join(process.cwd(), "package.json"));
-    var pkg = require(pkgPath);
-
-    // Remove cached copy for future checks
-    delete require.cache[pkgPath];
-  } catch(e) {
-    throw e;
-  }
-
-  var hasDep = pkg.dependencies && pkg.dependencies[dep];
-  var hasDevDep = pkg.devDependencies && pkg.devDependencies[dep];
-
-  // Bail early if we've already installed this dependency
-  if (hasDep || hasDevDep) {
+    resolve.sync(dep, {basedir: process.cwd()});
     return;
-  }
-
-  // Ignore linked modules
-  try {
-    var stats = fs.lstatSync(path.join(process.cwd(), "node_modules", dep));
-
-    if (stats.isSymbolicLink()) {
-      return;
-    }
-  } catch(e) {
-    // Module exists in node_modules, but isn't symlinked
-  }
-
-  // Ignore NPM global modules (e.g. "path", "fs", etc.)
-  try {
-    var resolved = require.resolve(dep);
-
-    // Global modules resolve to their name, not an actual path
-    if (resolved.match(EXTERNAL)) {
-      return;
-    }
   } catch(e) {
     // Module is not resolveable
   }
@@ -82,7 +62,7 @@ module.exports.check = function(request) {
 
 module.exports.checkBabel = function checkBabel() {
   try {
-    var babelrc = require.resolve(path.join(process.cwd(), ".babelrc"));
+    var babelrc = require.resolve(path.resolve(".babelrc"));
   } catch (e) {
     // Babel isn't installed, don't install deps
     return;
@@ -128,19 +108,6 @@ module.exports.checkBabel = function checkBabel() {
   this.install(missing);
 };
 
-module.exports.checkPackage = function checkPackage() {
-  try {
-    require.resolve(path.join(process.cwd(), "package.json"));
-
-    return;
-  } catch (e) {
-    // package.json does not exist
-  }
-
-  console.info("Initializing `%s`...", "package.json");
-  spawn.sync("npm", ["init", "-y"], { stdio: "inherit" });
-};
-
 module.exports.defaultOptions = defaultOptions;
 
 module.exports.install = function install(deps, options) {
@@ -165,7 +132,9 @@ module.exports.install = function install(deps, options) {
 
   var args = ["install"].concat(deps).filter(Boolean);
 
-  args.push(options.dev ? "--save-dev" : "--save");
+  if (module.exports.packageExists()) {
+    args.push(options.dev ? "--save-dev" : "--save");
+  }
 
   deps.forEach(function(dep) {
     console.info("Installing %s...", dep);
