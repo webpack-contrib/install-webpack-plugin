@@ -13,7 +13,7 @@
     "changelog": "npm run changelog:generate && npm run changelog:add",
     "changelog:add": "git add CHANGELOG.md",
     "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
-    "coverage": "npm test && nyc report --reporter=text-lcov | coveralls",
+    "coverage": "npm test && nyc report --reporter=lcov > coverage/coverage.lcov && codecov",
     "postversion": "npm run version:amend && git push origin master --tags && npm publish",
     "test": "cross-env NODE_ENV=test nyc mocha",
     "test:watch": "cross-env NODE_ENV=test mocha --watch",
@@ -42,7 +42,7 @@
     "resolve": "^1.2.0"
   },
   "devDependencies": {
-    "coveralls": "^2.11.8",
+    "codecov": "^1.0.1",
     "cross-env": "^3.1.4",
     "expect": "^1.14.0",
     "mocha": "^3.0.0",
