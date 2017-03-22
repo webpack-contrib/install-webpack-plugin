@@ -146,7 +146,8 @@ module.exports.install = function install(deps, options) {
 
   // Ignore input, capture output, show errors
   var output = spawn.sync("npm", args, {
-    stdio: ["ignore", "pipe", "inherit"]
+    stdio: ["ignore", "pipe", "inherit"],
+    cwd: options.cwd || process.cwd()
   });
 
   if (output.status) {
