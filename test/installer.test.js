@@ -210,6 +210,21 @@ describe("installer", function() {
         });
       });
 
+      context("with a specified cwd", function() {
+        it("should install it in specified cwd", function() {
+          var cwd = {
+            cwd: "foo"
+          };
+          var result = installer.install("foo", cwd);
+
+          expect(this.sync).toHaveBeenCalled();
+          expect(this.sync.calls.length).toEqual(1);
+          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save"]);
+          expect(this.sync.calls[0].arguments[2]).toInclude(cwd);
+        });
+      });
+
       context("with dev set to true", function() {
         it("should install it with --save-dev", function() {
           var result = installer.install("foo", {
