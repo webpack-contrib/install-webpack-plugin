@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "devDependencies": {
+    "css-loader": "0.23.1",
+    "reload-server-webpack-plugin": "1.0.1",
+    "style-loader": "0.13.0",
+    "webpack": "1.12.9"
+  },
+  "scripts": {
+    "link": "cd .. && npm link . && cd - && npm link npm-install-loader",
+    "postinstall": "npm run link",
+    "start": "webpack --config webpack.config.server.js --watch"
+  }
+}
