@@ -41,6 +41,7 @@ describe("plugin", function() {
       dev: false,
       peerDependencies: true,
       quiet: false,
+      npm: 'npm',
     };
 
     this.plugin = new Plugin(this.options);
