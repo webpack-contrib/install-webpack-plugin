@@ -3,13 +3,14 @@ var fs = require("fs");
 var path = require("path");
 var resolve = require("resolve");
 var util = require("util");
+var JSON5 = require("json5");
 
 var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
 var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
-var defaultOptions = { 
-  dev: false, 
-  peerDependencies: true, 
+var defaultOptions = {
+  dev: false,
+  peerDependencies: true,
   quiet: false,
   npm: 'npm',
 };
@@ -68,7 +69,11 @@ module.exports.check = function check(request) {
 module.exports.checkBabel = function checkBabel() {
   try {
     var babelrc = require.resolve(path.resolve(".babelrc"));
+    var babelOpts = JSON5.parse(fs.readFileSync(babelrc, "utf8"));
   } catch (e) {
+    if (babelrc) {
+      console.info(".babelrc is invalid JSON5, babel deps are skipped")
+    }
     // Babel isn't installed, don't install deps
     return;
   }
@@ -77,7 +82,7 @@ module.exports.checkBabel = function checkBabel() {
   var options = Object.assign({
     plugins: [],
     presets: [],
-  }, JSON.parse(fs.readFileSync(babelrc, "utf8")));
+  }, babelOpts);
 
   if (!options.env) {
     options.env = {};
