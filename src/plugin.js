@@ -136,7 +136,7 @@ NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
     );
   }
 
-  if (major === "2") {
+  if (major === "2" || major === "3") {
     return this.compiler.resolvers[resolver].resolve(
       result.context || {},
       result.path,
