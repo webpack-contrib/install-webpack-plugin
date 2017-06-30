@@ -13,7 +13,7 @@ describe("plugin", function() {
     this.checkBabel = expect.spyOn(installer, "checkBabel");
 
     this.compiler = {
-      // Webpack 2 will reject config without an entry
+      // Webpack >= 2 will reject config without an entry
       options: {
         entry: function() { return {} }
       },
