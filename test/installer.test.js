@@ -198,106 +198,223 @@ describe("installer", function() {
       });
     });
 
-    context("given a dependency", function() {
-      context("with no options", function() {
-        it("should install it with --save", function() {
-          var result = installer.install("foo");
-
-          expect(this.sync).toHaveBeenCalled();
-          expect(this.sync.calls.length).toEqual(1);
-          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save"]);
-        });
-      });
-
-      context("with dev set to true", function() {
-        it("should install it with --save-dev", function() {
-          var result = installer.install("foo", {
-            dev: true,
-          });
-
-          expect(this.sync).toHaveBeenCalled();
-          expect(this.sync.calls.length).toEqual(1);
-          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save-dev"]);
-        });
-      });
-
-      context("without a package.json present", function() {
-        beforeEach(function() {
-          expect.spyOn(installer, "packageExists").andReturn(false);
-        });
-
-        afterEach(function() {
-          expect.restoreSpies();
-        });
-
-        it("should install without --save", function() {
-          var result = installer.install("foo");
-          expect(this.sync).toHaveBeenCalled();
-          expect(this.sync.calls.length).toEqual(1);
-          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-          expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
-        });
-      });
-
-      context("with quiet set to true", function() {
-        it("should install it with --silent --noprogress", function() {
-          var result = installer.install("foo", {
-            quiet: true,
-          });
-
-          expect(this.sync).toHaveBeenCalled();
-          expect(this.sync.calls.length).toEqual(1);
-          expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-          expect(this.sync.calls[0].arguments[1]).toEqual(
-            ["install", "foo", "--save", "--silent", "--no-progress"]
-          );
-        });
-      });
-
-      context("with missing peerDependencies", function() {
-        beforeEach(function() {
-          this.sync.andCall(function(bin, args) {
-            var dep = args[1];
-
-            if (dep === "redbox-react") {
-              return {
-                stdout: new Buffer([
-                  "/test",
-                  "├── redbox-react@1.2.3",
-                  "└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc",
-                ].join("\n")),
-              };
-            }
-
-            return { stdout: null };
-          });
-        });
-
-        context("given no options", function() {
-          it("should install peerDependencies", function() {
-            var result = installer.install("redbox-react");
-
-            expect(this.sync.calls.length).toEqual(2);
-            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
-
-            // Ignore ranges, let NPM pick
-            expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react", "--save"]);
-          });
-        });
-
-        context("given peerDependencies set to false", function() {
-          it("should not install peerDependencies", function() {
-            var result = installer.install("redbox-react", {
-              peerDependencies: false,
+    context('when using yarn', function() {
+      context("given a dependency", function() {
+        context("with no options", function() {
+          it("should install it with --save", function() {
+            var result = installer.install("foo", { 
+              yarn: true,
             });
 
+            expect(this.sync).toHaveBeenCalled();
             expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
+            expect(this.sync.calls[0].arguments[1]).toEqual(["add", "foo"]);
+          });
+        });
+
+        context("with dev set to true", function() {
+          it("should install it with --dev", function() {
+            var result = installer.install("foo", {
+              dev: true,
+              yarn: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
+            expect(this.sync.calls[0].arguments[1]).toEqual(["add", "foo", "--dev"]);
+          });
+        });
+
+        context("without a package.json present", function() {
+          beforeEach(function() {
+            expect.spyOn(installer, "packageExists").andReturn(false);
+          });
+
+          afterEach(function() {
+            expect.restoreSpies();
+          });
+
+          it("should install without options", function() {
+            var result = installer.install("foo", {
+              yarn: true,
+            });
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
+            expect(this.sync.calls[0].arguments[1]).toEqual(["add", "foo"]);
+          });
+        });
+
+        context("with quiet set to true", function() {
+          it("should install it with --silent --noprogress", function() {
+            var result = installer.install("foo", {
+              quiet: true,
+              yarn: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
+            expect(this.sync.calls[0].arguments[1]).toEqual(
+              ["add", "foo", "--silent"]
+            );
+          });
+        });
+
+        context("with missing peerDependencies", function() {
+          beforeEach(function() {
+            this.sync.andCall(function(bin, args) {
+              var dep = args[1];
+
+              if (dep === "redbox-react") {
+                return {
+                  stdout: new Buffer([
+                    "/test",
+                    "├── redbox-react@1.2.3",
+                    "└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc",
+                  ].join("\n")),
+                };
+              }
+
+              return { stdout: null };
+            });
+          });
+
+          context("given no options", function() {
+            it("should install peerDependencies", function() {
+              var result = installer.install("redbox-react", {
+                yarn: true,
+              });
+
+              expect(this.sync.calls.length).toEqual(2);
+              expect(this.sync.calls[0].arguments[1]).toEqual(["add", "redbox-react"]);
+
+              // Ignore ranges, let NPM pick
+              expect(this.sync.calls[1].arguments[1]).toEqual(["add", "react"]);
+            });
+          });
+
+          context("given peerDependencies set to false", function() {
+            it("should not install peerDependencies", function() {
+              var result = installer.install("redbox-react", {
+                peerDependencies: false,
+                yarn: true,
+              });
+
+              expect(this.sync.calls.length).toEqual(1);
+              expect(this.sync.calls[0].arguments[1]).toEqual(["add", "redbox-react"]);
+            });
           });
         });
       });
     });
+
+    context('when using npm', function() {
+      context("given a dependency", function() {
+        context("with no options", function() {
+          it("should install it with --save", function() {
+            var result = installer.install("foo");
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save"]);
+          });
+        });
+
+        context("with dev set to true", function() {
+          it("should install it with --save-dev", function() {
+            var result = installer.install("foo", {
+              dev: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save-dev"]);
+          });
+        });
+
+        context("without a package.json present", function() {
+          beforeEach(function() {
+            expect.spyOn(installer, "packageExists").andReturn(false);
+          });
+
+          afterEach(function() {
+            expect.restoreSpies();
+          });
+
+          it("should install without --save", function() {
+            var result = installer.install("foo");
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
+          });
+        });
+
+        context("with quiet set to true", function() {
+          it("should install it with --silent --noprogress", function() {
+            var result = installer.install("foo", {
+              quiet: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
+            expect(this.sync.calls[0].arguments[1]).toEqual(
+              ["install", "foo", "--save", "--silent", "--no-progress"]
+            );
+          });
+        });
+
+        context("with missing peerDependencies", function() {
+          beforeEach(function() {
+            this.sync.andCall(function(bin, args) {
+              var dep = args[1];
+
+              if (dep === "redbox-react") {
+                return {
+                  stdout: new Buffer([
+                    "/test",
+                    "├── redbox-react@1.2.3",
+                    "└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc",
+                  ].join("\n")),
+                };
+              }
+
+              return { stdout: null };
+            });
+          });
+
+          context("given no options", function() {
+            it("should install peerDependencies", function() {
+              var result = installer.install("redbox-react");
+
+              expect(this.sync.calls.length).toEqual(2);
+              expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+
+              // Ignore ranges, let NPM pick
+              expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react", "--save"]);
+            });
+          });
+
+          context("given peerDependencies set to false", function() {
+            it("should not install peerDependencies", function() {
+              var result = installer.install("redbox-react", {
+                peerDependencies: false,
+              });
+
+              expect(this.sync.calls.length).toEqual(1);
+              expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+            });
+          });
+        });
+      });
+    });
+
+    
   });
 });

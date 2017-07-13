@@ -140,14 +140,30 @@ module.exports.install = function install(deps, options) {
     return;
   }
 
-  var args = ["install"].concat(deps).filter(Boolean);
+  var args;
+  var client;
+  var quietOptions;  
+  var save;
+  if (options.yarn) {
+    args = ['add'];
+    client = 'yarn';
+    save = options.dev ? "--dev" : null;
+    quietOptions = ["--silent"];
+  } else {
+    args = ['install'];
+    client = options.npm;
+    save = options.dev ? "--save-dev" : "--save";
+    quietOptions = ["--silent", "--no-progress"];
+  }
 
-  if (module.exports.packageExists()) {
-    args.push(options.dev ? "--save-dev" : "--save");
+  args = args.concat(deps).filter(Boolean);
+
+  if (save && module.exports.packageExists()) {
+    args.push(save);
   }
 
   if (options.quiet) {
-    args.push("--silent", "--no-progress");
+    args = args.concat(quietOptions);
   }
 
   deps.forEach(function(dep) {
@@ -155,7 +171,7 @@ module.exports.install = function install(deps, options) {
   });
 
   // Ignore input, capture output, show errors
-  var output = spawn.sync(options.npm, args, {
+  var output = spawn.sync(client, args, {
     stdio: ["ignore", "pipe", "inherit"]
   });
 
