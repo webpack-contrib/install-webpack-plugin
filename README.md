@@ -33,7 +33,7 @@ In your `webpack.config.js`:
 
 ```js
 plugins: [
-  new NpmInstallPlugin();
+  new NpmInstallPlugin()
 ],
 ```
 
