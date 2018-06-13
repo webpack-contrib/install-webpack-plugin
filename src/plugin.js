@@ -26,6 +26,9 @@ var depFromErr = function(err) {
   return matches[1];
 }
 
+var version = require("webpack/package.json").version;
+var major = version.split(".").shift();
+
 function NpmInstallPlugin(options) {
   this.preCompiler = null;
   this.compiler = null;
@@ -125,9 +128,6 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
 };
 
 NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
-  var version = require("webpack/package.json").version;
-  var major = version.split(".").shift();
-
   if (major === "1") {
     return this.compiler.resolvers[resolver].resolve(
       result.path,
@@ -194,5 +194,14 @@ NpmInstallPlugin.prototype.resolveModule = function(result, next) {
     return next();
   }.bind(this));
 };
+
+module.exports = NpmInstallPlugin;
+
+console.log("major = ", major)
+if (major = "4") {
+  var wp4 = require('./wp4')
+  NpmInstallPlugin.prototype.apply = wp4.apply
+  NpmInstallPlugin.prototype.resolve = wp4.resolve
+}
 
 module.exports = NpmInstallPlugin;
