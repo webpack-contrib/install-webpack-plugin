@@ -1,6 +1,5 @@
 var MemoryFS = require("memory-fs");
 var webpack = require("webpack");
-var path = require('path')
 
 var installer = require("./installer");
 var utils = require("./utils");
@@ -27,6 +26,9 @@ var depFromErr = function(err) {
   return matches[1];
 }
 
+var version = require("webpack/package.json").version;
+var major = version.split(".").shift();
+
 function NpmInstallPlugin(options) {
   this.preCompiler = null;
   this.compiler = null;
@@ -40,20 +42,20 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
   this.compiler = compiler;
 
   // Recursively install missing dependencies so primary build doesn't fail
-  compiler.hooks.watchRun.tapAsync('npm-install-plugin', this.preCompile.bind(this));
+  compiler.plugin("watch-run", this.preCompile.bind(this));
 
   // Install externals that wouldn't normally be resolved
   if (Array.isArray(compiler.options.externals)) {
     compiler.options.externals.unshift(this.resolveExternal.bind(this));
   }
-  compiler.hooks.afterResolvers.tap("npm-install-plugin", compiler => {
-    const project_root = process.cwd()
-    compiler
-      .hooks
-      .normalModuleFactory
-      .tap('npm-install-plugin', this.installMissingModules.bind(this))
-  })
 
+  compiler.plugin("after-resolvers", function(compiler) {
+    // Install loaders on demand
+    compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
+
+    // Install project dependencies on demand
+    compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
+  }.bind(this))
 };
 
 NpmInstallPlugin.prototype.install = function(result) {
@@ -96,9 +98,7 @@ NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
     this.preCompiler.outputFileSystem = new MemoryFS();
   }
 
-  this.preCompiler.run((err, stats) => {
-    next()
-  });
+  this.preCompiler.run(next);
 };
 
 NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback) {
@@ -127,10 +127,7 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
   }.bind(this));
 };
 
-NpmInstallPlugin.prototype.resolve = function(normalModuleFactory) {
-  var version = require("webpack/package.json").version;
-  var major = version.split(".").shift();
-
+NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
   if (major === "1") {
     return this.compiler.resolvers[resolver].resolve(
       result.path,
@@ -175,7 +172,7 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
   }.bind(this));
 };
 
-NpmInstallPlugin.prototype.resolveModule = function(createdModule, result, next) {
+NpmInstallPlugin.prototype.resolveModule = function(result, next) {
   // Only install direct dependencies, not sub-dependencies
   if (result.path.match("node_modules")) {
     return next();
@@ -198,21 +195,13 @@ NpmInstallPlugin.prototype.resolveModule = function(createdModule, result, next)
   }.bind(this));
 };
 
-NpmInstallPlugin.prototype.installMissingModules = function(normalModuleFactory) {
-  normalModuleFactory
-    .hooks
-    .resolver
-    .tap("npm-install-plugin", prev => (data, callback) => {
-      const new_callback = (err, ...args) => {
-        if (err) {
-          const request = depFromErr(err.toString());
-          const dep = installer.check(request)
-          installer.install(dep, Object.assign({}, this.options));
-        }
-        callback(err, ...args)
-      }
-      prev(data, new_callback)
-    })
-};
+module.exports = NpmInstallPlugin;
+
+console.log("major = ", major)
+if (major = "4") {
+  var wp4 = require('./wp4')
+  NpmInstallPlugin.prototype.apply = wp4.apply
+  NpmInstallPlugin.prototype.resolve = wp4.resolve
+}
 
 module.exports = NpmInstallPlugin;
