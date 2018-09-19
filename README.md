@@ -14,7 +14,7 @@
   <p>Speed up development by <b>automatically installing & saving dependencies</b> with Webpack.<p>
 </div>
 
-It sucks to <kbd>Ctrl-C</kbd> your
+It is inefficient to <kbd>Ctrl-C</kbd> your
 build script & server just to install
 a dependency you didn't know you needed until now.
 
