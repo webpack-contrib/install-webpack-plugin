@@ -49,7 +49,7 @@ plugins: [
     // Reduce amount of console logging
     quiet: false,
     // npm command used inside company, yarn is not supported yet
-    npm: 'tnpm'
+    npm: 'npm'
   });
 ],
 ```
