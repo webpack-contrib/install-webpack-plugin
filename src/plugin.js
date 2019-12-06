@@ -38,21 +38,27 @@ function NpmInstallPlugin(options) {
 NpmInstallPlugin.prototype.apply = function(compiler) {
   this.compiler = compiler;
 
+  var plugin = { name: "NpmInstallPlugin" };
+
   // Recursively install missing dependencies so primary build doesn't fail
-  compiler.plugin("watch-run", this.preCompile.bind(this));
+  compiler.hooks.watchRun.tapAsync(plugin, this.preCompile.bind(this));
 
   // Install externals that wouldn't normally be resolved
   if (Array.isArray(compiler.options.externals)) {
     compiler.options.externals.unshift(this.resolveExternal.bind(this));
   }
 
-  compiler.plugin("after-resolvers", function(compiler) {
+  compiler.hooks.afterResolvers.tap(plugin, (compiler) => {
     // Install loaders on demand
-    compiler.resolvers.loader.plugin("module", this.resolveLoader.bind(this));
+    compiler.resolverFactory.hooks.resolver.tap("loader", plugin, (resolver) => {
+      resolver.hooks.module.tapAsync("NpmInstallPlugin", this.resolveLoader.bind(this));
+    });
 
     // Install project dependencies on demand
-    compiler.resolvers.normal.plugin("module", this.resolveModule.bind(this));
-  }.bind(this))
+    compiler.resolverFactory.hooks.resolver.tap("normal", plugin, (resolver) => {
+      resolver.hooks.module.tapAsync("NpmInstallPlugin", this.resolveModule.bind(this));
+    });
+  });
 };
 
 NpmInstallPlugin.prototype.install = function(result) {
@@ -128,19 +134,12 @@ NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
   var version = require("webpack/package.json").version;
   var major = version.split(".").shift();
 
-  if (major === "1") {
-    return this.compiler.resolvers[resolver].resolve(
-      result.path,
-      result.request,
-      callback
-    );
-  }
-
-  if (major === "2" || major === "3") {
-    return this.compiler.resolvers[resolver].resolve(
+  if (major === "4") {
+    return this.compiler.resolverFactory.get(resolver).resolve(
       result.context || {},
       result.path,
       result.request,
+      {},
       callback
     );
   }
@@ -148,7 +147,7 @@ NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
   throw new Error("Unsupported Webpack version: " + version);
 }
 
-NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
+NpmInstallPlugin.prototype.resolveLoader = function(result, resolveContext, next) {
   // Only install direct dependencies, not sub-dependencies
   if (result.path.match("node_modules")) {
     return next();
@@ -172,7 +171,7 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, next) {
   }.bind(this));
 };
 
-NpmInstallPlugin.prototype.resolveModule = function(result, next) {
+NpmInstallPlugin.prototype.resolveModule = function(result, resolveContext, next) {
   // Only install direct dependencies, not sub-dependencies
   if (result.path.match("node_modules")) {
     return next();
