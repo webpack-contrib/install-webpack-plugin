@@ -76,7 +76,7 @@ plugins: [
 
 <h2 align="center">Features</h2>
 
-- [x] Works with both Webpack `^v1.12.0` and `^2.1.0-beta.0`.
+- [x] Works with both webpack `^v1.12.0` and `^2.1.0-beta.0`.
 - [x] Auto-installs `.babelrc` plugins & presets.
 - [x] Supports both ES5 & ES6 Modules.
   (e.g. `require`, `import`)
@@ -86,13 +86,13 @@ plugins: [
   (e.g. `lodash.capitalize`)
 - [x] Supports CSS imports.
   (e.g. `@import "~bootstrap"`)
-- [x] Supports Webpack loaders.
+- [x] Supports webpack loaders.
   (e.g. `babel-loader`, `file-loader`, etc.)
-- [x] Supports inline Webpack loaders.
+- [x] Supports inline webpack loaders.
   (e.g. `require("bundle?lazy!./App"`)
 - [x] Auto-installs missing `peerDependencies`.
   (e.g. `@cycle/core` will automatically install `rx@*`)
-- [x] Supports Webpack's `resolve.alias` & `resolve.root` configuration.
+- [x] Supports webpack's `resolve.alias` & `resolve.root` configuration.
   (e.g. `require("react")` can alias to `react-lite`)
 
 <h2 align="center">Maintainers</h2>
