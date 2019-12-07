@@ -6,8 +6,9 @@ cache:
 notifications:
   email: false
 node_js:
-  - "5"
-  - "4"
+  - '8'
+  - '10'
+  - '12'
 before_script:
   - npm prune
 after_success: npm run coverage

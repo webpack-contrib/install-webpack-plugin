@@ -4,7 +4,7 @@
   "description": "Webpack loader to automatically npm install & save dependencies.",
   "main": "index.js",
   "engines": {
-    "node": ">=4.2.0"
+    "node": ">= 8.9.0"
   },
   "files": [
     "src"
