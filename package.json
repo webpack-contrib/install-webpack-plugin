@@ -48,7 +48,7 @@
     "expect": "^1.14.0",
     "mocha": "^3.0.0",
     "nyc": "^10.1.2",
-    "webpack": "^3.0.0"
+    "webpack": "^4.39.0"
   },
   "peerDependencies": {
     "webpack": "^4.0.0"
