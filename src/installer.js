@@ -99,14 +99,14 @@ module.exports.checkBabel = function checkBabel() {
   }, options.env.development);
 
   // Accumulate babel-core (required for babel-loader)+ all dependencies
-  var deps = ["babel-core"].concat(options.plugins.map(function(plugin) {
+  var deps = ["@babel/core"].concat(options.plugins.map(function(plugin) {
     return normalizeBabelPlugin(plugin, "babel-plugin-");
   })).concat(options.presets.map(function(preset) {
-    return normalizeBabelPlugin(preset, "babel-preset-");
+    return normalizeBabelPlugin(preset, "@babel/preset-");
   })).concat(options.env.development.plugins.map(function(plugin) {
     return normalizeBabelPlugin(plugin, "babel-plugin-");
   })).concat(options.env.development.presets.map(function(preset) {
-    return normalizeBabelPlugin(preset, "babel-preset-");
+    return normalizeBabelPlugin(preset, "@babel/preset-");
   }));
 
   // Check for missing dependencies
