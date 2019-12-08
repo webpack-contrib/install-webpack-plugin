@@ -1,71 +1,72 @@
-var expect = require("expect");
+var expect = require('chai').expect;
 var fs = require("fs");
 var path = require("path");
 var spawn = require("cross-spawn");
+var sinon = require('sinon');
 
 var installer = require("../src/installer");
 
 describe("installer", function() {
   describe(".defaultOptions", function() {
     it("should default dev to false", function() {
-      expect(installer.defaultOptions.dev).toEqual(false);
+      expect(installer.defaultOptions.dev).to.equal(false);
     });
 
     it("should default peerDependencies to true", function() {
-      expect(installer.defaultOptions.peerDependencies).toEqual(true);
+      expect(installer.defaultOptions.peerDependencies).to.equal(true);
     });
 
     it("should default quiet to false", function() {
-      expect(installer.defaultOptions.quiet).toEqual(false);
+      expect(installer.defaultOptions.quiet).to.equal(false);
     });
   })
 
   describe(".check", function() {
     context("given nothing", function() {
       it("should return undefined", function() {
-        expect(installer.check()).toBe(undefined);
+        expect(installer.check()).to.equal(undefined);
       });
     });
 
     context("given a local module", function() {
       it("should return undefined", function() {
-        expect(installer.check("./foo")).toBe(undefined);
+        expect(installer.check("./foo")).to.equal(undefined);
       });
     });
 
     context("given a resolvable dependency", function() {
       it("should return undefined", function() {
-        expect(installer.check("cross-spawn")).toBe(undefined);
+        expect(installer.check("cross-spawn")).to.equal(undefined);
       });
     });
 
     context("given a global module", function() {
       it("should return undefined", function () {
-        expect(installer.check("path")).toBe(undefined);
+        expect(installer.check("path")).to.equal(undefined);
       });
     });
 
     context("given a module", function() {
       it("should return module", function() {
-        expect(installer.check("react")).toBe("react");
+        expect(installer.check("react")).to.equal("react");
       });
     });
 
     context("given a module/and/path", function() {
       it("should return module", function() {
-        expect(installer.check("react/proptypes")).toBe("react");
+        expect(installer.check("react/proptypes")).to.equal("react");
       });
     });
 
     context("given a @namespaced/module", function() {
       it("should return @namespaced/module", function() {
-        expect(installer.check("@namespaced/module")).toBe("@namespaced/module");
+        expect(installer.check("@namespaced/module")).to.equal("@namespaced/module");
       });
     });
 
     context("given a webpack !!loader/module", function() {
       it("should return undefined", function() {
-        expect(installer.check("!!./css-loader/index.js',")).toBe(undefined);
+        expect(installer.check("!!./css-loader/index.js',")).to.equal(undefined);
       });
     })
 
@@ -73,13 +74,13 @@ describe("installer", function() {
 
   describe(".checkBabel", function() {
     beforeEach(function() {
-      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
+      this.sync = sinon.spy(spawn, "sync").returned({ stdout: null });
 
-      expect.spyOn(console, "info");
+      sinon.spy(console, "info");
     });
 
     afterEach(function() {
-      expect.restoreSpies();
+      this.sync.restore();
     });
 
     context("when .babelrc doesn't exist", function() {
@@ -94,8 +95,8 @@ describe("installer", function() {
       it("should return early", function() {
         var result = installer.checkBabel();
 
-        expect(result).toBe(undefined);
-        expect(this.sync).toNotHaveBeenCalled();
+        expect(result).to.equal(undefined);
+        expect(this.sync.called).to.equal(true);
       });
     });
 
@@ -103,11 +104,9 @@ describe("installer", function() {
       beforeEach(function() {
         process.chdir(path.join(process.cwd(), "example/webpack2"));
 
-        this.check = expect.spyOn(installer, "check").andCall(function(dep) {
-          return dep;
-        });
+        this.check = sinon.spy(installer, "check")
 
-        this.install = expect.spyOn(installer, "install");
+        this.install = sinon.spy(installer, "install");
       });
 
       afterEach(function() {
@@ -121,9 +120,9 @@ describe("installer", function() {
           return call.arguments[0];
         });
 
-        expect(this.check).toHaveBeenCalled();
-        expect(this.check.calls.length).toEqual(6);
-        expect(checked).toEqual([
+        expect(this.check.called).to.equal(true);  
+        expect(this.check.calls.length).to.equal(6);
+        expect(checked).to.equal([
           'babel-core',
           'babel-plugin-react-html-attrs',
           'babel-preset-react',
@@ -136,9 +135,9 @@ describe("installer", function() {
       it("should install missing plugins & presets", function() {
         installer.checkBabel();
 
-        expect(this.install).toHaveBeenCalled();
-        expect(this.install.calls.length).toEqual(1);
-        expect(this.install.calls[0].arguments).toEqual([
+        expect(this.install.called).to.equal(true);
+        expect(this.install.calls.length).to.equal(1);
+        expect(this.install.calls[0].arguments).to.equal([
           [
             'babel-core',
             'babel-plugin-react-html-attrs',
@@ -154,47 +153,47 @@ describe("installer", function() {
 
   describe(".install", function() {
     beforeEach(function() {
-      this.sync = expect.spyOn(spawn, "sync").andReturn({ stdout: null });
+      this.sync = sinon.spy(spawn, "sync").returned({ stdout: null });
 
-      expect.spyOn(console, "info");
-      expect.spyOn(console, "warn");
+      sinon.spy(console, "info");
+      sinon.spy(console, "warn");
     });
 
     afterEach(function() {
-      expect.restoreSpies();
+      this.sync.restore();
     });
 
     context("given a falsey value", function() {
       it("should return undefined", function() {
-        expect(installer.install()).toEqual(undefined);
-        expect(installer.install(0)).toEqual(undefined);
-        expect(installer.install(false)).toEqual(undefined);
-        expect(installer.install(null)).toEqual(undefined);
-        expect(installer.install("")).toEqual(undefined);
+        expect(installer.install()).to.equal(undefined);
+        expect(installer.install(0)).to.equal(undefined);
+        expect(installer.install(false)).to.equal(undefined);
+        expect(installer.install(null)).to.equal(undefined);
+        expect(installer.install("")).to.equal(undefined);
       });
     });
 
     context("given an empty array", function() {
       it("should return undefined", function () {
-        expect(installer.install([])).toEqual(undefined);
+        expect(installer.install([])).to.equal(undefined);
       });
     });
 
     context("given a non-existant module", function() {
       beforeEach(function() {
-        this.sync.andReturn({ status: 1 });
+        this.sync.returned({ status: 1 });
       });
 
       it("should attempt to install once", function() {
         installer.install("does.not.exist.jsx")
 
-        expect(this.sync).toHaveBeenCalled();
+        expect(this.sync.called).to.equal(true);
       });
 
       it("should not attempt to install it again", function() {
         installer.install("does.not.exist.jsx")
 
-        expect(this.sync).toNotHaveBeenCalled();
+        expect(this.sync.called).to.equal(true);
       });
     });
 
@@ -206,10 +205,10 @@ describe("installer", function() {
               yarn: true,
             });
 
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
-            expect(this.sync.calls[0].arguments[1]).toEqual(["add", "foo"]);
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("yarn");
+            expect(this.sync.calls[0].arguments[1]).to.equal(["add", "foo"]);
           });
         });
 
@@ -220,16 +219,16 @@ describe("installer", function() {
               yarn: true,
             });
 
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
-            expect(this.sync.calls[0].arguments[1]).toEqual(["add", "foo", "--dev"]);
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("yarn");
+            expect(this.sync.calls[0].arguments[1]).to.equal(["add", "foo", "--dev"]);
           });
         });
 
         context("without a package.json present", function() {
           beforeEach(function() {
-            expect.spyOn(installer, "packageExists").andReturn(false);
+            sinon.spy(installer, "packageExists").returned(false);
           });
 
           afterEach(function() {
@@ -240,10 +239,10 @@ describe("installer", function() {
             var result = installer.install("foo", {
               yarn: true,
             });
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
-            expect(this.sync.calls[0].arguments[1]).toEqual(["add", "foo"]);
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("yarn");
+            expect(this.sync.calls[0].arguments[1]).to.equal(["add", "foo"]);
           });
         });
 
@@ -254,10 +253,10 @@ describe("installer", function() {
               yarn: true,
             });
 
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("yarn");
-            expect(this.sync.calls[0].arguments[1]).toEqual(
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("yarn");
+            expect(this.sync.calls[0].arguments[1]).to.equal(
               ["add", "foo", "--silent"]
             );
           });
@@ -288,11 +287,11 @@ describe("installer", function() {
                 yarn: true,
               });
 
-              expect(this.sync.calls.length).toEqual(2);
-              expect(this.sync.calls[0].arguments[1]).toEqual(["add", "redbox-react"]);
+              expect(this.sync.calls.length).to.equal(2);
+              expect(this.sync.calls[0].arguments[1]).to.equal(["add", "redbox-react"]);
 
               // Ignore ranges, let NPM pick
-              expect(this.sync.calls[1].arguments[1]).toEqual(["add", "react"]);
+              expect(this.sync.calls[1].arguments[1]).to.equal(["add", "react"]);
             });
           });
 
@@ -303,8 +302,8 @@ describe("installer", function() {
                 yarn: true,
               });
 
-              expect(this.sync.calls.length).toEqual(1);
-              expect(this.sync.calls[0].arguments[1]).toEqual(["add", "redbox-react"]);
+              expect(this.sync.calls.length).to.equal(1);
+              expect(this.sync.calls[0].arguments[1]).to.equal(["add", "redbox-react"]);
             });
           });
         });
@@ -317,10 +316,10 @@ describe("installer", function() {
           it("should install it with --save", function() {
             var result = installer.install("foo");
 
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save"]);
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("npm");
+            expect(this.sync.calls[0].arguments[1]).to.equal(["install", "foo", "--save"]);
           });
         });
 
@@ -330,28 +329,28 @@ describe("installer", function() {
               dev: true,
             });
 
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo", "--save-dev"]);
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("npm");
+            expect(this.sync.calls[0].arguments[1]).to.equal(["install", "foo", "--save-dev"]);
           });
         });
 
         context("without a package.json present", function() {
           beforeEach(function() {
-            expect.spyOn(installer, "packageExists").andReturn(false);
+            sinon.spy(installer, "packageExists").returned(false);
           });
 
           afterEach(function() {
-            expect.restoreSpies();
+            this.sync.restore();
           });
 
           it("should install without --save", function() {
             var result = installer.install("foo");
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-            expect(this.sync.calls[0].arguments[1]).toEqual(["install", "foo"]);
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("npm");
+            expect(this.sync.calls[0].arguments[1]).to.equal(["install", "foo"]);
           });
         });
 
@@ -361,10 +360,10 @@ describe("installer", function() {
               quiet: true,
             });
 
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual("npm");
-            expect(this.sync.calls[0].arguments[1]).toEqual(
+            expect(this.sync.called).to.equal(true);
+            expect(this.sync.calls.length).to.equal(1);
+            expect(this.sync.calls[0].arguments[0]).to.equal("npm");
+            expect(this.sync.calls[0].arguments[1]).to.equal(
               ["install", "foo", "--save", "--silent", "--no-progress"]
             );
           });
@@ -393,11 +392,11 @@ describe("installer", function() {
             it("should install peerDependencies", function() {
               var result = installer.install("redbox-react");
 
-              expect(this.sync.calls.length).toEqual(2);
-              expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+              expect(this.sync.calls.length).to.equal(2);
+              expect(this.sync.calls[0].arguments[1]).to.equal(["install", "redbox-react", "--save"]);
 
               // Ignore ranges, let NPM pick
-              expect(this.sync.calls[1].arguments[1]).toEqual(["install", "react", "--save"]);
+              expect(this.sync.calls[1].arguments[1]).to.equal(["install", "react", "--save"]);
             });
           });
 
@@ -407,8 +406,8 @@ describe("installer", function() {
                 peerDependencies: false,
               });
 
-              expect(this.sync.calls.length).toEqual(1);
-              expect(this.sync.calls[0].arguments[1]).toEqual(["install", "redbox-react", "--save"]);
+              expect(this.sync.calls.length).to.equal(1);
+              expect(this.sync.calls[0].arguments[1]).to.equal(["install", "redbox-react", "--save"]);
             });
           });
         });

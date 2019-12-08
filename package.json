@@ -37,20 +37,22 @@
   },
   "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
-    "cross-spawn": "^5.0.1",
-    "json5": "^0.5.1",
-    "memory-fs": "^0.4.1",
-    "resolve": "^1.2.0"
+    "cross-spawn": "^7.0.1",
+    "json5": "^2.1.1",
+    "memory-fs": "^0.5.0",
+    "resolve": "^1.13.1"
   },
   "devDependencies": {
-    "codecov": "^1.0.1",
-    "cross-env": "^3.1.4",
-    "expect": "^1.14.0",
-    "mocha": "^3.0.0",
-    "nyc": "^10.1.2",
+    "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
+    "codecov": "^3.6.1",
+    "cross-env": "^6.0.3",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0",
     "webpack": "^3.0.0"
   },
   "peerDependencies": {
-    "webpack": "^4.0.0"
+    "webpack": "^4.41.2"
   }
 }
