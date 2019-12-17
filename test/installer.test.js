@@ -123,15 +123,15 @@ describe('installer', function() {
           return call.arguments[0];
         });
 
-        expect(this.check.called).to.equal(true);
-        expect(this.check.calls.length).to.equal(6);
-        expect(checked).to.equal([
-          'babel-core',
+        expect(this.check).toHaveBeenCalled();
+        expect(this.check.calls.length).toEqual(6);
+        expect(checked).toEqual([
+          '@babel/core',
           'babel-plugin-react-html-attrs',
-          'babel-preset-react',
-          'babel-preset-es2015',
-          'babel-preset-stage-0',
-          'babel-preset-react-hmre'
+          '@babel/preset-react',
+          '@babel/preset-es2015',
+          '@babel/preset-stage-0',
+          '@babel/preset-react-hmre'
         ]);
       });
 
@@ -142,12 +142,12 @@ describe('installer', function() {
         expect(this.install.calls.length).to.equal(1);
         expect(this.install.calls[0].arguments).to.equal([
           [
-            'babel-core',
+            '@babel/core',
             'babel-plugin-react-html-attrs',
-            'babel-preset-react',
-            'babel-preset-es2015',
-            'babel-preset-stage-0',
-            'babel-preset-react-hmre'
+            '@babel/preset-react',
+            '@babel/preset-es2015',
+            '@babel/preset-stage-0',
+            '@babel/preset-react-hmre'
           ]
         ]);
       });
