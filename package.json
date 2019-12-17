@@ -4,7 +4,7 @@
   "description": "Webpack loader to automatically npm install & save dependencies.",
   "main": "index.js",
   "engines": {
-    "node": ">=4.2.0"
+    "node": ">=6.9.0"
   },
   "files": [
     "src"
@@ -44,13 +44,12 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "chai-spies": "^1.0.0",
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "sinon": "^7.5.0",
-    "webpack": "^3.0.0"
+    "webpack": "^4.41.2"
   },
   "peerDependencies": {
     "webpack": "^4.41.2"
