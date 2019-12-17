@@ -158,7 +158,6 @@ describe('installer', function() {
     var sandbox = sinon.createSandbox();
     beforeEach(function() {
       this.sync = sandbox.stub(spawn, 'sync');
-      console.log('this.syncbeforeEach ', this.sync);
       sandbox.spy(console, 'info');
       sandbox.spy(console, 'warn');
     });
@@ -451,7 +450,6 @@ describe('installer', function() {
               var result = installer.install('redbox-react', {
                 peerDependencies: false
               });
-              console.log('this.sync', this.sync);
               expect(this.sync.calls.length).to.equal(1);
               expect(this.sync.calls[0].arguments[1]).to.equal([
                 'install',
