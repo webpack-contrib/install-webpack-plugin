@@ -2,8 +2,9 @@
   "private": true,
   "devDependencies": {
     "rimraf": "2.5.2",
-    "webpack": "1.12.15",
-    "webpack-dev-server": "1.14.1"
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
   },
   "scripts": {
     "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",

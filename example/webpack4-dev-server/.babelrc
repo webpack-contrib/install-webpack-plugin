@@ -1,0 +1,13 @@
+{
+  "plugins": ["react-html-attrs"],
+  "presets": [
+    "@babel/preset-react",
+    "@babel/preset-env",
+    "@babel/preset-stage-0"
+  ],
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
+}

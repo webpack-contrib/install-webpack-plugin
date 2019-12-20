@@ -1,14 +1,19 @@
 {
   "private": true,
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-react-html-attrs": "^2.1.0",
+    "babel-preset-react-hmre": "^1.1.1",
     "reload-server-webpack-plugin": "1.0.1",
-    "rimraf": "2.5.2",
-    "webpack": "1.12.15"
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
   },
   "scripts": {
     "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
     "postinstall": "npm run link",
-    "prestart": "rimraf build",
     "start": "webpack --config webpack.config.server.js --watch"
+  },
+  "dependencies": {
+    "babel-loader": "^8.0.6"
   }
 }
