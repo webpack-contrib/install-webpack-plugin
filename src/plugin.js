@@ -1,4 +1,4 @@
-var MemoryFS = require("memory-fs");
+var { createFsFromVolume, Volume } = require('memfs')
 var webpack = require("webpack");
 
 var installer = require("./installer");
@@ -98,7 +98,7 @@ NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
     );
 
     this.preCompiler = webpack(config);
-    this.preCompiler.outputFileSystem = new MemoryFS();
+    this.preCompiler.outputFileSystem = createFsFromVolume(new Volume());
   }
 
   this.preCompiler.run(next);
