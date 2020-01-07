@@ -15,6 +15,11 @@
     "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
     "coverage": "npm test && nyc report --reporter=lcov > coverage/coverage.lcov && codecov",
     "postversion": "npm run version:amend && git push origin master --tags && npm publish",
+    "security": "npm audit",
+    "lint:prettier": "prettier \"{**/*,*}.{js,json,md,yml,css,ts}\" --list-different",
+    "lint:js": "eslint --cache .",
+    "lint": "npm-run-all -l -p \"lint:**\"",
+    "pretest": "npm run lint",
     "test": "cross-env NODE_ENV=test nyc mocha",
     "test:watch": "cross-env NODE_ENV=test mocha --watch",
     "version": "npm run changelog",
@@ -37,6 +42,7 @@
   },
   "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
+    "@webpack-contrib/eslint-config-webpack": "^3.0.0",
     "cross-spawn": "^5.0.1",
     "json5": "^0.5.1",
     "memory-fs": "^0.4.1",
@@ -45,9 +51,14 @@
   "devDependencies": {
     "codecov": "^1.0.1",
     "cross-env": "^3.1.4",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.19.1",
     "expect": "^1.14.0",
     "mocha": "^3.0.0",
+    "npm-run-all": "^4.1.5",
     "nyc": "^10.1.2",
+    "prettier": "^1.19.1",
     "webpack": "^3.0.0"
   },
   "peerDependencies": {
