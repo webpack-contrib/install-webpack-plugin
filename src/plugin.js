@@ -1,6 +1,8 @@
-/* eslint-disable consistent-return, no-useless-escape, no-undefined  */
+/* eslint-disable consistent-return */
+/* eslint-disable no-useless-escape */
+const path = require('path');
 
-const MemoryFS = require('memory-fs');
+const { createFsFromVolume, Volume } = require('memfs');
 const webpack = require('webpack');
 
 const installer = require('./installer');
@@ -114,7 +116,8 @@ NpmInstallPlugin.prototype.preCompile = (compilation, next) => {
     );
 
     this.preCompiler = webpack(config);
-    this.preCompiler.outputFileSystem = new MemoryFS();
+    this.preCompiler.outputFileSystem = createFsFromVolume(new Volume());
+    this.preCompiler.outputFileSystem.join = path.join.bind(path);
   }
 
   this.preCompiler.run(next);
