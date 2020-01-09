@@ -42,13 +42,13 @@
   },
   "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
-    "@webpack-contrib/eslint-config-webpack": "^3.0.0",
     "cross-spawn": "^5.0.1",
     "json5": "^0.5.1",
     "memory-fs": "^0.4.1",
     "resolve": "^1.2.0"
   },
   "devDependencies": {
+    "@webpack-contrib/eslint-config-webpack": "^3.0.0",
     "codecov": "^1.0.1",
     "cross-env": "^3.1.4",
     "eslint": "^6.8.0",
