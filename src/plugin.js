@@ -99,6 +99,7 @@ NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
 
     this.preCompiler = webpack(config);
     this.preCompiler.outputFileSystem = createFsFromVolume(new Volume());
+    this.preCompiler.outputFileSystem.join = path.join.bind(path)
   }
 
   this.preCompiler.run(next);
