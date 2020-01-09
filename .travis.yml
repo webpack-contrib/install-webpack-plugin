@@ -6,10 +6,14 @@ cache:
 notifications:
   email: false
 node_js:
-  - '5'
-  - '4'
+  - '8'
+  - '10'
+  - '12'
 before_script:
   - npm prune
+  - npm install
+  - npm run lint
+  - npm run test
 after_success: npm run coverage
 branches:
   except:
