@@ -79,21 +79,21 @@ plugins: [
 - [x] Works with both webpack `^v1.12.0` and `^2.1.0-beta.0`.
 - [x] Auto-installs `.babelrc` plugins & presets.
 - [x] Supports both ES5 & ES6 Modules.
-  (e.g. `require`, `import`)
+      (e.g. `require`, `import`)
 - [x] Supports Namespaced packages.
-  (e.g. `@cycle/dom`)
+      (e.g. `@cycle/dom`)
 - [x] Supports Dot-delimited packages.
-  (e.g. `lodash.capitalize`)
+      (e.g. `lodash.capitalize`)
 - [x] Supports CSS imports.
-  (e.g. `@import "~bootstrap"`)
+      (e.g. `@import "~bootstrap"`)
 - [x] Supports webpack loaders.
-  (e.g. `babel-loader`, `file-loader`, etc.)
+      (e.g. `babel-loader`, `file-loader`, etc.)
 - [x] Supports inline webpack loaders.
-  (e.g. `require("bundle?lazy!./App"`)
+      (e.g. `require("bundle?lazy!./App"`)
 - [x] Auto-installs missing `peerDependencies`.
-  (e.g. `@cycle/core` will automatically install `rx@*`)
+      (e.g. `@cycle/core` will automatically install `rx@*`)
 - [x] Supports webpack's `resolve.alias` & `resolve.root` configuration.
-  (e.g. `require("react")` can alias to `react-lite`)
+      (e.g. `require("react")` can alias to `react-lite`)
 
 <h2 align="center">Maintainers</h2>
 
@@ -116,18 +116,13 @@ plugins: [
   <tbody>
 </table>
 
-
 [npm]: https://img.shields.io/npm/v/npm-install-webpack-plugin.svg
 [npm-url]: https://npmjs.com/package/npm-install-webpack-plugin
-
 [deps]: https://david-dm.org/webpack-contrib/npm-install-webpack-plugin.svg
 [deps-url]: https://david-dm.org/webpack-contrib/npm-install-webpack-plugin
-
 [chat]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
 [chat-url]: https://gitter.im/webpack/webpack
-
 [test]: https://travis-ci.org/webpack-contrib/npm-install-webpack-plugin.svg?branch=master
 [test-url]: https://travis-ci.org/webpack-contrib/npm-install-webpack-plugin
-
 [cover]: https://codecov.io/gh/webpack-contrib/npm-install-webpack-plugin/branch/master/graph/badge.svg
 [cover-url]: https://codecov.io/gh/webpack-contrib/npm-install-webpack-plugin
