@@ -95,6 +95,14 @@ plugins: [
 - [x] Supports webpack's `resolve.alias` & `resolve.root` configuration.
       (e.g. `require("react")` can alias to `react-lite`)
 
+
+## Contributing
+
+Please take a moment to read our contributing guidelines if you haven't yet done so.
+
+[CONTRIBUTING](./.github/CONTRIBUTING.md)
+
+
 <h2 align="center">Maintainers</h2>
 
 <table>
