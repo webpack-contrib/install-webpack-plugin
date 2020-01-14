@@ -1,0 +1,8 @@
+/coverage
+/dist
+/node_modules
+/test/fixtures
+CHANGELOG.md
+/example
+/coverage
+/.nyc_output

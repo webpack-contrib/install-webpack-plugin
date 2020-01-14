@@ -1,10 +1,14 @@
-var MemoryFS = require("memory-fs");
-var webpack = require("webpack");
+/* eslint-disable consistent-return */
+/* eslint-disable no-useless-escape */
+const path = require('path');
 
-var installer = require("./installer");
-var utils = require("./utils");
+const { createFsFromVolume, Volume } = require('memfs');
+const webpack = require('webpack');
 
-var depFromErr = function(err) {
+const installer = require('./installer');
+const utils = require('./utils');
+
+const depFromErr = (err) => {
   if (!err) {
     return undefined;
   }
@@ -17,14 +21,16 @@ var depFromErr = function(err) {
    * - bootswatch/lumen/bootstrap.css
    * - lodash.random
    */
-  var matches = /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(err);
+  const matches = /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
+    err
+  );
 
   if (!matches) {
     return undefined;
   }
 
   return matches[1];
-}
+};
 
 function NpmInstallPlugin(options) {
   this.preCompiler = null;
@@ -35,10 +41,10 @@ function NpmInstallPlugin(options) {
   installer.checkBabel();
 }
 
-NpmInstallPlugin.prototype.apply = function(compiler) {
+NpmInstallPlugin.prototype.apply = (compiler) => {
   this.compiler = compiler;
 
-  var plugin = { name: "NpmInstallPlugin" };
+  const plugin = { name: 'NpmInstallPlugin' };
 
   // Recursively install missing dependencies so primary build doesn't fail
   compiler.hooks.watchRun.tapAsync(plugin, this.preCompile.bind(this));
@@ -50,39 +56,53 @@ NpmInstallPlugin.prototype.apply = function(compiler) {
 
   compiler.hooks.afterResolvers.tap(plugin, (compiler) => {
     // Install loaders on demand
-    compiler.resolverFactory.hooks.resolver.tap("loader", plugin, (resolver) => {
-      resolver.hooks.module.tapAsync("NpmInstallPlugin", this.resolveLoader.bind(this));
-    });
+    compiler.resolverFactory.hooks.resolver.tap(
+      'loader',
+      plugin,
+      (resolver) => {
+        resolver.hooks.module.tapAsync(
+          'NpmInstallPlugin',
+          this.resolveLoader.bind(this)
+        );
+      }
+    );
 
     // Install project dependencies on demand
-    compiler.resolverFactory.hooks.resolver.tap("normal", plugin, (resolver) => {
-      resolver.hooks.module.tapAsync("NpmInstallPlugin", this.resolveModule.bind(this));
-    });
+    compiler.resolverFactory.hooks.resolver.tap(
+      'normal',
+      plugin,
+      (resolver) => {
+        resolver.hooks.module.tapAsync(
+          'NpmInstallPlugin',
+          this.resolveModule.bind(this)
+        );
+      }
+    );
   });
 };
 
-NpmInstallPlugin.prototype.install = function(result) {
+NpmInstallPlugin.prototype.install = (result) => {
   if (!result) {
     return;
   }
 
-  var dep = installer.check(result.request);
+  const dep = installer.check(result.request);
 
   if (dep) {
-    var dev = this.options.dev;
+    let { dev } = this.options;
 
-    if (typeof this.options.dev === "function") {
+    if (typeof this.options.dev === 'function') {
       dev = !!this.options.dev(result.request, result.path);
     }
 
-    installer.install(dep, Object.assign({}, this.options, { dev: dev }));
+    installer.install(dep, Object.assign({}, this.options, { dev }));
   }
-}
+};
 
-NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
+NpmInstallPlugin.prototype.preCompile = (compilation, next) => {
   if (!this.preCompiler) {
-    var options = this.compiler.options;
-    var config = Object.assign(
+    const { options } = this.compiler;
+    const config = Object.assign(
       // Start with new config object
       {},
       // Inherit the current config
@@ -91,22 +111,21 @@ NpmInstallPlugin.prototype.preCompile = function(compilation, next) {
         // Ensure fresh cache
         cache: {},
         // Register plugin to install missing deps
-        plugins: [
-          new NpmInstallPlugin(this.options),
-        ],
+        plugins: [new NpmInstallPlugin(this.options)],
       }
     );
 
     this.preCompiler = webpack(config);
-    this.preCompiler.outputFileSystem = new MemoryFS();
+    this.preCompiler.outputFileSystem = createFsFromVolume(new Volume());
+    this.preCompiler.outputFileSystem.join = path.join.bind(path);
   }
 
   this.preCompiler.run(next);
 };
 
-NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback) {
+NpmInstallPlugin.prototype.resolveExternal = (context, request, callback) => {
   // Only install direct dependencies, not sub-dependencies
-  if (context.match("node_modules")) {
+  if (context.match('node_modules')) {
     return callback();
   }
 
@@ -115,41 +134,42 @@ NpmInstallPlugin.prototype.resolveExternal = function(context, request, callback
     return callback();
   }
 
-  var result = {
+  const result = {
     context: {},
     path: context,
-    request: request,
+    request,
   };
 
-  this.resolve('normal', result, function(err, filepath) {
-    if (err) {
-      this.install(Object.assign({}, result, { request: depFromErr(err) }));
-    }
+  this.resolve(
+    'normal',
+    result,
+    // eslint-disable-next-line func-names
+    function(err) {
+      if (err) {
+        this.install(Object.assign({}, result, { request: depFromErr(err) }));
+      }
 
-    callback();
-  }.bind(this));
+      callback();
+    }.bind(this)
+  );
 };
 
-NpmInstallPlugin.prototype.resolve = function(resolver, result, callback) {
-  var version = require("webpack/package.json").version;
-  var major = version.split(".").shift();
+NpmInstallPlugin.prototype.resolve = (resolver, result, callback) => {
+  const { version } = require('webpack/package.json');
+  const major = version.split('.').shift();
 
-  if (major === "4") {
-    return this.compiler.resolverFactory.get(resolver).resolve(
-      result.context || {},
-      result.path,
-      result.request,
-      {},
-      callback
-    );
+  if (major === '4') {
+    return this.compiler.resolverFactory
+      .get(resolver)
+      .resolve(result.context || {}, result.path, result.request, {}, callback);
   }
 
-  throw new Error("Unsupported Webpack version: " + version);
-}
+  throw new Error(`Unsupported Webpack version: ${version}`);
+};
 
-NpmInstallPlugin.prototype.resolveLoader = function(result, resolveContext, next) {
+NpmInstallPlugin.prototype.resolveLoader = (result, resolveContext, next) => {
   // Only install direct dependencies, not sub-dependencies
-  if (result.path.match("node_modules")) {
+  if (result.path.match('node_modules')) {
     return next();
   }
 
@@ -159,21 +179,26 @@ NpmInstallPlugin.prototype.resolveLoader = function(result, resolveContext, next
 
   this.resolving[result.request] = true;
 
-  this.resolve("loader", result, function(err, filepath) {
-    this.resolving[result.request] = false;
+  this.resolve(
+    'loader',
+    result,
+    // eslint-disable-next-line func-names
+    function(err) {
+      this.resolving[result.request] = false;
 
-    if (err) {
-      var loader = utils.normalizeLoader(result.request);
-      this.install(Object.assign({}, result, { request: loader }));
-    }
+      if (err) {
+        const loader = utils.normalizeLoader(result.request);
+        this.install(Object.assign({}, result, { request: loader }));
+      }
 
-    return next();
-  }.bind(this));
+      return next();
+    }.bind(this)
+  );
 };
 
-NpmInstallPlugin.prototype.resolveModule = function(result, resolveContext, next) {
+NpmInstallPlugin.prototype.resolveModule = (result, resolveContext, next) => {
   // Only install direct dependencies, not sub-dependencies
-  if (result.path.match("node_modules")) {
+  if (result.path.match('node_modules')) {
     return next();
   }
 
@@ -183,15 +208,20 @@ NpmInstallPlugin.prototype.resolveModule = function(result, resolveContext, next
 
   this.resolving[result.request] = true;
 
-  this.resolve('normal', result, function(err, filepath) {
-    this.resolving[result.request] = false;
+  this.resolve(
+    'normal',
+    result,
+    // eslint-disable-next-line func-names
+    function(err) {
+      this.resolving[result.request] = false;
 
-    if (err) {
-      this.install(Object.assign({}, result, { request: depFromErr(err) }));
-    }
+      if (err) {
+        this.install(Object.assign({}, result, { request: depFromErr(err) }));
+      }
 
-    return next();
-  }.bind(this));
+      return next();
+    }.bind(this)
+  );
 };
 
 module.exports = NpmInstallPlugin;

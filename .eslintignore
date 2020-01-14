@@ -1,0 +1,7 @@
+/coverage
+/dist
+/node_modules
+/test/fixtures
+/example
+/coverage
+/.nyc_output

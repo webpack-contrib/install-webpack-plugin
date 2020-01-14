@@ -1,20 +1,26 @@
-var spawn = require('cross-spawn');
-var fs = require('fs');
-var path = require('path');
-var resolve = require('resolve');
-var util = require('util');
-var JSON5 = require('json5');
+/* eslint-disable no-console, consistent-return,no-useless-escape */
+const fs = require('fs');
+const path = require('path');
 
-var EXTERNAL = /^\w[a-z\-0-9\.]+$/; // Match "react", "path", "fs", "lodash.random", etc.
-var PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
+const util = require('util');
 
-var defaultOptions = {
+const resolve = require('resolve');
+
+const spawn = require('cross-spawn');
+
+const JSON5 = require('json5');
+
+// Match "react", "path", "fs", "lodash.random", etc.
+const EXTERNAL = /^\w[a-z\-0-9\.]+$/;
+const PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
+
+const defaultOptions = {
   dev: false,
   peerDependencies: true,
   quiet: false,
-  npm: 'npm'
+  npm: 'npm',
 };
-var erroneous = [];
+const erroneous = [];
 
 function normalizeBabelPlugin(plugin, prefix) {
   // Babel plugins can be configured as [plugin, options]
@@ -28,7 +34,7 @@ function normalizeBabelPlugin(plugin, prefix) {
 }
 
 module.exports.packageExists = function packageExists() {
-  var pkgPath = path.resolve('package.json');
+  const pkgPath = path.resolve('package.json');
   try {
     require.resolve(pkgPath);
     // Remove cached copy for future checks
@@ -44,8 +50,8 @@ module.exports.check = function check(request) {
     return;
   }
 
-  var namespaced = request.charAt(0) === '@';
-  var dep = request
+  const namespaced = request.charAt(0) === '@';
+  const dep = request
     .split('/')
     .slice(0, namespaced ? 2 : 1)
     .join('/');
@@ -66,16 +72,17 @@ module.exports.check = function check(request) {
 };
 
 module.exports.checkBabel = function checkBabel() {
+  let babelOpts;
+  let babelrc;
   try {
-    var babelrc = require.resolve(path.resolve('.babelrc'));
-    var babelOpts = JSON5.parse(fs.readFileSync(babelrc, 'utf8'));
+    babelrc = require.resolve(path.resolve('.babelrc'));
+    babelOpts = JSON5.parse(fs.readFileSync(babelrc, 'utf8'));
   } catch (e) {
     try {
-      var babelConfigJs = require.resolve(path.resolve('babel.config.js'));
-      var babelOpts = require(babelConfigJs);
+      const babelConfigJs = require.resolve(path.resolve('babel.config.js'));
+      babelOpts = require(babelConfigJs);
     } catch (e2) {
       console.info("couldn't locate babel.config.js nor .babelrc");
-    } finally {
     }
     if (babelrc) {
       console.info('.babelrc is invalid JSON5, babel deps are skipped');
@@ -85,10 +92,10 @@ module.exports.checkBabel = function checkBabel() {
   }
 
   // Default plugins/presets
-  var options = Object.assign(
+  const options = Object.assign(
     {
       plugins: [],
-      presets: []
+      presets: [],
     },
     babelOpts
   );
@@ -105,36 +112,37 @@ module.exports.checkBabel = function checkBabel() {
   options.env.development = Object.assign(
     {
       plugins: [],
-      presets: []
+      presets: [],
     },
     options.env.development
   );
 
   // Accumulate babel-core (required for babel-loader)+ all dependencies
-  var deps = ['@babel/core']
+  const deps = ['@babel/core']
     .concat(
-      options.plugins.map(function(plugin) {
-        return normalizeBabelPlugin(plugin, 'babel-plugin-');
-      })
+      options.plugins.map((plugin) =>
+        normalizeBabelPlugin(plugin, 'babel-plugin-')
+      )
     )
     .concat(
-      options.presets.map(function(preset) {
-        return normalizeBabelPlugin(preset, '@babel/preset-');
-      })
+      options.presets.map((preset) =>
+        normalizeBabelPlugin(preset, '@babel/preset-')
+      )
     )
     .concat(
-      options.env.development.plugins.map(function(plugin) {
-        return normalizeBabelPlugin(plugin, 'babel-plugin-');
-      })
+      options.env.development.plugins.map((plugin) =>
+        normalizeBabelPlugin(plugin, 'babel-plugin-')
+      )
     )
     .concat(
-      options.env.development.presets.map(function(preset) {
-        return normalizeBabelPlugin(preset, '@babel/preset-');
-      })
+      options.env.development.presets.map((preset) =>
+        normalizeBabelPlugin(preset, '@babel/preset-')
+      )
     );
 
   // Check for missing dependencies
-  var missing = deps.filter(
+  const missing = deps.filter(
+    // eslint-disable-next-line func-names
     function(dep) {
       return this.check(dep);
     }.bind(this)
@@ -158,18 +166,16 @@ module.exports.install = function install(deps, options) {
   options = Object.assign({}, defaultOptions, options);
 
   // Ignore known, erroneous modules
-  deps = deps.filter(function(dep) {
-    return erroneous.indexOf(dep) === -1;
-  });
+  deps = deps.filter((dep) => erroneous.indexOf(dep) === -1);
 
   if (!deps.length) {
     return;
   }
 
-  var args;
-  var client;
-  var quietOptions;
-  var save;
+  let args;
+  let client;
+  let quietOptions;
+  let save;
   if (options.yarn) {
     args = ['add'];
     client = 'yarn';
@@ -192,28 +198,29 @@ module.exports.install = function install(deps, options) {
     args = args.concat(quietOptions);
   }
 
-  deps.forEach(function(dep) {
+  deps.forEach((dep) => {
     console.info('Installing %s...', dep);
   });
 
   // Ignore input, capture output, show errors
-  var output = spawn.sync(client, args, {
-    stdio: ['ignore', 'pipe', 'inherit']
+  const output = spawn.sync(client, args, {
+    stdio: ['ignore', 'pipe', 'inherit'],
   });
 
   if (output.status) {
-    deps.forEach(function(dep) {
+    deps.forEach((dep) => {
       erroneous.push(dep);
     });
   }
 
-  var matches = null;
-  var peers = [];
+  let matches = null;
+  const peers = [];
 
   // RegExps track return a single result each time
+  // eslint-disable-next-line no-cond-assign
   while ((matches = PEERS.exec(output.stdout))) {
-    var dep = matches[1];
-    var version = matches[2];
+    const dep = matches[1];
+    const version = matches[2];
 
     // Ranges don't work well, so let NPM pick
     if (version.match(' ')) {
