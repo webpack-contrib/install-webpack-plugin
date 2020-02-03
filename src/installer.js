@@ -181,6 +181,11 @@ module.exports.install = function install(deps, options) {
     client = 'yarn';
     save = options.dev ? '--dev' : null;
     quietOptions = ['--silent'];
+  } else if (options.pnpm) {
+    args = ['add'];
+    client = 'pnpm';
+    save = options.dev ? '--save-dev' : null;
+    quietOptions = [];
   } else {
     args = ['install'];
     client = options.npm;

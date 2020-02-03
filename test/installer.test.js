@@ -197,10 +197,133 @@ describe('installer', () => {
       });
     });
 
+    context('when using pnpm', () => {
+      context('given a dependency', () => {
+        context('with no options', () => {
+          it('should install it with null', () => {
+            installer.install('foo', {
+              pnpm: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual('pnpm');
+            expect(this.sync.calls[0].arguments[1]).toEqual(['add', 'foo']);
+          });
+        });
+
+        context('with dev set to true', () => {
+          it('should install it with --dev', () => {
+            installer.install('foo', {
+              dev: true,
+              pnpm: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual('pnpm');
+            expect(this.sync.calls[0].arguments[1]).toEqual([
+              'add',
+              'foo',
+              '--save-dev',
+            ]);
+          });
+        });
+
+        context('without a package.json present', () => {
+          beforeEach(() => {
+            expect.spyOn(installer, 'packageExists').andReturn(false);
+          });
+
+          afterEach(() => {
+            expect.restoreSpies();
+          });
+
+          it('should install without options', () => {
+            installer.install('foo', {
+              pnpm: true,
+            });
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual('pnpm');
+            expect(this.sync.calls[0].arguments[1]).toEqual(['add', 'foo']);
+          });
+        });
+
+        context('with quiet set to true', () => {
+          it('should simply ignore the quite options, pnpm doesnt support silent', () => {
+            installer.install('foo', {
+              quiet: true,
+              pnpm: true,
+            });
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.calls.length).toEqual(1);
+            expect(this.sync.calls[0].arguments[0]).toEqual('pnpm');
+            expect(this.sync.calls[0].arguments[1]).toEqual(['add', 'foo']);
+          });
+        });
+
+        context('with missing peerDependencies', () => {
+          beforeEach(() => {
+            this.sync.andCall((bin, args) => {
+              const dep = args[1];
+
+              if (dep === 'redbox-react') {
+                return {
+                  stdout: new Buffer(
+                    [
+                      '/test',
+                      '├── redbox-react@1.2.3',
+                      '└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc',
+                    ].join('\n')
+                  ),
+                };
+              }
+
+              return { stdout: null };
+            });
+          });
+
+          context('given no options', () => {
+            it('should install peerDependencies', () => {
+              installer.install('redbox-react', {
+                pnpm: true,
+              });
+
+              expect(this.sync.calls.length).toEqual(2);
+              expect(this.sync.calls[0].arguments[1]).toEqual([
+                'add',
+                'redbox-react',
+              ]);
+
+              // Ignore ranges, let NPM pick
+              expect(this.sync.calls[1].arguments[1]).toEqual(['add', 'react']);
+            });
+          });
+
+          context('given peerDependencies set to false', () => {
+            it('should not install peerDependencies', () => {
+              installer.install('redbox-react', {
+                peerDependencies: false,
+                pnpm: true,
+              });
+
+              expect(this.sync.calls.length).toEqual(1);
+              expect(this.sync.calls[0].arguments[1]).toEqual([
+                'add',
+                'redbox-react',
+              ]);
+            });
+          });
+        });
+      });
+    });
+
     context('when using yarn', () => {
       context('given a dependency', () => {
         context('with no options', () => {
-          it('should install it with --save', () => {
+          it('should install it with null', () => {
             installer.install('foo', {
               yarn: true,
             });
