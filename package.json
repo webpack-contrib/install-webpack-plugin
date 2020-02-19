@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@webpack-contrib/eslint-config-webpack": "^3.0.0",
-    "codecov": "^1.0.1",
+    "codecov": "^3.6.5",
     "cross-env": "^3.1.4",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
