@@ -10,7 +10,7 @@ const utils = require('./utils');
 
 const depFromErr = (err) => {
   if (!err) {
-    return undefined;
+    return;
   }
 
   /**
@@ -26,7 +26,7 @@ const depFromErr = (err) => {
   );
 
   if (!matches) {
-    return undefined;
+    return;
   }
 
   return matches[1];
@@ -54,7 +54,7 @@ NpmInstallPlugin.prototype.apply = (compiler) => {
     compiler.options.externals.unshift(this.resolveExternal.bind(this));
   }
 
-  compiler.hooks.afterResolvers.tap(plugin, (compiler) => {
+  compiler.hooks.afterResolvers.tap(plugin, () => {
     // Install loaders on demand
     compiler.resolverFactory.hooks.resolver.tap(
       'loader',
@@ -155,7 +155,8 @@ NpmInstallPlugin.prototype.resolveExternal = (context, request, callback) => {
 };
 
 NpmInstallPlugin.prototype.resolve = (resolver, result, callback) => {
-  const { version } = require('webpack/package.json');
+  // eslint-disable-next-line
+  const { version } = require('webpack');
   const major = version.split('.').shift();
 
   if (major === '4') {

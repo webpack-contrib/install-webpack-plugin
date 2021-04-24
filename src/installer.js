@@ -25,6 +25,7 @@ const erroneous = [];
 function normalizeBabelPlugin(plugin, prefix) {
   // Babel plugins can be configured as [plugin, options]
   if (Array.isArray(plugin)) {
+    // eslint-disable-next-line
     plugin = plugin[0];
   }
   if (plugin.indexOf(prefix) === 0) {
@@ -80,6 +81,7 @@ module.exports.checkBabel = function checkBabel() {
   } catch (e) {
     try {
       const babelConfigJs = require.resolve(path.resolve('babel.config.js'));
+      // eslint-disable-next-line
       babelOpts = require(babelConfigJs);
     } catch (e2) {
       console.info("couldn't locate babel.config.js nor .babelrc");
@@ -160,12 +162,15 @@ module.exports.install = function install(deps, options) {
   }
 
   if (!Array.isArray(deps)) {
+    // eslint-disable-next-line
     deps = [deps];
   }
 
+  // eslint-disable-next-line
   options = Object.assign({}, defaultOptions, options);
 
   // Ignore known, erroneous modules
+  // eslint-disable-next-line
   deps = deps.filter((dep) => erroneous.indexOf(dep) === -1);
 
   if (!deps.length) {
@@ -219,8 +224,7 @@ module.exports.install = function install(deps, options) {
   // RegExps track return a single result each time
   // eslint-disable-next-line no-cond-assign
   while ((matches = PEERS.exec(output.stdout))) {
-    const dep = matches[1];
-    const version = matches[2];
+    const [dep, version] = matches;
 
     // Ranges don't work well, so let NPM pick
     if (version.match(' ')) {
