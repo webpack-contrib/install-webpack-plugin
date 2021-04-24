@@ -305,7 +305,7 @@ describe('installer', () => {
               // Ignore ranges, let NPM pick
               expect(this.sync.calls[1].arguments[1]).toEqual([
                 'add',
-                'UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc@react'
+                'UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc@react',
               ]);
             });
           });
