@@ -24,6 +24,7 @@ describe.skip('plugin', () => {
         },
       },
       plugin: expect.createSpy().andCall(
+        // eslint-disable-next-line
         function(event, cb) {
           if (event === 'after-resolvers') {
             cb(this.compiler);
@@ -117,6 +118,7 @@ describe.skip('plugin', () => {
 
       this.plugin.preCompile(
         compilation,
+        // eslint-disable-next-line
         function() {
           expect(this.run).toHaveBeenCalled();
           done();
@@ -150,6 +152,7 @@ describe.skip('plugin', () => {
       this.plugin.resolveExternal(
         'node_modules',
         'express',
+        // eslint-disable-next-line
         function() {
           expect(this.resolve).toNotHaveBeenCalled();
           done();
@@ -161,6 +164,7 @@ describe.skip('plugin', () => {
       this.plugin.resolveExternal(
         'src',
         'bundle?lazy!express',
+        // eslint-disable-next-line
         function() {
           expect(this.resolve).toNotHaveBeenCalled();
           done();
@@ -172,6 +176,7 @@ describe.skip('plugin', () => {
       this.plugin.resolveExternal(
         'src',
         'express',
+        // eslint-disable-next-line
         function() {
           expect(this.resolve).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalled();

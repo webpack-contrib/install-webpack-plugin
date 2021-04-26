@@ -4,7 +4,7 @@
   "description": "Webpack plugin to automatically npm install & save dependencies.",
   "main": "index.js",
   "engines": {
-    "node": ">=4.2.0"
+    "node": ">=12.13.0"
   },
   "files": [
     "src"
@@ -13,7 +13,7 @@
     "changelog": "npm run changelog:generate && npm run changelog:add",
     "changelog:add": "git add CHANGELOG.md",
     "changelog:generate": "github_changelog_generator --future-release $npm_package_version",
-    "coverage": "npm test && nyc report --reporter=lcov > coverage/coverage.lcov && codecov",
+    "coverage": "nyc --no-clean mocha",
     "postversion": "npm run version:amend && git push origin master --tags && npm publish",
     "security": "npm audit",
     "lint:prettier": "prettier \"{**/*,*}.{js,json,md,yml,css,ts}\" --list-different",

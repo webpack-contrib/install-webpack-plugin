@@ -1,0 +1,74 @@
+name: npm-install-webpack-plugin
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test description'
+
+jobs:
+  lint:
+    name: Lint - ${{ matrix.os }} - Node v${{ matrix.node-version }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [12.x]
+        webpack-version: [latest]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Using Node v${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+  build:
+    name: Tests and Coverage - ${{ matrix.os }} - Node v${{ matrix.node-version }}, Webpack ${{ matrix.webpack-version }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [12.x, 14.x]
+        webpack-version: [4]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Using Node v${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install webpack ${{ matrix.webpack-version }}
+        run: yarn add -W webpack@${{ matrix.webpack-version }}
+
+      - name: Run tests and generate coverage
+        run: |
+          npm run test
+          npm run coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
