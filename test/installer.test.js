@@ -23,43 +23,43 @@ describe('installer', () => {
   });
 
   describe('.check', () => {
-    context('given nothing', () => {
+    describe('given nothing', () => {
       it('should return undefined', () => {
         expect(installer.check()).toBe(undefined);
       });
     });
 
-    context('given a local module', () => {
+    describe('given a local module', () => {
       it('should return undefined', () => {
         expect(installer.check('./foo')).toBe(undefined);
       });
     });
 
-    context('given a resolvable dependency', () => {
+    describe('given a resolvable dependency', () => {
       it('should return undefined', () => {
         expect(installer.check('cross-spawn')).toBe(undefined);
       });
     });
 
-    context('given a global module', () => {
+    describe('given a global module', () => {
       it('should return undefined', () => {
         expect(installer.check('path')).toBe(undefined);
       });
     });
 
-    context('given a module', () => {
+    describe('given a module', () => {
       it('should return module', () => {
         expect(installer.check('react')).toBe('react');
       });
     });
 
-    context('given a module/and/path', () => {
+    describe('given a module/and/path', () => {
       it('should return module', () => {
         expect(installer.check('react/proptypes')).toBe('react');
       });
     });
 
-    context('given a @namespaced/module', () => {
+    describe('given a @namespaced/module', () => {
       it('should return @namespaced/module', () => {
         expect(installer.check('@namespaced/module')).toBe(
           '@namespaced/module'
@@ -67,7 +67,7 @@ describe('installer', () => {
       });
     });
 
-    context('given a webpack !!loader/module', () => {
+    describe('given a webpack !!loader/module', () => {
       it('should return undefined', () => {
         expect(installer.check("!!./css-loader/index.js',")).toBe(undefined);
       });
@@ -85,7 +85,7 @@ describe('installer', () => {
       expect.restoreSpies();
     });
 
-    context("when .babelrc doesn't exist", () => {
+    describe("when .babelrc doesn't exist", () => {
       beforeEach(() => {
         process.chdir(path.join(process.cwd(), 'test'));
       });
@@ -102,7 +102,7 @@ describe('installer', () => {
       });
     });
 
-    context('when .babelrc exists', () => {
+    describe('when .babelrc exists', () => {
       beforeEach(() => {
         process.chdir(path.join(process.cwd(), 'example/webpack2'));
 
@@ -163,7 +163,7 @@ describe('installer', () => {
       expect.restoreSpies();
     });
 
-    context('given a falsey value', () => {
+    describe('given a falsey value', () => {
       it('should return undefined', () => {
         expect(installer.install()).toEqual(undefined);
         expect(installer.install(0)).toEqual(undefined);
@@ -173,13 +173,13 @@ describe('installer', () => {
       });
     });
 
-    context('given an empty array', () => {
+    describe('given an empty array', () => {
       it('should return undefined', () => {
         expect(installer.install([])).toEqual(undefined);
       });
     });
 
-    context('given a non-existant module', () => {
+    describe('given a non-existant module', () => {
       beforeEach(() => {
         this.sync.andReturn({ status: 1 });
       });
@@ -197,9 +197,9 @@ describe('installer', () => {
       });
     });
 
-    context('when using yarn', () => {
-      context('given a dependency', () => {
-        context('with no options', () => {
+    describe('when using yarn', () => {
+      describe('given a dependency', () => {
+        describe('with no options', () => {
           it('should install it with --save', () => {
             installer.install('foo', {
               yarn: true,
@@ -212,7 +212,7 @@ describe('installer', () => {
           });
         });
 
-        context('with dev set to true', () => {
+        describe('with dev set to true', () => {
           it('should install it with --dev', () => {
             installer.install('foo', {
               dev: true,
@@ -230,7 +230,7 @@ describe('installer', () => {
           });
         });
 
-        context('without a package.json present', () => {
+        describe('without a package.json present', () => {
           beforeEach(() => {
             expect.spyOn(installer, 'packageExists').andReturn(false);
           });
@@ -250,7 +250,7 @@ describe('installer', () => {
           });
         });
 
-        context('with quiet set to true', () => {
+        describe('with quiet set to true', () => {
           it('should install it with --silent --noprogress', () => {
             installer.install('foo', {
               quiet: true,
@@ -268,7 +268,7 @@ describe('installer', () => {
           });
         });
 
-        context('with missing peerDependencies', () => {
+        describe('with missing peerDependencies', () => {
           beforeEach(() => {
             this.sync.andCall((bin, args) => {
               // eslint-disable-next-line
@@ -290,7 +290,7 @@ describe('installer', () => {
             });
           });
 
-          context('given no options', () => {
+          describe('given no options', () => {
             it('should install peerDependencies', () => {
               installer.install('redbox-react', {
                 yarn: true,
@@ -310,7 +310,7 @@ describe('installer', () => {
             });
           });
 
-          context('given peerDependencies set to false', () => {
+          describe('given peerDependencies set to false', () => {
             it('should not install peerDependencies', () => {
               installer.install('redbox-react', {
                 peerDependencies: false,
@@ -328,9 +328,9 @@ describe('installer', () => {
       });
     });
 
-    context('when using npm', () => {
-      context('given a dependency', () => {
-        context('with no options', () => {
+    describe('when using npm', () => {
+      describe('given a dependency', () => {
+        describe('with no options', () => {
           it('should install it with --save', () => {
             installer.install('foo');
 
@@ -345,7 +345,7 @@ describe('installer', () => {
           });
         });
 
-        context('with dev set to true', () => {
+        describe('with dev set to true', () => {
           it('should install it with --save-dev', () => {
             installer.install('foo', {
               dev: true,
@@ -362,7 +362,7 @@ describe('installer', () => {
           });
         });
 
-        context('without a package.json present', () => {
+        describe('without a package.json present', () => {
           beforeEach(() => {
             expect.spyOn(installer, 'packageExists').andReturn(false);
           });
@@ -380,7 +380,7 @@ describe('installer', () => {
           });
         });
 
-        context('with quiet set to true', () => {
+        describe('with quiet set to true', () => {
           it('should install it with --silent --noprogress', () => {
             installer.install('foo', {
               quiet: true,
@@ -399,7 +399,7 @@ describe('installer', () => {
           });
         });
 
-        context('with missing peerDependencies', () => {
+        describe('with missing peerDependencies', () => {
           beforeEach(() => {
             this.sync.andCall((bin, args) => {
               // eslint-disable-next-line
@@ -421,7 +421,7 @@ describe('installer', () => {
             });
           });
 
-          context('given no options', () => {
+          describe('given no options', () => {
             it('should install peerDependencies', () => {
               installer.install('redbox-react');
 
@@ -441,7 +441,7 @@ describe('installer', () => {
             });
           });
 
-          context('given peerDependencies set to false', () => {
+          describe('given peerDependencies set to false', () => {
             it('should not install peerDependencies', () => {
               installer.install('redbox-react', {
                 peerDependencies: false,
