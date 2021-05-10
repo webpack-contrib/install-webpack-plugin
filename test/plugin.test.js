@@ -6,38 +6,36 @@ const installer = require('../src/installer');
 const Plugin = require('../src/plugin');
 
 // TODO: fix me
-describe.skip('plugin', () => {
+describe('plugin', () => {
   beforeEach(() => {
     this.check = expect.spyOn(installer, 'check').andCall((dep) => dep);
 
     this.checkBabel = expect.spyOn(installer, 'checkBabel');
 
-    this.compiler = {
+    this.compiler = webpack({
       // Webpack >= 2 will reject config without an entry
-      options: {
-        entry() {
-          return {};
-        },
+      entry() {
+        return {};
       },
-      plugin: expect.createSpy().andCall(
-        // eslint-disable-next-line
-        function (event, cb) {
-          if (event === 'after-resolvers') {
-            cb(this.compiler);
-          }
-        }.bind(this)
-      ),
-      resolvers: {
-        loader: {
-          plugin: expect.createSpy(),
-          resolve: expect.createSpy(),
-        },
-        normal: {
-          plugin: expect.createSpy(),
-          resolve: expect.createSpy(),
-        },
-      },
-    };
+      // plugin: expect.createSpy().andCall(
+      //   // eslint-disable-next-line
+      //   function(event, cb) {
+      //     if (event === 'after-resolvers') {
+      //       cb(this.compiler);
+      //     }
+      //   }.bind(this)
+      // ),
+      // resolvers: {
+      //   loader: {
+      //     plugin: expect.createSpy(),
+      //     resolve: expect.createSpy(),
+      //   },
+      //   normal: {
+      //     plugin: expect.createSpy(),
+      //     resolve: expect.createSpy(),
+      //   },
+      // },
+    });
 
     this.install = expect.spyOn(installer, 'install');
     this.next = expect.createSpy();
