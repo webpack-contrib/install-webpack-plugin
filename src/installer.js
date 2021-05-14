@@ -143,12 +143,7 @@ module.exports.checkBabel = function checkBabel() {
     );
 
   // Check for missing dependencies
-  const missing = deps.filter(
-    // eslint-disable-next-line func-names
-    function(dep) {
-      return this.check(dep);
-    }.bind(this)
-  );
+  const missing = deps.filter((dep) => this.check(dep));
 
   // Install missing dependencies
   this.install(missing);

@@ -10,9 +10,7 @@ const Plugin = require('../src/plugin');
 // TODO: fix me
 describe.skip('plugin', () => {
   beforeEach(() => {
-    this.check = expect.spyOn(installer, 'check').andCall((dep) => {
-      return dep;
-    });
+    this.check = expect.spyOn(installer, 'check').andCall((dep) => dep);
 
     this.checkBabel = expect.spyOn(installer, 'checkBabel');
 
@@ -25,7 +23,7 @@ describe.skip('plugin', () => {
       },
       plugin: expect.createSpy().andCall(
         // eslint-disable-next-line
-        function(event, cb) {
+        function (event, cb) {
           if (event === 'after-resolvers') {
             cb(this.compiler);
           }
@@ -119,7 +117,7 @@ describe.skip('plugin', () => {
       this.plugin.preCompile(
         compilation,
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.run).toHaveBeenCalled();
           done();
         }.bind(this)
@@ -153,7 +151,7 @@ describe.skip('plugin', () => {
         'node_modules',
         'express',
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.resolve).toNotHaveBeenCalled();
           done();
         }.bind(this)
@@ -165,7 +163,7 @@ describe.skip('plugin', () => {
         'src',
         'bundle?lazy!express',
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.resolve).toNotHaveBeenCalled();
           done();
         }.bind(this)
@@ -177,7 +175,7 @@ describe.skip('plugin', () => {
         'src',
         'express',
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.resolve).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalled();
           expect(this.install).toHaveBeenCalled();
