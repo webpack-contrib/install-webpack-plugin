@@ -21,9 +21,10 @@ const depFromErr = (err) => {
    * - bootswatch/lumen/bootstrap.css
    * - lodash.random
    */
-  const matches = /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
-    err
-  );
+  const matches =
+    /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
+      err
+    );
 
   if (!matches) {
     return;
@@ -140,18 +141,13 @@ NpmInstallPlugin.prototype.resolveExternal = (context, request, callback) => {
     request,
   };
 
-  this.resolve(
-    'normal',
-    result,
-    // eslint-disable-next-line func-names
-    function(err) {
-      if (err) {
-        this.install(Object.assign({}, result, { request: depFromErr(err) }));
-      }
+  this.resolve('normal', result, (err) => {
+    if (err) {
+      this.install(Object.assign({}, result, { request: depFromErr(err) }));
+    }
 
-      callback();
-    }.bind(this)
-  );
+    callback();
+  });
 };
 
 NpmInstallPlugin.prototype.resolve = (resolver, result, callback) => {
@@ -180,21 +176,16 @@ NpmInstallPlugin.prototype.resolveLoader = (result, resolveContext, next) => {
 
   this.resolving[result.request] = true;
 
-  this.resolve(
-    'loader',
-    result,
-    // eslint-disable-next-line func-names
-    function(err) {
-      this.resolving[result.request] = false;
+  this.resolve('loader', result, (err) => {
+    this.resolving[result.request] = false;
 
-      if (err) {
-        const loader = utils.normalizeLoader(result.request);
-        this.install(Object.assign({}, result, { request: loader }));
-      }
+    if (err) {
+      const loader = utils.normalizeLoader(result.request);
+      this.install(Object.assign({}, result, { request: loader }));
+    }
 
-      return next();
-    }.bind(this)
-  );
+    return next();
+  });
 };
 
 NpmInstallPlugin.prototype.resolveModule = (result, resolveContext, next) => {
@@ -209,20 +200,15 @@ NpmInstallPlugin.prototype.resolveModule = (result, resolveContext, next) => {
 
   this.resolving[result.request] = true;
 
-  this.resolve(
-    'normal',
-    result,
-    // eslint-disable-next-line func-names
-    function(err) {
-      this.resolving[result.request] = false;
+  this.resolve('normal', result, (err) => {
+    this.resolving[result.request] = false;
 
-      if (err) {
-        this.install(Object.assign({}, result, { request: depFromErr(err) }));
-      }
+    if (err) {
+      this.install(Object.assign({}, result, { request: depFromErr(err) }));
+    }
 
-      return next();
-    }.bind(this)
-  );
+    return next();
+  });
 };
 
 module.exports = NpmInstallPlugin;
