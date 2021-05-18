@@ -1,8 +1,6 @@
 /* eslint-disable no-undefined */
 const path = require('path');
 
-const expect = require('expect');
-
 const spawn = require('cross-spawn');
 
 const installer = require('../src/installer');
@@ -76,13 +74,13 @@ describe('installer', () => {
 
   describe('.checkBabel', () => {
     beforeEach(() => {
-      this.sync = expect.spyOn(spawn, 'sync').andReturn({ stdout: null });
-
-      expect.spyOn(console, 'info');
+      this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {
+        return { stdout: null };
+      });
     });
 
     afterEach(() => {
-      expect.restoreSpies();
+      jest.clearAllMocks();
     });
 
     describe("when .babelrc doesn't exist", () => {
@@ -98,7 +96,7 @@ describe('installer', () => {
         const result = installer.checkBabel();
 
         expect(result).toBe(undefined);
-        expect(this.sync).toNotHaveBeenCalled();
+        expect(this.sync).not.toHaveBeenCalled();
       });
     });
 
@@ -106,9 +104,8 @@ describe('installer', () => {
       beforeEach(() => {
         process.chdir(path.join(process.cwd(), 'example/webpack2'));
 
-        this.check = expect.spyOn(installer, 'check').andCall((dep) => dep);
-
-        this.install = expect.spyOn(installer, 'install');
+        this.check = jest.spyOn(installer, 'check');
+        this.install = jest.spyOn(installer, 'install');
       });
 
       afterEach(() => {
@@ -118,11 +115,11 @@ describe('installer', () => {
       it('should check plugins & presets', () => {
         installer.checkBabel();
 
-        const checked = this.check.calls.map((call) => call.arguments[0]);
+        const deps = this.check.mock.calls.map((call) => call[0]);
 
         expect(this.check).toHaveBeenCalled();
-        expect(this.check.calls.length).toEqual(6);
-        expect(checked).toEqual([
+        expect(this.check.mock.calls.length).toEqual(6);
+        expect(deps).toEqual([
           '@babel/core',
           'babel-plugin-react-html-attrs',
           '@babel/preset-react',
@@ -135,17 +132,17 @@ describe('installer', () => {
       it('should install missing plugins & presets', () => {
         installer.checkBabel();
 
+        const deps = this.check.mock.calls.map((call) => call[0]);
+
         expect(this.install).toHaveBeenCalled();
-        expect(this.install.calls.length).toEqual(1);
-        expect(this.install.calls[0].arguments).toEqual([
-          [
-            '@babel/core',
-            'babel-plugin-react-html-attrs',
-            '@babel/preset-react',
-            '@babel/preset-es2015',
-            '@babel/preset-stage-0',
-            '@babel/preset-react-hmre',
-          ],
+        expect(this.install.mock.calls.length).toEqual(1);
+        expect(deps).toEqual([
+          '@babel/core',
+          'babel-plugin-react-html-attrs',
+          '@babel/preset-react',
+          '@babel/preset-es2015',
+          '@babel/preset-stage-0',
+          '@babel/preset-react-hmre',
         ]);
       });
     });
@@ -153,14 +150,13 @@ describe('installer', () => {
 
   describe('.install', () => {
     beforeEach(() => {
-      this.sync = expect.spyOn(spawn, 'sync').andReturn({ stdout: null });
-
-      expect.spyOn(console, 'info');
-      expect.spyOn(console, 'warn');
+      this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {
+        return { stdout: null };
+      });
     });
 
     afterEach(() => {
-      expect.restoreSpies();
+      jest.clearAllMocks();
     });
 
     describe('given a falsey value', () => {
@@ -181,7 +177,9 @@ describe('installer', () => {
 
     describe('given a non-existant module', () => {
       beforeEach(() => {
-        this.sync.andReturn({ status: 1 });
+        this.sync.mockImplementation(() => {
+          return { status: 1 };
+        });
       });
 
       it('should attempt to install once', () => {
@@ -193,22 +191,31 @@ describe('installer', () => {
       it('should not attempt to install it again', () => {
         installer.install('does.not.exist.jsx');
 
-        expect(this.sync).toNotHaveBeenCalled();
+        expect(this.sync).not.toHaveBeenCalled();
       });
     });
 
     describe('when using yarn', () => {
+      beforeEach(() => {
+        this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {
+          return { stdout: null };
+        });
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
       describe('given a dependency', () => {
         describe('with no options', () => {
           it('should install it with --save', () => {
             installer.install('foo', {
               yarn: true,
             });
-
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('yarn');
-            expect(this.sync.calls[0].arguments[1]).toEqual(['add', 'foo']);
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
+            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
           });
         });
 
@@ -220,23 +227,21 @@ describe('installer', () => {
             });
 
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('yarn');
-            expect(this.sync.calls[0].arguments[1]).toEqual([
-              'add',
-              'foo',
-              '--dev',
-            ]);
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
+            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo', '--dev']);
           });
         });
 
         describe('without a package.json present', () => {
           beforeEach(() => {
-            expect.spyOn(installer, 'packageExists').andReturn(false);
+            jest
+              .spyOn(installer, 'packageExists')
+              .mockImplementation(() => false);
           });
 
           afterEach(() => {
-            expect.restoreSpies();
+            jest.clearAllMocks();
           });
 
           it('should install without options', () => {
@@ -244,9 +249,9 @@ describe('installer', () => {
               yarn: true,
             });
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('yarn');
-            expect(this.sync.calls[0].arguments[1]).toEqual(['add', 'foo']);
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
+            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
           });
         });
 
@@ -258,9 +263,9 @@ describe('installer', () => {
             });
 
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('yarn');
-            expect(this.sync.calls[0].arguments[1]).toEqual([
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
+            expect(this.sync.mock.calls[0][1]).toEqual([
               'add',
               'foo',
               '--silent',
@@ -270,7 +275,7 @@ describe('installer', () => {
 
         describe('with missing peerDependencies', () => {
           beforeEach(() => {
-            this.sync.andCall((bin, args) => {
+            this.sync.mockImplementation((bin, args) => {
               // eslint-disable-next-line
               const dep = args[1];
 
@@ -296,14 +301,14 @@ describe('installer', () => {
                 yarn: true,
               });
 
-              expect(this.sync.calls.length).toEqual(2);
-              expect(this.sync.calls[0].arguments[1]).toEqual([
+              expect(this.sync.mock.calls.length).toEqual(2);
+              expect(this.sync.mock.calls[0][1]).toEqual([
                 'add',
                 'redbox-react',
               ]);
 
               // Ignore ranges, let NPM pick
-              expect(this.sync.calls[1].arguments[1]).toEqual([
+              expect(this.sync.mock.calls[1][1]).toEqual([
                 'add',
                 'UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc@react',
               ]);
@@ -317,8 +322,8 @@ describe('installer', () => {
                 yarn: true,
               });
 
-              expect(this.sync.calls.length).toEqual(1);
-              expect(this.sync.calls[0].arguments[1]).toEqual([
+              expect(this.sync.mock.calls.length).toEqual(1);
+              expect(this.sync.mock.calls[0][1]).toEqual([
                 'add',
                 'redbox-react',
               ]);
@@ -329,15 +334,26 @@ describe('installer', () => {
     });
 
     describe('when using npm', () => {
+      beforeEach(() => {
+        this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {
+          return { stdout: null };
+        });
+        jest.spyOn(installer, 'packageExists').mockImplementation(() => true);
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
       describe('given a dependency', () => {
         describe('with no options', () => {
           it('should install it with --save', () => {
             installer.install('foo');
 
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('npm');
-            expect(this.sync.calls[0].arguments[1]).toEqual([
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('npm');
+            expect(this.sync.mock.calls[0][1]).toEqual([
               'install',
               'foo',
               '--save',
@@ -352,9 +368,9 @@ describe('installer', () => {
             });
 
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('npm');
-            expect(this.sync.calls[0].arguments[1]).toEqual([
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('npm');
+            expect(this.sync.mock.calls[0][1]).toEqual([
               'install',
               'foo',
               '--save-dev',
@@ -364,19 +380,21 @@ describe('installer', () => {
 
         describe('without a package.json present', () => {
           beforeEach(() => {
-            expect.spyOn(installer, 'packageExists').andReturn(false);
+            jest
+              .spyOn(installer, 'packageExists')
+              .mockImplementation(() => false);
           });
 
           afterEach(() => {
-            expect.restoreSpies();
+            jest.clearAllMocks();
           });
 
           it('should install without --save', () => {
             installer.install('foo');
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('npm');
-            expect(this.sync.calls[0].arguments[1]).toEqual(['install', 'foo']);
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('npm');
+            expect(this.sync.mock.calls[0][1]).toEqual(['install', 'foo']);
           });
         });
 
@@ -387,9 +405,9 @@ describe('installer', () => {
             });
 
             expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.calls.length).toEqual(1);
-            expect(this.sync.calls[0].arguments[0]).toEqual('npm');
-            expect(this.sync.calls[0].arguments[1]).toEqual([
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('npm');
+            expect(this.sync.mock.calls[0][1]).toEqual([
               'install',
               'foo',
               '--save',
@@ -401,7 +419,7 @@ describe('installer', () => {
 
         describe('with missing peerDependencies', () => {
           beforeEach(() => {
-            this.sync.andCall((bin, args) => {
+            this.sync.mockImplementation((bin, args) => {
               // eslint-disable-next-line
               const dep = args[1];
 
@@ -425,15 +443,15 @@ describe('installer', () => {
             it('should install peerDependencies', () => {
               installer.install('redbox-react');
 
-              expect(this.sync.calls.length).toEqual(2);
-              expect(this.sync.calls[0].arguments[1]).toEqual([
+              expect(this.sync.mock.calls.length).toEqual(2);
+              expect(this.sync.mock.calls[0][1]).toEqual([
                 'install',
                 'redbox-react',
                 '--save',
               ]);
 
               // Ignore ranges, let NPM pick
-              expect(this.sync.calls[1].arguments[1]).toEqual([
+              expect(this.sync.mock.calls[1][1]).toEqual([
                 'install',
                 'UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc@react',
                 '--save',
@@ -447,8 +465,8 @@ describe('installer', () => {
                 peerDependencies: false,
               });
 
-              expect(this.sync.calls.length).toEqual(1);
-              expect(this.sync.calls[0].arguments[1]).toEqual([
+              expect(this.sync.mock.calls.length).toEqual(1);
+              expect(this.sync.mock.calls[0][1]).toEqual([
                 'install',
                 'redbox-react',
                 '--save',
