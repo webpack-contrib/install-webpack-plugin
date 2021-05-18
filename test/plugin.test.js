@@ -1,7 +1,5 @@
 const util = require('util');
 
-const expect = require('expect');
-
 const webpack = require('webpack');
 
 const installer = require('../src/installer');
