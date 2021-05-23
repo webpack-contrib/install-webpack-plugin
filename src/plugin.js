@@ -8,7 +8,7 @@ const webpack = require('webpack');
 const installer = require('./installer');
 const utils = require('./utils');
 
-const PLUGIN_NAME = 'NpmInstallPlugin'
+const PLUGIN_NAME = 'NpmInstallPlugin';
 
 const depFromErr = (err) => {
   if (!err) {
@@ -23,10 +23,9 @@ const depFromErr = (err) => {
    * - bootswatch/lumen/bootstrap.css
    * - lodash.random
    */
-  const matches =
-    /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
-      err
-    );
+  const matches = /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
+    err
+  );
 
   if (!matches) {
     return;
@@ -36,7 +35,7 @@ const depFromErr = (err) => {
 };
 
 class NpmInstallPlugin {
-  constructor (options) {
+  constructor(options) {
     this.preCompiler = null;
     this.compiler = null;
     this.options = Object.assign(installer.defaultOptions, options);
@@ -58,28 +57,26 @@ class NpmInstallPlugin {
 
     compiler.hooks.afterResolvers.tap(PLUGIN_NAME, () => {
       // Install loaders on demand
-      compiler.resolverFactory.hooks.resolver.for('loader').tap(
-        PLUGIN_NAME,
-        (resolver) => {
+      compiler.resolverFactory.hooks.resolver
+        .for('loader')
+        .tap(PLUGIN_NAME, (resolver) => {
           resolver.hooks.module.tapAsync(
             PLUGIN_NAME,
             this.resolveLoader.bind(this)
           );
-        }
-      );
+        });
 
       // Install project dependencies on demand
-      compiler.resolverFactory.hooks.resolver.for('normal').tap(
-        PLUGIN_NAME,
-        (resolver) => {
+      compiler.resolverFactory.hooks.resolver
+        .for('normal')
+        .tap(PLUGIN_NAME, (resolver) => {
           resolver.hooks.module.tapAsync(
             PLUGIN_NAME,
             this.resolveModule.bind(this)
           );
-        }
-      );
+        });
     });
-  };
+  }
 
   install(result) {
     if (!result) {
@@ -97,7 +94,7 @@ class NpmInstallPlugin {
 
       installer.install(dep, Object.assign({}, this.options, { dev }));
     }
-  };
+  }
 
   preCompile(compilation, next) {
     if (!this.preCompiler) {
@@ -121,7 +118,7 @@ class NpmInstallPlugin {
     }
 
     this.preCompiler.run(next);
-  };
+  }
 
   resolveExternal(context, request, callback) {
     // Only install direct dependencies, not sub-dependencies
@@ -152,15 +149,15 @@ class NpmInstallPlugin {
         callback();
       }.bind(this)
     );
-  };
+  }
 
   resolve(resolver, result, callback) {
     return this.compiler.resolverFactory
       .get(resolver)
       .resolve(result.context || {}, result.path, result.request, {}, callback);
-  };
+  }
 
-  resolveLoader (result, next) {
+  resolveLoader(result, next) {
     // Only install direct dependencies, not sub-dependencies
     if (result.path.match('node_modules')) {
       return next && next();
@@ -187,9 +184,9 @@ class NpmInstallPlugin {
         return next && next();
       }.bind(this)
     );
-  };
+  }
 
-  resolveModule (result, next) {
+  resolveModule(result, next) {
     // Only install direct dependencies, not sub-dependencies
     if (result.path.match('node_modules')) {
       return next();
@@ -215,7 +212,7 @@ class NpmInstallPlugin {
         return next();
       }.bind(this)
     );
-  };
+  }
 }
 
 module.exports = NpmInstallPlugin;

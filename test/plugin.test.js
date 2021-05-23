@@ -6,15 +6,14 @@ const installer = require('../src/installer');
 const Plugin = require('../src/plugin');
 
 describe('plugin', () => {
-
   beforeEach(async () => {
-    this.check = jest.spyOn(installer, 'check').mockImplementation(dep => dep)
+    this.check = jest
+      .spyOn(installer, 'check')
+      .mockImplementation((dep) => dep);
 
     this.checkBabel = jest.spyOn(installer, 'checkBabel');
 
     this.compiler = await webpack({});
-
-    // console.log(this.compiler)
 
     this.install = jest.spyOn(installer, 'install');
     this.next = jest.fn();
@@ -28,18 +27,17 @@ describe('plugin', () => {
 
     this.plugin = new Plugin(this.options);
 
-    this.applySpy = jest.spyOn(this.plugin, 'apply')
+    this.applySpy = jest.spyOn(this.plugin, 'apply');
 
     this.plugin.apply(this.compiler);
   });
 
   afterEach(() => {
-    this.check.mockRestore()
+    this.check.mockRestore();
     this.checkBabel.mockRestore();
     this.install.mockRestore();
     this.next.mockRestore();
     this.applySpy.mockRestore();
-    this.resolve && this.resolve.mockRestore();
   });
 
   it('should checkBabel', () => {
@@ -52,8 +50,7 @@ describe('plugin', () => {
 
   describe('.apply', () => {
     it('should apply the plugin only once`', () => {
-      console.log(this.applySpy)
-      expect(this.applySpy).toHaveBeenCalledTimes(1)
+      expect(this.applySpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -76,7 +73,7 @@ describe('plugin', () => {
       this.plugin.preCompile(
         compilation,
         // eslint-disable-next-line
-        function () {
+        function() {
           expect(this.run).toHaveBeenCalled();
           done();
         }.bind(this)
@@ -110,7 +107,7 @@ describe('plugin', () => {
         'node_modules',
         'express',
         // eslint-disable-next-line
-        function () {
+        function() {
           expect(this.resolve).not.toHaveBeenCalled();
           done();
         }.bind(this)
@@ -122,7 +119,7 @@ describe('plugin', () => {
         'src',
         'bundle?lazy!express',
         // eslint-disable-next-line
-        function () {
+        function() {
           expect(this.resolve).not.toHaveBeenCalled();
           done();
         }.bind(this)
@@ -134,12 +131,15 @@ describe('plugin', () => {
         'src',
         'express',
         // eslint-disable-next-line
-        function () {
+        function() {
           expect(this.resolve).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalled();
           expect(this.install).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalledWith('express');
-          expect(this.install).toHaveBeenCalledWith('express', installer.defaultOptions);
+          expect(this.install).toHaveBeenCalledWith(
+            'express',
+            installer.defaultOptions
+          );
           done();
         }.bind(this)
       );
@@ -152,14 +152,13 @@ describe('plugin', () => {
 
       jest
         .spyOn(this.plugin, 'resolve')
-        .mockImplementation((resolver, result, callback) => {
+        .mockImplementation((resolver, res, callback) => {
           callback(null);
         });
 
       const install = jest.spyOn(this.plugin, 'install');
 
       this.plugin.resolveLoader(result, this.next);
-
 
       // no installs because the package was resolved
       expect(install.mock.calls.length).toBe(0);
@@ -172,7 +171,7 @@ describe('plugin', () => {
 
       jest
         .spyOn(this.plugin, 'resolve')
-        .mockImplementation((resolver, result, callback) => {
+        .mockImplementation((resolver, res, callback) => {
           callback(
             new Error(
               util.format(
@@ -187,7 +186,6 @@ describe('plugin', () => {
       const install = jest.spyOn(this.plugin, 'install');
 
       this.plugin.resolveLoader(result, this.next);
-
 
       // Should install the package when not found
       expect(install.mock.calls.length).toBe(1);
@@ -210,9 +208,11 @@ describe('plugin', () => {
     it('should call .resolve if direct dependency', () => {
       const result = { path: '/', request: 'foo' };
 
-      jest.spyOn(this.plugin, 'resolve').mockImplementation((resolver, result, callback) => {
-        callback(new Error("Can't resolve '@cycle/core' in '/'"));
-      });
+      jest
+        .spyOn(this.plugin, 'resolve')
+        .mockImplementation((resolver, res, callback) => {
+          callback(new Error("Can't resolve '@cycle/core' in '/'"));
+        });
 
       this.plugin.resolveModule(result, this.next);
 
