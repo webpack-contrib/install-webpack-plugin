@@ -23,9 +23,10 @@ const depFromErr = (err) => {
    * - bootswatch/lumen/bootstrap.css
    * - lodash.random
    */
-  const matches = /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
-    err
-  );
+  const matches =
+    /(?:(?:Cannot resolve module)|(?:Can't resolve)) '([@\w\/\.-]+)' in/.exec(
+      err
+    );
 
   if (!matches) {
     return;
@@ -141,13 +142,13 @@ class NpmInstallPlugin {
       'normal',
       result,
       // eslint-disable-next-line func-names
-      function(err) {
+      (err) => {
         if (err) {
           this.install(Object.assign({}, result, { request: depFromErr(err) }));
         }
 
         callback();
-      }.bind(this)
+      }
     );
   }
 
@@ -173,7 +174,7 @@ class NpmInstallPlugin {
       'loader',
       result,
       // eslint-disable-next-line func-names
-      function(err) {
+      (err) => {
         this.resolving[result.request] = false;
 
         if (err) {
@@ -182,7 +183,7 @@ class NpmInstallPlugin {
         }
 
         return next && next();
-      }.bind(this)
+      }
     );
   }
 
@@ -202,7 +203,7 @@ class NpmInstallPlugin {
       'normal',
       result,
       // eslint-disable-next-line func-names
-      function(err) {
+      (err) => {
         this.resolving[result.request] = false;
 
         if (err) {
@@ -210,7 +211,7 @@ class NpmInstallPlugin {
         }
 
         return next();
-      }.bind(this)
+      }
     );
   }
 }

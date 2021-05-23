@@ -73,7 +73,7 @@ describe('plugin', () => {
       this.plugin.preCompile(
         compilation,
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.run).toHaveBeenCalled();
           done();
         }.bind(this)
@@ -107,7 +107,7 @@ describe('plugin', () => {
         'node_modules',
         'express',
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.resolve).not.toHaveBeenCalled();
           done();
         }.bind(this)
@@ -119,7 +119,7 @@ describe('plugin', () => {
         'src',
         'bundle?lazy!express',
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.resolve).not.toHaveBeenCalled();
           done();
         }.bind(this)
@@ -131,7 +131,7 @@ describe('plugin', () => {
         'src',
         'express',
         // eslint-disable-next-line
-        function() {
+        function () {
           expect(this.resolve).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalled();
           expect(this.install).toHaveBeenCalled();
