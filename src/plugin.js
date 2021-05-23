@@ -8,6 +8,8 @@ const webpack = require('webpack');
 const installer = require('./installer');
 const utils = require('./utils');
 
+const PLUGIN_NAME = 'NpmInstallPlugin'
+
 const depFromErr = (err) => {
   if (!err) {
     return;
@@ -46,36 +48,32 @@ class NpmInstallPlugin {
   apply(compiler) {
     this.compiler = compiler;
 
-    const plugin = { name: 'NpmInstallPlugin' };
-    // console.log(compiler)
     // Recursively install missing dependencies so primary build doesn't fail
-    compiler.hooks.watchRun.tapAsync(plugin, this.preCompile.bind(this));
+    compiler.hooks.watchRun.tapAsync(PLUGIN_NAME, this.preCompile.bind(this));
 
     // Install externals that wouldn't normally be resolved
     if (Array.isArray(compiler.options.externals)) {
       compiler.options.externals.unshift(this.resolveExternal.bind(this));
     }
 
-    compiler.hooks.afterResolvers.tap(plugin, () => {
+    compiler.hooks.afterResolvers.tap(PLUGIN_NAME, () => {
       // Install loaders on demand
-      compiler.resolverFactory.hooks.resolver.tap(
-        'loader',
-        plugin,
+      compiler.resolverFactory.hooks.resolver.for('loader').tap(
+        PLUGIN_NAME,
         (resolver) => {
           resolver.hooks.module.tapAsync(
-            'NpmInstallPlugin',
+            PLUGIN_NAME,
             this.resolveLoader.bind(this)
           );
         }
       );
 
       // Install project dependencies on demand
-      compiler.resolverFactory.hooks.resolver.tap(
-        'normal',
-        plugin,
+      compiler.resolverFactory.hooks.resolver.for('normal').tap(
+        PLUGIN_NAME,
         (resolver) => {
           resolver.hooks.module.tapAsync(
-            'NpmInstallPlugin',
+            PLUGIN_NAME,
             this.resolveModule.bind(this)
           );
         }
@@ -157,27 +155,19 @@ class NpmInstallPlugin {
   };
 
   resolve(resolver, result, callback) {
-    // eslint-disable-next-line
-    const { version } = require('webpack');
-    const major = version.split('.').shift();
-
-    if (major === '4') {
-      return this.compiler.resolverFactory
-        .get(resolver)
-        .resolve(result.context || {}, result.path, result.request, {}, callback);
-    }
-
-    throw new Error(`Unsupported Webpack version: ${version}`);
+    return this.compiler.resolverFactory
+      .get(resolver)
+      .resolve(result.context || {}, result.path, result.request, {}, callback);
   };
 
-  resolveLoader (result, resolveContext, next) {
+  resolveLoader (result, next) {
     // Only install direct dependencies, not sub-dependencies
     if (result.path.match('node_modules')) {
-      return next();
+      return next && next();
     }
 
     if (this.resolving[result.request]) {
-      return next();
+      return next && next();
     }
 
     this.resolving[result.request] = true;
@@ -194,12 +184,12 @@ class NpmInstallPlugin {
           this.install(Object.assign({}, result, { request: loader }));
         }
 
-        return next();
+        return next && next();
       }.bind(this)
     );
   };
 
-  resolveModule (result, resolveContext, next) {
+  resolveModule (result, next) {
     // Only install direct dependencies, not sub-dependencies
     if (result.path.match('node_modules')) {
       return next();
