@@ -37,10 +37,10 @@ const depFromErr = (err) => {
 
 class NpmInstallPlugin {
   constructor(options) {
-    this.preCompiler = null;
-    this.compiler = null;
-    this.options = Object.assign(installer.defaultOptions, options);
-    this.resolving = {};
+    this.preCompiler = undefined;
+    this.compiler = undefined;
+    this.options = { ...installer.defaultOptions, ...options };
+    this.resolving = new Set();
 
     installer.checkBabel();
   }
@@ -106,8 +106,6 @@ class NpmInstallPlugin {
         // Inherit the current config
         options,
         {
-          // Ensure fresh cache
-          cache: {},
           // Register plugin to install missing deps
           plugins: [new NpmInstallPlugin(this.options)],
         }
@@ -164,18 +162,18 @@ class NpmInstallPlugin {
       return next && next();
     }
 
-    if (this.resolving[result.request]) {
+    if (this.resolving.has(result.request)) {
       return next && next();
     }
 
-    this.resolving[result.request] = true;
+    this.resolving.add(result.request);
 
     this.resolve(
       'loader',
       result,
       // eslint-disable-next-line func-names
       (err) => {
-        this.resolving[result.request] = false;
+        this.resolving.delete(result.request);
 
         if (err) {
           const loader = utils.normalizeLoader(result.request);
@@ -193,18 +191,18 @@ class NpmInstallPlugin {
       return next();
     }
 
-    if (this.resolving[result.request]) {
+    if (this.resolving.has(result.request)) {
       return next();
     }
 
-    this.resolving[result.request] = true;
+    this.resolving.add(result.request);
 
     this.resolve(
       'normal',
       result,
       // eslint-disable-next-line func-names
       (err) => {
-        this.resolving[result.request] = false;
+        this.resolving.delete(result.request);
 
         if (err) {
           this.install(Object.assign({}, result, { request: depFromErr(err) }));

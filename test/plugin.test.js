@@ -15,7 +15,9 @@ describe('plugin', () => {
 
     this.compiler = await webpack({});
 
-    this.install = jest.spyOn(installer, 'install');
+    this.install = jest
+      .spyOn(installer, 'install')
+      .mockImplementation(() => {});
     this.next = jest.fn();
 
     this.options = {
@@ -197,7 +199,7 @@ describe('plugin', () => {
     it('should prevent cyclical installs', () => {
       const result = { path: '/', request: 'foo' };
 
-      this.plugin.resolving.foo = true;
+      this.plugin.resolving.add('foo');
 
       this.plugin.resolveModule(result, this.next);
 
