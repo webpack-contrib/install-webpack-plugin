@@ -5,42 +5,20 @@ const webpack = require('webpack');
 const installer = require('../src/installer');
 const Plugin = require('../src/plugin');
 
-// TODO: fix me
-describe.skip('plugin', () => {
-  beforeEach(() => {
-    this.check = expect.spyOn(installer, 'check').andCall((dep) => dep);
+describe('plugin', () => {
+  beforeEach(async () => {
+    this.check = jest
+      .spyOn(installer, 'check')
+      .mockImplementation((dep) => dep);
 
-    this.checkBabel = expect.spyOn(installer, 'checkBabel');
+    this.checkBabel = jest.spyOn(installer, 'checkBabel');
 
-    this.compiler = {
-      // Webpack >= 2 will reject config without an entry
-      options: {
-        entry() {
-          return {};
-        },
-      },
-      plugin: expect.createSpy().andCall(
-        // eslint-disable-next-line
-        function (event, cb) {
-          if (event === 'after-resolvers') {
-            cb(this.compiler);
-          }
-        }.bind(this)
-      ),
-      resolvers: {
-        loader: {
-          plugin: expect.createSpy(),
-          resolve: expect.createSpy(),
-        },
-        normal: {
-          plugin: expect.createSpy(),
-          resolve: expect.createSpy(),
-        },
-      },
-    };
+    this.compiler = await webpack({});
 
-    this.install = expect.spyOn(installer, 'install');
-    this.next = expect.createSpy();
+    this.install = jest
+      .spyOn(installer, 'install')
+      .mockImplementation(() => {});
+    this.next = jest.fn();
 
     this.options = {
       dev: false,
@@ -51,14 +29,17 @@ describe.skip('plugin', () => {
 
     this.plugin = new Plugin(this.options);
 
+    this.applySpy = jest.spyOn(this.plugin, 'apply');
+
     this.plugin.apply(this.compiler);
   });
 
   afterEach(() => {
-    this.check.restore();
-    this.checkBabel.restore();
-    this.install.restore();
-    this.next.restore();
+    this.check.mockRestore();
+    this.checkBabel.mockRestore();
+    this.install.mockRestore();
+    this.next.mockRestore();
+    this.applySpy.mockRestore();
   });
 
   it('should checkBabel', () => {
@@ -70,43 +51,22 @@ describe.skip('plugin', () => {
   });
 
   describe('.apply', () => {
-    it('should hook into `watch-run`', () => {
-      expect(this.compiler.plugin.calls.length).toBe(2);
-      expect(this.compiler.plugin.calls[0].arguments).toEqual([
-        'watch-run',
-        this.plugin.preCompile.bind(this.plugin),
-      ]);
-    });
-
-    it('should hook into `after-resolvers`', () => {
-      expect(this.compiler.plugin.calls.length).toBe(2);
-      expect(this.compiler.plugin.calls[1].arguments[0]).toEqual(
-        'after-resolvers'
-      );
-      expect(this.compiler.resolvers.loader.plugin.calls.length).toBe(1);
-      expect(this.compiler.resolvers.loader.plugin.calls[0].arguments).toEqual([
-        'module',
-        this.plugin.resolveLoader.bind(this.plugin),
-      ]);
-      expect(this.compiler.resolvers.normal.plugin.calls.length).toBe(1);
-      expect(this.compiler.resolvers.normal.plugin.calls[0].arguments).toEqual([
-        'module',
-        this.plugin.resolveModule.bind(this.plugin),
-      ]);
+    it('should apply the plugin only once`', () => {
+      expect(this.applySpy).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('.preCompile', () => {
     beforeEach(() => {
-      this.run = expect
+      this.run = jest
         .spyOn(webpack.Compiler.prototype, 'run')
-        .andCall((callback) => {
+        .mockImplementation((callback) => {
           callback();
         });
     });
 
     afterEach(() => {
-      this.run.restore();
+      this.run.mockRestore();
     });
 
     it('should perform dryrun', (done) => {
@@ -125,9 +85,9 @@ describe.skip('plugin', () => {
 
   describe('.resolveExternal', () => {
     beforeEach(() => {
-      this.resolve = expect
+      this.resolve = jest
         .spyOn(this.plugin, 'resolve')
-        .andCall((resolver, result, callback) => {
+        .mockImplementation((resolver, result, callback) => {
           callback(
             new Error(
               util.format(
@@ -141,7 +101,7 @@ describe.skip('plugin', () => {
     });
 
     afterEach(() => {
-      this.resolve.restore();
+      this.resolve.mockRestore();
     });
 
     it('should ignore node_modules', (done) => {
@@ -150,7 +110,7 @@ describe.skip('plugin', () => {
         'express',
         // eslint-disable-next-line
         function () {
-          expect(this.resolve).toNotHaveBeenCalled();
+          expect(this.resolve).not.toHaveBeenCalled();
           done();
         }.bind(this)
       );
@@ -162,7 +122,7 @@ describe.skip('plugin', () => {
         'bundle?lazy!express',
         // eslint-disable-next-line
         function () {
-          expect(this.resolve).toNotHaveBeenCalled();
+          expect(this.resolve).not.toHaveBeenCalled();
           done();
         }.bind(this)
       );
@@ -177,9 +137,11 @@ describe.skip('plugin', () => {
           expect(this.resolve).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalled();
           expect(this.install).toHaveBeenCalled();
-
-          expect(this.check.calls[0].arguments[0]).toEqual('express');
-          expect(this.install.calls[0].arguments[0]).toEqual('express');
+          expect(this.check).toHaveBeenCalledWith('express');
+          expect(this.install).toHaveBeenCalledWith(
+            'express',
+            installer.defaultOptions
+          );
           done();
         }.bind(this)
       );
@@ -190,38 +152,46 @@ describe.skip('plugin', () => {
     it('should call .resolve', () => {
       const result = { path: '/', request: 'babel-loader' };
 
-      this.compiler.resolvers.loader.resolve.andCall(
-        (context, path, request, callback) => {
+      jest
+        .spyOn(this.plugin, 'resolve')
+        .mockImplementation((resolver, res, callback) => {
           callback(null);
-        }
-      );
+        });
 
-      const install = expect.spyOn(this.plugin, 'install');
+      const install = jest.spyOn(this.plugin, 'install');
 
       this.plugin.resolveLoader(result, this.next);
 
-      expect(this.compiler.resolvers.loader.resolve.calls.length).toBe(1);
-      expect(install.calls.length).toBe(0);
-      expect(this.next.calls.length).toBe(1);
-      expect(this.next.calls[0].arguments).toEqual([]);
+      // no installs because the package was resolved
+      expect(install.mock.calls.length).toBe(0);
+      expect(this.next.mock.calls.length).toBe(1);
+      expect(this.next.mock.calls[0]).toEqual([]);
     });
+
     it('should call .resolve and install if not resolved', () => {
       const result = { path: '/', request: 'babel-loader' };
 
-      this.compiler.resolvers.loader.resolve.andCall(
-        (context, path, request, callback) => {
-          callback(new Error("Can't resolve 'babel-loader' in 'node_modules'"));
-        }
-      );
+      jest
+        .spyOn(this.plugin, 'resolve')
+        .mockImplementation((resolver, res, callback) => {
+          callback(
+            new Error(
+              util.format(
+                "Can't resolve '%s' in '%s'",
+                result.request,
+                result.path
+              )
+            )
+          );
+        });
 
-      const install = expect.spyOn(this.plugin, 'install');
+      const install = jest.spyOn(this.plugin, 'install');
 
       this.plugin.resolveLoader(result, this.next);
 
-      expect(this.compiler.resolvers.loader.resolve.calls.length).toBe(1);
-      expect(install.calls.length).toBe(1);
-      expect(this.next.calls.length).toBe(1);
-      expect(this.next.calls[0].arguments).toEqual([]);
+      // Should install the package when not found
+      expect(install.mock.calls.length).toBe(1);
+      expect(this.next.mock.calls.length).toBe(1);
     });
   });
 
@@ -229,28 +199,28 @@ describe.skip('plugin', () => {
     it('should prevent cyclical installs', () => {
       const result = { path: '/', request: 'foo' };
 
-      this.plugin.resolving.foo = true;
+      this.plugin.resolving.add('foo');
 
       this.plugin.resolveModule(result, this.next);
 
-      expect(this.compiler.resolvers.normal.resolve.calls.length).toBe(0);
-      expect(this.next.calls.length).toBe(1);
+      expect(this.install.mock.calls.length).toBe(0);
+      expect(this.next.mock.calls.length).toBe(1);
     });
 
     it('should call .resolve if direct dependency', () => {
       const result = { path: '/', request: 'foo' };
 
-      this.compiler.resolvers.normal.resolve.andCall(
-        (context, path, request, callback) => {
+      jest
+        .spyOn(this.plugin, 'resolve')
+        .mockImplementation((resolver, res, callback) => {
           callback(new Error("Can't resolve '@cycle/core' in '/'"));
-        }
-      );
+        });
 
       this.plugin.resolveModule(result, this.next);
 
-      expect(this.compiler.resolvers.normal.resolve.calls.length).toBe(1);
-      expect(this.next.calls.length).toBe(1);
-      expect(this.next.calls[0].arguments).toEqual([]);
+      expect(this.install.mock.calls.length).toBe(1);
+      expect(this.next.mock.calls.length).toBe(1);
+      expect(this.next.mock.calls[0]).toEqual([]);
     });
 
     it('should call not .resolve if sub-dependency', () => {
@@ -258,8 +228,8 @@ describe.skip('plugin', () => {
 
       this.plugin.resolveModule(result, this.next);
 
-      expect(this.compiler.resolvers.normal.resolve.calls.length).toBe(0);
-      expect(this.next.calls.length).toBe(1);
+      expect(this.install.mock.calls.length).toBe(0);
+      expect(this.next.mock.calls.length).toBe(1);
     });
   });
 });
