@@ -1,7 +1,7 @@
 {
-  "name": "npm-install-webpack-plugin",
+  "name": "auto-install-webpack-plugin",
   "version": "4.0.5",
-  "description": "Webpack plugin to automatically npm install & save dependencies.",
+  "description": "Webpack plugin to automatically install & save dependencies.",
   "main": "index.js",
   "engines": {
     "node": ">=12.13.0"

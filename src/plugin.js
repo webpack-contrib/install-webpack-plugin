@@ -8,7 +8,7 @@ const webpack = require('webpack');
 const installer = require('./installer');
 const utils = require('./utils');
 
-const PLUGIN_NAME = 'NpmInstallPlugin';
+const PLUGIN_NAME = 'AutoInstallPlugin';
 
 const depFromErr = (err) => {
   if (!err) {
@@ -35,7 +35,7 @@ const depFromErr = (err) => {
   return matches[1];
 };
 
-class NpmInstallPlugin {
+class AutoInstallPlugin {
   constructor(options) {
     this.preCompiler = undefined;
     this.compiler = undefined;
@@ -107,7 +107,7 @@ class NpmInstallPlugin {
         options,
         {
           // Register plugin to install missing deps
-          plugins: [new NpmInstallPlugin(this.options)],
+          plugins: [new AutoInstallPlugin(this.options)],
         }
       );
 
@@ -214,4 +214,4 @@ class NpmInstallPlugin {
   }
 }
 
-module.exports = NpmInstallPlugin;
+module.exports = AutoInstallPlugin;

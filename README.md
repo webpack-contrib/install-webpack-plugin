@@ -33,7 +33,7 @@ In your `webpack.config.js`:
 
 ```js
 plugins: [
-  new NpmInstallPlugin()
+  new AutoInstallPlugin()
 ],
 ```
 
@@ -41,7 +41,7 @@ plugins: [
 
 ```js
 plugins: [
-  new NpmInstallPlugin({
+  new AutonstallPlugin({
     // Use --save or --save-dev
     dev: false,
     // Install missing peerDependencies
@@ -58,7 +58,7 @@ You can provide a `Function` to the `dev` to make it dynamic:
 
 ```js
 plugins: [
-  new NpmInstallPlugin({
+  new AutoInstallPlugin({
     dev: function(module, path) {
       return [
         "babel-preset-react-hmre",
