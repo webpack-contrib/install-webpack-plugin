@@ -1,9 +1,5 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-useless-escape */
-const path = require('path');
-
-const { createFsFromVolume, Volume } = require('memfs');
-const webpack = require('webpack');
 
 const installer = require('./installer');
 const utils = require('./utils');
@@ -47,9 +43,6 @@ class NpmInstallPlugin {
 
   apply(compiler) {
     this.compiler = compiler;
-
-    // Recursively install missing dependencies so primary build doesn't fail
-    compiler.hooks.watchRun.tapAsync(PLUGIN_NAME, this.preCompile.bind(this));
 
     // Install externals that wouldn't normally be resolved
     if (Array.isArray(compiler.options.externals)) {
@@ -95,28 +88,6 @@ class NpmInstallPlugin {
 
       installer.install(dep, Object.assign({}, this.options, { dev }));
     }
-  }
-
-  preCompile(compilation, next) {
-    if (!this.preCompiler) {
-      const { options } = this.compiler;
-      const config = Object.assign(
-        // Start with new config object
-        {},
-        // Inherit the current config
-        options,
-        {
-          // Register plugin to install missing deps
-          plugins: [new NpmInstallPlugin(this.options)],
-        }
-      );
-
-      this.preCompiler = webpack(config);
-      this.preCompiler.outputFileSystem = createFsFromVolume(new Volume());
-      this.preCompiler.outputFileSystem.join = path.join.bind(path);
-    }
-
-    this.preCompiler.run(next);
   }
 
   resolveExternal(context, request, callback) {
