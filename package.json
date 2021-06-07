@@ -46,8 +46,8 @@
   },
   "homepage": "https://github.com/ericclemmons/npm-install-webpack-plugin#readme",
   "dependencies": {
-    "cross-spawn": "^5.0.1",
-    "json5": "^0.5.1",
+    "cross-spawn": "^7.0.3",
+    "json5": "^2.2.0",
     "memfs": "^3.2.2",
     "resolve": "^1.20.0"
   },
