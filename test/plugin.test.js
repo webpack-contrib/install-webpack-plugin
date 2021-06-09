@@ -56,33 +56,6 @@ describe('plugin', () => {
     });
   });
 
-  describe('.preCompile', () => {
-    beforeEach(() => {
-      this.run = jest
-        .spyOn(webpack.Compiler.prototype, 'run')
-        .mockImplementation((callback) => {
-          callback();
-        });
-    });
-
-    afterEach(() => {
-      this.run.mockRestore();
-    });
-
-    it('should perform dryrun', (done) => {
-      const compilation = {};
-
-      this.plugin.preCompile(
-        compilation,
-        // eslint-disable-next-line
-        function () {
-          expect(this.run).toHaveBeenCalled();
-          done();
-        }.bind(this)
-      );
-    });
-  });
-
   describe('.resolveExternal', () => {
     beforeEach(() => {
       this.resolve = jest
