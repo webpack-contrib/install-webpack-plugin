@@ -160,18 +160,18 @@ describe('installer', () => {
     });
 
     describe('given a falsey value', () => {
-      it('should return undefined', () => {
-        expect(installer.install()).toEqual(undefined);
-        expect(installer.install(0)).toEqual(undefined);
-        expect(installer.install(false)).toEqual(undefined);
-        expect(installer.install(null)).toEqual(undefined);
-        expect(installer.install('')).toEqual(undefined);
+      it('should return undefined', async () => {
+        expect(await installer.install()).toEqual(undefined);
+        expect(await installer.install(0)).toEqual(undefined);
+        expect(await installer.install(false)).toEqual(undefined);
+        expect(await installer.install(null)).toEqual(undefined);
+        expect(await installer.install('')).toEqual(undefined);
       });
     });
 
     describe('given an empty array', () => {
-      it('should return undefined', () => {
-        expect(installer.install([])).toEqual(undefined);
+      it('should return undefined', async () => {
+        expect(await installer.install([])).toEqual(undefined);
       });
     });
 

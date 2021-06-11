@@ -1,14 +1,15 @@
 /* eslint-disable no-console, consistent-return,no-useless-escape */
 const fs = require('fs');
 const path = require('path');
-
 const util = require('util');
 
 const resolve = require('resolve');
-
 const spawn = require('cross-spawn');
-
 const JSON5 = require('json5');
+
+const { green, yellow } = require('colorette');
+
+const prompt = require('./utils/prompt');
 
 // Match "react", "path", "fs", "lodash.random", etc.
 const EXTERNAL = /^\w[a-z\-0-9\.]+$/;
@@ -18,6 +19,8 @@ const defaultOptions = {
   dev: false,
   peerDependencies: true,
   quiet: false,
+  // flip to true
+  prompt: false,
   npm: 'npm',
 };
 const erroneous = [];
@@ -151,7 +154,7 @@ module.exports.checkBabel = function checkBabel() {
 
 module.exports.defaultOptions = defaultOptions;
 
-module.exports.install = function install(deps, options) {
+module.exports.install = async function install(deps, options) {
   if (!deps) {
     return;
   }
@@ -186,6 +189,25 @@ module.exports.install = function install(deps, options) {
     client = options.npm;
     save = options.dev ? '--save-dev' : '--save';
     quietOptions = ['--silent', '--no-progress'];
+  }
+
+  if (options.prompt) {
+    const response = await prompt({
+      message: `[install-webpack-plugin] Would you like to install package(s) ${green(
+        deps.join(', ')
+      )},
+      )}'? (That will run '${green(`${client} ${args[0]}`)}') (${yellow(
+        'Y/n'
+      )})`,
+      defaultResponse: 'Y',
+      stream: process.stderr,
+    });
+    if (!response) {
+      console.log(
+        "[install-webpack-plugin] Missing packages won't be installed."
+      );
+      return;
+    }
   }
 
   args = args.concat(deps).filter(Boolean);

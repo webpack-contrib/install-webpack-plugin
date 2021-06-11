@@ -24,6 +24,7 @@ describe('plugin', () => {
       dev: false,
       peerDependencies: true,
       quiet: false,
+      prompt: false,
       npm: 'npm',
     };
 
