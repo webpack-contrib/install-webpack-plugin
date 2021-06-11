@@ -1,4 +1,4 @@
-var AutoInstallPlugin = require("auto-install-webpack-plugin");
+var InstallPlugin = require("install-webpack-plugin");
 var path = require("path");
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
   },
 
   plugins: [
-    new AutoInstallPlugin({
+    new InstallPlugin({
       dev: function(module, path) {
         return [
           "babel-preset-react-hmre",

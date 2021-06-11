@@ -1,4 +1,4 @@
-# `auto-install-webpack-plugin` Example
+# `install-webpack-plugin` Example
 
 > This example shows how it's possible to start with a minimal project setup
 > and rapidly develop by auto-installing both Javascript & CSS dependencies
@@ -13,7 +13,7 @@ $ nvm install
 $ nvm use
 ```
 
-Clone the `auto-install-webpack-plugin` repo and change directory to the example folder.
+Clone the `install-webpack-plugin` repo and change directory to the example folder.
 
 Install dependencies required to start working:
 

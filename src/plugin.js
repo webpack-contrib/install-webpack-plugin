@@ -8,7 +8,7 @@ const webpack = require('webpack');
 const installer = require('./installer');
 const utils = require('./utils');
 
-const PLUGIN_NAME = 'AutoInstallPlugin';
+const PLUGIN_NAME = 'InstallPlugin';
 
 const depFromErr = (err) => {
   if (!err) {
@@ -35,7 +35,7 @@ const depFromErr = (err) => {
   return matches[1];
 };
 
-class AutoInstallPlugin {
+class InstallPlugin {
   constructor(options) {
     this.preCompiler = undefined;
     this.compiler = undefined;
@@ -107,7 +107,7 @@ class AutoInstallPlugin {
         options,
         {
           // Register plugin to install missing deps
-          plugins: [new AutoInstallPlugin(this.options)],
+          plugins: [new InstallPlugin(this.options)],
         }
       );
 
@@ -214,4 +214,4 @@ class AutoInstallPlugin {
   }
 }
 
-module.exports = AutoInstallPlugin;
+module.exports = InstallPlugin;

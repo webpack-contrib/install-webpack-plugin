@@ -1,5 +1,5 @@
 {
-  "name": "auto-install-webpack-plugin",
+  "name": "install-webpack-plugin",
   "version": "4.0.5",
   "description": "Webpack plugin to automatically install & save dependencies.",
   "main": "index.js",
