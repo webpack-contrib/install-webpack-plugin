@@ -10,7 +10,7 @@ export default class App extends React.Component {
         <div className="page-header">
           <h3>
             <code>
-              npm-install-webpack-plugin
+              install-webpack-plugin
             </code>
           </h3>
         </div>
@@ -26,7 +26,7 @@ export default class App extends React.Component {
 
           <a
             className="btn btn-primary btn-lg"
-            href="https://github.com/ericclemmons/npm-install-webpack-plugin"
+            href="https://github.com/webpack-contrib/install-webpack-plugin"
           >
             View on Github
           </a>

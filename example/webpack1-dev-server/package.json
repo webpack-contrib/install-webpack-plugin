@@ -6,7 +6,7 @@
     "webpack-dev-server": "1.14.1"
   },
   "scripts": {
-    "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
+    "link": "(cd .. && npm link .) && npm link install-webpack-plugin",
     "postinstall": "npm run link",
     "prestart": "rimraf build",
     "start": "webpack-dev-server --config webpack.config.client.js --content-base=public --hot --inline --port=3000 --progress"
