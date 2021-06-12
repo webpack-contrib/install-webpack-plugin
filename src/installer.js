@@ -19,8 +19,7 @@ const defaultOptions = {
   dev: false,
   peerDependencies: true,
   quiet: false,
-  // flip to true
-  prompt: false,
+  prompt: true,
   npm: 'npm',
 };
 const erroneous = [];
@@ -75,15 +74,17 @@ module.exports.check = function check(request) {
   return dep;
 };
 
-module.exports.checkBabel = function checkBabel() {
+module.exports.checkBabel = function checkBabel(pluginOptions) {
   let babelOpts;
   let babelrc;
   try {
-    babelrc = require.resolve(path.resolve('.babelrc'));
+    babelrc = require.resolve(path.join(process.cwd(), '.babelrc'));
     babelOpts = JSON5.parse(fs.readFileSync(babelrc, 'utf8'));
   } catch (e) {
     try {
-      const babelConfigJs = require.resolve(path.resolve('babel.config.js'));
+      const babelConfigJs = require.resolve(
+        path.join(process.cwd(), '.babelrc')
+      );
       // eslint-disable-next-line
       babelOpts = require(babelConfigJs);
     } catch (e2) {
@@ -149,7 +150,7 @@ module.exports.checkBabel = function checkBabel() {
   const missing = deps.filter((dep) => this.check(dep));
 
   // Install missing dependencies
-  this.install(missing);
+  this.install(missing, pluginOptions);
 };
 
 module.exports.defaultOptions = defaultOptions;
@@ -191,6 +192,8 @@ module.exports.install = async function install(deps, options) {
     quietOptions = ['--silent', '--no-progress'];
   }
 
+  console.log({ options });
+
   if (options.prompt) {
     const response = await prompt({
       message: `[install-webpack-plugin] Would you like to install package(s) ${green(
@@ -219,6 +222,8 @@ module.exports.install = async function install(deps, options) {
   if (options.quiet) {
     args = args.concat(quietOptions);
   }
+
+  console.log({ args });
 
   deps.forEach((dep) => {
     console.info('Installing %s...', dep);

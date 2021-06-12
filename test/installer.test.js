@@ -5,7 +5,11 @@ const spawn = require('cross-spawn');
 
 const installer = require('../src/installer');
 
+jest.mock('../src/utils/prompt');
+const prompt = require('../src/utils/prompt');
+
 describe('installer', () => {
+  prompt.mockImplementation(() => true);
   describe('.defaultOptions', () => {
     it('should default dev to false', () => {
       expect(installer.defaultOptions.dev).toEqual(false);
@@ -182,14 +186,14 @@ describe('installer', () => {
         });
       });
 
-      it('should attempt to install once', () => {
-        installer.install('does.not.exist.jsx');
+      it('should attempt to install once', async () => {
+        await installer.install('does.not.exist.jsx');
 
         expect(this.sync).toHaveBeenCalled();
       });
 
-      it('should not attempt to install it again', () => {
-        installer.install('does.not.exist.jsx');
+      it('should not attempt to install it again', async () => {
+        await installer.install('does.not.exist.jsx');
 
         expect(this.sync).not.toHaveBeenCalled();
       });
@@ -208,8 +212,8 @@ describe('installer', () => {
 
       describe('given a dependency', () => {
         describe('with no options', () => {
-          it('should install it with --save', () => {
-            installer.install('foo', {
+          it('should install it with --save', async () => {
+            await installer.install('foo', {
               yarn: true,
             });
             expect(this.sync).toHaveBeenCalled();
@@ -220,8 +224,8 @@ describe('installer', () => {
         });
 
         describe('with dev set to true', () => {
-          it('should install it with --dev', () => {
-            installer.install('foo', {
+          it('should install it with --dev', async () => {
+            await installer.install('foo', {
               dev: true,
               yarn: true,
             });
@@ -244,8 +248,8 @@ describe('installer', () => {
             jest.clearAllMocks();
           });
 
-          it('should install without options', () => {
-            installer.install('foo', {
+          it('should install without options', async () => {
+            await installer.install('foo', {
               yarn: true,
             });
             expect(this.sync).toHaveBeenCalled();
@@ -256,8 +260,8 @@ describe('installer', () => {
         });
 
         describe('with quiet set to true', () => {
-          it('should install it with --silent --noprogress', () => {
-            installer.install('foo', {
+          it('should install it with --silent --noprogress', async () => {
+            await installer.install('foo', {
               quiet: true,
               yarn: true,
             });
@@ -296,8 +300,8 @@ describe('installer', () => {
           });
 
           describe('given no options', () => {
-            it('should install peerDependencies', () => {
-              installer.install('redbox-react', {
+            it('should install peerDependencies', async () => {
+              await installer.install('redbox-react', {
                 yarn: true,
               });
 
@@ -316,8 +320,8 @@ describe('installer', () => {
           });
 
           describe('given peerDependencies set to false', () => {
-            it('should not install peerDependencies', () => {
-              installer.install('redbox-react', {
+            it('should not install peerDependencies', async () => {
+              await installer.install('redbox-react', {
                 peerDependencies: false,
                 yarn: true,
               });
@@ -347,8 +351,8 @@ describe('installer', () => {
 
       describe('given a dependency', () => {
         describe('with no options', () => {
-          it('should install it with --save', () => {
-            installer.install('foo');
+          it('should install it with --save', async () => {
+            await installer.install('foo');
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
@@ -362,8 +366,8 @@ describe('installer', () => {
         });
 
         describe('with dev set to true', () => {
-          it('should install it with --save-dev', () => {
-            installer.install('foo', {
+          it('should install it with --save-dev', async () => {
+            await installer.install('foo', {
               dev: true,
             });
 
@@ -389,8 +393,8 @@ describe('installer', () => {
             jest.clearAllMocks();
           });
 
-          it('should install without --save', () => {
-            installer.install('foo');
+          it('should install without --save', async () => {
+            await installer.install('foo');
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
             expect(this.sync.mock.calls[0][0]).toEqual('npm');
@@ -399,8 +403,8 @@ describe('installer', () => {
         });
 
         describe('with quiet set to true', () => {
-          it('should install it with --silent --noprogress', () => {
-            installer.install('foo', {
+          it('should install it with --silent --noprogress', async () => {
+            await installer.install('foo', {
               quiet: true,
             });
 
@@ -440,8 +444,8 @@ describe('installer', () => {
           });
 
           describe('given no options', () => {
-            it('should install peerDependencies', () => {
-              installer.install('redbox-react');
+            it('should install peerDependencies', async () => {
+              await installer.install('redbox-react');
 
               expect(this.sync.mock.calls.length).toEqual(2);
               expect(this.sync.mock.calls[0][1]).toEqual([
@@ -460,8 +464,8 @@ describe('installer', () => {
           });
 
           describe('given peerDependencies set to false', () => {
-            it('should not install peerDependencies', () => {
-              installer.install('redbox-react', {
+            it('should not install peerDependencies', async () => {
+              await installer.install('redbox-react', {
                 peerDependencies: false,
               });
 
