@@ -5,7 +5,7 @@
     "webpack": "2.2.0"
   },
   "scripts": {
-    "link": "(cd .. && npm link .) && npm link npm-install-webpack-plugin",
+    "link": "(cd .. && npm link .) && npm link install-webpack-plugin",
     "postinstall": "npm run link",
     "start": "webpack --config webpack.config.server.js --watch"
   }

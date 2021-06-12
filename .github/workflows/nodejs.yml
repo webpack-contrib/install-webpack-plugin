@@ -1,4 +1,4 @@
-name: npm-install-webpack-plugin
+name: install-webpack-plugin
 
 on:
   push:

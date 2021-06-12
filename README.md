@@ -24,7 +24,7 @@ will happen **automatically to install & save missing dependencies** while you w
 <h2 align="center">Install</h2>
 
 ```bash
-$ npm install --save-dev npm-install-webpack-plugin
+$ npm install --save-dev install-webpack-plugin
 ```
 
 <h2 align="center">Usage</h2>
@@ -72,7 +72,7 @@ plugins: [
 
 <h2 align="center">Demo</h2>
 
-![npm-install-webpack-plugin demo](https://cloud.githubusercontent.com/assets/15182/12540538/6a4e8f1a-c2d0-11e5-97ee-4ddaf6892645.gif)
+![install-webpack-plugin demo](https://cloud.githubusercontent.com/assets/15182/12540538/6a4e8f1a-c2d0-11e5-97ee-4ddaf6892645.gif)
 
 <h2 align="center">Features</h2>
 
@@ -122,13 +122,13 @@ Please take a moment to read our contributing guidelines if you haven't yet done
   <tbody>
 </table>
 
-[npm]: https://img.shields.io/npm/v/npm-install-webpack-plugin.svg
-[npm-url]: https://npmjs.com/package/npm-install-webpack-plugin
-[deps]: https://david-dm.org/webpack-contrib/npm-install-webpack-plugin.svg
-[deps-url]: https://david-dm.org/webpack-contrib/npm-install-webpack-plugin
+[npm]: https://img.shields.io/npm/v/install-webpack-plugin.svg
+[npm-url]: https://npmjs.com/package/install-webpack-plugin
+[deps]: https://david-dm.org/webpack-contrib/install-webpack-plugin.svg
+[deps-url]: https://david-dm.org/webpack-contrib/install-webpack-plugin
 [chat]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
 [chat-url]: https://gitter.im/webpack/webpack
-[test]: https://travis-ci.org/webpack-contrib/npm-install-webpack-plugin.svg?branch=master
-[test-url]: https://travis-ci.org/webpack-contrib/npm-install-webpack-plugin
-[cover]: https://codecov.io/gh/webpack-contrib/npm-install-webpack-plugin/branch/master/graph/badge.svg
-[cover-url]: https://codecov.io/gh/webpack-contrib/npm-install-webpack-plugin
+[test]: https://travis-ci.org/webpack-contrib/install-webpack-plugin.svg?branch=master
+[test-url]: https://travis-ci.org/webpack-contrib/install-webpack-plugin
+[cover]: https://codecov.io/gh/webpack-contrib/install-webpack-plugin/branch/master/graph/badge.svg
+[cover-url]: https://codecov.io/gh/webpack-contrib/install-webpack-plugin
