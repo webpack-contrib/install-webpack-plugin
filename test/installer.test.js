@@ -5,11 +5,8 @@ const spawn = require('cross-spawn');
 
 const installer = require('../src/installer');
 
-jest.mock('../src/utils/prompt');
-const prompt = require('../src/utils/prompt');
-
 describe('installer', () => {
-  prompt.mockImplementation(() => true);
+  jest.spyOn(installer, 'prompt').mockImplementation(() => true);
   describe('.defaultOptions', () => {
     it('should default dev to false', () => {
       expect(installer.defaultOptions.dev).toEqual(false);

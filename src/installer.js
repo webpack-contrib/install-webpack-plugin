@@ -9,8 +9,6 @@ const JSON5 = require('json5');
 
 const { green, yellow } = require('colorette');
 
-const prompt = require('./utils/prompt');
-
 // Match "react", "path", "fs", "lodash.random", etc.
 const EXTERNAL = /^\w[a-z\-0-9\.]+$/;
 const PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
@@ -35,6 +33,30 @@ function normalizeBabelPlugin(plugin, prefix) {
   }
   return prefix + plugin;
 }
+
+module.exports.prompt = ({ message, defaultResponse, stream }) => {
+  const readline = require('readline');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: stream,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(`${message} `, (answer) => {
+      // Close the stream
+      rl.close();
+
+      const response = (answer || defaultResponse).toLowerCase();
+
+      // Resolve with the input response
+      if (response === 'y' || response === 'yes') {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
+};
 
 module.exports.packageExists = function packageExists() {
   const pkgPath = path.resolve('package.json');
@@ -195,7 +217,7 @@ module.exports.install = async function install(deps, options) {
   console.log({ options });
 
   if (options.prompt) {
-    const response = await prompt({
+    const response = await this.prompt({
       message: `[install-webpack-plugin] Would you like to install package(s) ${green(
         deps.join(', ')
       )},
