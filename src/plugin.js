@@ -42,7 +42,7 @@ class InstallPlugin {
     this.options = { ...installer.defaultOptions, ...options };
     this.resolving = new Set();
 
-    installer.checkBabel();
+    installer.checkBabel(this.options);
   }
 
   apply(compiler) {

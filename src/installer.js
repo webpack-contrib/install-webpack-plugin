@@ -1,14 +1,13 @@
 /* eslint-disable no-console, consistent-return,no-useless-escape */
 const fs = require('fs');
 const path = require('path');
-
 const util = require('util');
 
 const resolve = require('resolve');
-
 const spawn = require('cross-spawn');
-
 const JSON5 = require('json5');
+
+const { green, yellow } = require('colorette');
 
 // Match "react", "path", "fs", "lodash.random", etc.
 const EXTERNAL = /^\w[a-z\-0-9\.]+$/;
@@ -18,6 +17,7 @@ const defaultOptions = {
   dev: false,
   peerDependencies: true,
   quiet: false,
+  prompt: true,
   npm: 'npm',
 };
 const erroneous = [];
@@ -33,6 +33,30 @@ function normalizeBabelPlugin(plugin, prefix) {
   }
   return prefix + plugin;
 }
+
+module.exports.prompt = ({ message, defaultResponse, stream }) => {
+  const readline = require('readline');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: stream,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(`${message} `, (answer) => {
+      // Close the stream
+      rl.close();
+
+      const response = (answer || defaultResponse).toLowerCase();
+
+      // Resolve with the input response
+      if (response === 'y' || response === 'yes') {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
+};
 
 module.exports.packageExists = function packageExists() {
   const pkgPath = path.resolve('package.json');
@@ -72,15 +96,17 @@ module.exports.check = function check(request) {
   return dep;
 };
 
-module.exports.checkBabel = function checkBabel() {
+module.exports.checkBabel = function checkBabel(pluginOptions) {
   let babelOpts;
   let babelrc;
   try {
-    babelrc = require.resolve(path.resolve('.babelrc'));
+    babelrc = require.resolve(path.join(process.cwd(), '.babelrc'));
     babelOpts = JSON5.parse(fs.readFileSync(babelrc, 'utf8'));
   } catch (e) {
     try {
-      const babelConfigJs = require.resolve(path.resolve('babel.config.js'));
+      const babelConfigJs = require.resolve(
+        path.join(process.cwd(), '.babelrc')
+      );
       // eslint-disable-next-line
       babelOpts = require(babelConfigJs);
     } catch (e2) {
@@ -146,12 +172,12 @@ module.exports.checkBabel = function checkBabel() {
   const missing = deps.filter((dep) => this.check(dep));
 
   // Install missing dependencies
-  this.install(missing);
+  this.install(missing, pluginOptions);
 };
 
 module.exports.defaultOptions = defaultOptions;
 
-module.exports.install = function install(deps, options) {
+module.exports.install = async function install(deps, options) {
   if (!deps) {
     return;
   }
@@ -188,6 +214,27 @@ module.exports.install = function install(deps, options) {
     quietOptions = ['--silent', '--no-progress'];
   }
 
+  console.log({ options });
+
+  if (options.prompt) {
+    const response = await this.prompt({
+      message: `[install-webpack-plugin] Would you like to install package(s) ${green(
+        deps.join(', ')
+      )},
+      )}'? (That will run '${green(`${client} ${args[0]}`)}') (${yellow(
+        'Y/n'
+      )})`,
+      defaultResponse: 'Y',
+      stream: process.stderr,
+    });
+    if (!response) {
+      console.log(
+        "[install-webpack-plugin] Missing packages won't be installed."
+      );
+      return;
+    }
+  }
+
   args = args.concat(deps).filter(Boolean);
 
   if (save && module.exports.packageExists()) {
@@ -197,6 +244,8 @@ module.exports.install = function install(deps, options) {
   if (options.quiet) {
     args = args.concat(quietOptions);
   }
+
+  console.log({ args });
 
   deps.forEach((dep) => {
     console.info('Installing %s...', dep);
