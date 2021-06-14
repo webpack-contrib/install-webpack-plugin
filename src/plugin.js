@@ -39,14 +39,17 @@ class InstallPlugin {
   constructor(options) {
     this.preCompiler = undefined;
     this.compiler = undefined;
+    this.logger = undefined;
     this.options = { ...installer.defaultOptions, ...options };
     this.resolving = new Set();
-
-    installer.checkBabel(this.options);
   }
 
   apply(compiler) {
     this.compiler = compiler;
+
+    this.logger = compiler.getInfrastructureLogger('install-webpack-plugin');
+
+    installer.checkBabel(this.options, this.logger);
 
     // Recursively install missing dependencies so primary build doesn't fail
     compiler.hooks.watchRun.tapAsync(PLUGIN_NAME, this.preCompile.bind(this));
@@ -79,7 +82,7 @@ class InstallPlugin {
     });
   }
 
-  install(result) {
+  install(result, logger) {
     if (!result) {
       return;
     }
@@ -93,7 +96,7 @@ class InstallPlugin {
         dev = !!this.options.dev(result.request, result.path);
       }
 
-      installer.install(dep, Object.assign({}, this.options, { dev }));
+      installer.install(dep, Object.assign({}, this.options, { dev }), logger);
     }
   }
 
@@ -142,7 +145,10 @@ class InstallPlugin {
       // eslint-disable-next-line func-names
       (err) => {
         if (err) {
-          this.install(Object.assign({}, result, { request: depFromErr(err) }));
+          this.install(
+            Object.assign({}, result, { request: depFromErr(err) }),
+            this.logger
+          );
         }
 
         callback();
@@ -177,7 +183,10 @@ class InstallPlugin {
 
         if (err) {
           const loader = utils.normalizeLoader(result.request);
-          this.install(Object.assign({}, result, { request: loader }));
+          this.install(
+            Object.assign({}, result, { request: loader }),
+            this.logger
+          );
         }
 
         return next && next();
@@ -205,7 +214,10 @@ class InstallPlugin {
         this.resolving.delete(result.request);
 
         if (err) {
-          this.install(Object.assign({}, result, { request: depFromErr(err) }));
+          this.install(
+            Object.assign({}, result, { request: depFromErr(err) }),
+            this.logger
+          );
         }
 
         return next();

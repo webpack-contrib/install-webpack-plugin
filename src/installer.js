@@ -1,4 +1,4 @@
-/* eslint-disable no-console, consistent-return,no-useless-escape */
+/* eslint-disable consistent-return, no-useless-escape */
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
@@ -96,7 +96,7 @@ module.exports.check = function check(request) {
   return dep;
 };
 
-module.exports.checkBabel = function checkBabel(pluginOptions) {
+module.exports.checkBabel = function checkBabel(pluginOptions, logger) {
   let babelOpts;
   let babelrc;
   try {
@@ -110,10 +110,10 @@ module.exports.checkBabel = function checkBabel(pluginOptions) {
       // eslint-disable-next-line
       babelOpts = require(babelConfigJs);
     } catch (e2) {
-      console.info("couldn't locate babel.config.js nor .babelrc");
+      logger.info("couldn't locate babel.config.js nor .babelrc");
     }
     if (babelrc) {
-      console.info('.babelrc is invalid JSON5, babel deps are skipped');
+      logger.info('.babelrc is invalid JSON5, babel deps are skipped');
     }
     // Babel isn't installed, don't install deps
     return;
@@ -172,12 +172,12 @@ module.exports.checkBabel = function checkBabel(pluginOptions) {
   const missing = deps.filter((dep) => this.check(dep));
 
   // Install missing dependencies
-  this.install(missing, pluginOptions);
+  this.install(missing, pluginOptions, logger);
 };
 
 module.exports.defaultOptions = defaultOptions;
 
-module.exports.install = async function install(deps, options) {
+module.exports.install = async function install(deps, options, logger) {
   if (!deps) {
     return;
   }
@@ -214,8 +214,6 @@ module.exports.install = async function install(deps, options) {
     quietOptions = ['--silent', '--no-progress'];
   }
 
-  console.log({ options });
-
   if (options.prompt) {
     const response = await this.prompt({
       message: `[install-webpack-plugin] Would you like to install package(s) ${green(
@@ -228,7 +226,7 @@ module.exports.install = async function install(deps, options) {
       stream: process.stderr,
     });
     if (!response) {
-      console.log(
+      logger.warn(
         "[install-webpack-plugin] Missing packages won't be installed."
       );
       return;
@@ -245,10 +243,8 @@ module.exports.install = async function install(deps, options) {
     args = args.concat(quietOptions);
   }
 
-  console.log({ args });
-
   deps.forEach((dep) => {
-    console.info('Installing %s...', dep);
+    logger.info('Installing %s...', dep);
   });
 
   // Ignore input, capture output, show errors
@@ -279,9 +275,9 @@ module.exports.install = async function install(deps, options) {
   }
 
   if (options.peerDependencies && peers.length) {
-    console.info('Installing peerDependencies...');
-    this.install(peers, options);
-    console.info('');
+    logger.info('Installing peerDependencies...');
+    this.install(peers, options, logger);
+    logger.info('');
   }
 
   return output;
