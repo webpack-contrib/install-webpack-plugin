@@ -10,11 +10,8 @@ exports[`validation should throw an error on the "dependencies" option with "{"d
     * options.dependencies.dev should be an instance of function."
 `;
 
-exports[`validation should throw an error on the "dependencies" option with "{"dev":"test","peerDependencies":true}" value 1`] = `
+exports[`validation should throw an error on the "dependencies" option with "{"dev":"test","peer":true}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.dependencies has an unknown property 'peerDependencies'. These properties are valid:
-   object { dev?, peer? }
-   -> dependencies related options.
  - options.dependencies.dev should be one of these:
    boolean | function
    -> Install as development dependencies
@@ -33,11 +30,10 @@ exports[`validation should throw an error on the "dependencies" option with "{"d
     * options.dependencies.dev should be an instance of function."
 `;
 
-exports[`validation should throw an error on the "dependencies" option with "{"peerDependencies":"bar"}" value 1`] = `
+exports[`validation should throw an error on the "dependencies" option with "{"peer":"bar"}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.dependencies has an unknown property 'peerDependencies'. These properties are valid:
-   object { dev?, peer? }
-   -> dependencies related options."
+ - options.dependencies.peer should be a boolean.
+   -> Install missing peer dependencies"
 `;
 
 exports[`validation should throw an error on the "npm" option with "10" value 1`] = `

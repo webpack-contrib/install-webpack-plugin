@@ -6,14 +6,14 @@ describe('validation', () => {
       success: [
         { dev: true },
         { dev: () => {} },
-        { peerDependencies: true },
-        { dev: true, peerDependencies: true },
+        { peer: true },
+        { dev: true, peer: true },
       ],
       failure: [
         { dev: 'foo' },
         { dev: 10 },
-        { peerDependencies: 'bar' },
-        { dev: 'test', peerDependencies: true },
+        { peer: 'bar' },
+        { dev: 'test', peer: true },
       ],
     },
     npm: {
