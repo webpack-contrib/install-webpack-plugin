@@ -39,7 +39,7 @@ jobs:
         run: npm run lint
 
   build:
-    name: Tests and Coverage - ${{ matrix.os }} - Node v${{ matrix.node-version }}, Webpack ${{ matrix.webpack-version }}
+    name: Tests and Coverage - ${{ matrix.os }} - Node v${{ matrix.node-version }}
 
     runs-on: ${{ matrix.os }}
 
@@ -47,7 +47,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [12.x, 14.x]
-        webpack-version: [4]
 
     steps:
       - uses: actions/checkout@v2
@@ -61,9 +60,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Install webpack ${{ matrix.webpack-version }}
-        run: npm install webpack@${{ matrix.webpack-version }}
 
       - name: Run tests and generate coverage
         run: |
