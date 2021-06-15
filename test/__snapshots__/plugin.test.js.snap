@@ -4,9 +4,11 @@ exports[`plugin .resolveExternal should resolve external deps 1`] = `
 Array [
   "express",
   Object {
-    "dev": false,
+    "dependencies": Object {
+      "dev": false,
+      "peer": true,
+    },
     "npm": true,
-    "peerDependencies": true,
     "prompt": true,
     "quiet": false,
   },

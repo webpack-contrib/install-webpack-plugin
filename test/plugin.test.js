@@ -21,8 +21,10 @@ describe('plugin', () => {
     this.next = jest.fn();
 
     this.options = {
-      dev: false,
-      peerDependencies: true,
+      dependencies: {
+        dev: false,
+        peer: true,
+      },
       quiet: false,
       prompt: true,
       npm: true,

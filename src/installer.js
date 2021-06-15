@@ -14,8 +14,10 @@ const EXTERNAL = /^\w[a-z\-0-9\.]+$/;
 const PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
 const defaultOptions = {
-  dev: false,
-  peerDependencies: true,
+  dependencies: {
+    dev: false,
+    peer: true,
+  },
   quiet: false,
   prompt: true,
   npm: true,
@@ -206,12 +208,12 @@ module.exports.install = async function install(deps, options, logger) {
   if (options.yarn) {
     args = ['add'];
     client = 'yarn';
-    save = options.dev ? '--dev' : null;
+    save = options.dependencies.dev ? '--dev' : null;
     quietOptions = ['--silent'];
   } else {
     args = ['install'];
     client = 'npm';
-    save = options.dev ? '--save-dev' : '--save';
+    save = options.dependencies.dev ? '--save-dev' : '--save';
     quietOptions = ['--silent', '--no-progress'];
   }
 
@@ -275,7 +277,7 @@ module.exports.install = async function install(deps, options, logger) {
     }
   }
 
-  if (options.peerDependencies && peers.length) {
+  if (options.dependencies.peer && peers.length) {
     logger.info('Installing peerDependencies...');
     this.install(peers, options, logger);
     logger.info('');

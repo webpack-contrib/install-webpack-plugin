@@ -12,12 +12,12 @@ const logger = logging.getLogger('install-webpack-plugin');
 describe('installer', () => {
   jest.spyOn(installer, 'prompt').mockImplementation(() => true);
   describe('.defaultOptions', () => {
-    it('should default dev to false', () => {
-      expect(installer.defaultOptions.dev).toEqual(false);
+    it('should default dependencies.dev to false', () => {
+      expect(installer.defaultOptions.dependencies.dev).toEqual(false);
     });
 
-    it('should default peerDependencies to true', () => {
-      expect(installer.defaultOptions.peerDependencies).toEqual(true);
+    it('should default dependencies.peer to true', () => {
+      expect(installer.defaultOptions.dependencies.peer).toEqual(true);
     });
 
     it('should default quiet to false', () => {
@@ -233,7 +233,9 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                dev: true,
+                dependencies: {
+                  dev: true,
+                },
                 yarn: true,
               },
               logger
@@ -345,17 +347,15 @@ describe('installer', () => {
               await installer.install(
                 'redbox-react',
                 {
-                  peerDependencies: false,
+                  dependencies: {
+                    peer: false,
+                  },
                   yarn: true,
                 },
                 logger
               );
 
-              expect(this.sync.mock.calls.length).toEqual(1);
-              expect(this.sync.mock.calls[0][1]).toEqual([
-                'add',
-                'redbox-react',
-              ]);
+              expect(this.sync.mock.calls).toMatchSnapshot();
             });
           });
         });
@@ -395,7 +395,9 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                dev: true,
+                dependencies: {
+                  dev: true,
+                },
               },
               logger
             );
@@ -496,22 +498,19 @@ describe('installer', () => {
             });
           });
 
-          describe('given peerDependencies set to false', () => {
+          describe('given dependencies.peer set to false', () => {
             it('should not install peerDependencies', async () => {
               await installer.install(
                 'redbox-react',
                 {
-                  peerDependencies: false,
+                  dependencies: {
+                    peer: false,
+                  },
                 },
                 logger
               );
 
-              expect(this.sync.mock.calls.length).toEqual(1);
-              expect(this.sync.mock.calls[0][1]).toEqual([
-                'install',
-                'redbox-react',
-                '--save',
-              ]);
+              expect(this.sync.mock.calls).toMatchSnapshot();
             });
           });
         });

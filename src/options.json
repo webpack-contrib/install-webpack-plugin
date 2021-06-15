@@ -2,24 +2,31 @@
   "title": "Install Plugin options",
   "type": "object",
   "definitions": {
-    "Dev": {
-      "anyOf": [
-        {
-          "type": "boolean"
+    "Dependencies": {
+      "type": "object",
+      "description": "dependencies related options.",
+      "additionalProperties": false,
+      "properties": {
+        "dev": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
+          "description": "Install as development dependencies"
         },
-        {
-          "instanceof": "Function"
+        "peer": {
+          "type": "boolean",
+          "description": "Install missing peer dependencies"
         }
-      ],
-      "description": "Install as development dependencies"
+      }
     },
     "NPM": {
       "type": "boolean",
       "description": "Use NPM to install dependencies."
-    },
-    "PeerDependencies": {
-      "type": "boolean",
-      "description": "Install missing peer dependencies"
     },
     "Prompt": {
       "type": "boolean",
@@ -36,14 +43,11 @@
   },
   "additionalProperties": false,
   "properties": {
-    "dev": {
-      "$ref": "#/definitions/Dev"
+    "dependencies": {
+      "$ref": "#/definitions/Dependencies"
     },
     "npm": {
       "$ref": "#/definitions/NPM"
-    },
-    "peerDependencies": {
-      "$ref": "#/definitions/PeerDependencies"
     },
     "prompt": {
       "$ref": "#/definitions/Prompt"
