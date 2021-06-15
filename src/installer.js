@@ -18,8 +18,9 @@ const defaultOptions = {
   peerDependencies: true,
   quiet: false,
   prompt: true,
-  npm: 'npm',
+  npm: true,
 };
+
 const erroneous = [];
 
 function normalizeBabelPlugin(plugin, prefix) {
@@ -209,7 +210,7 @@ module.exports.install = async function install(deps, options, logger) {
     quietOptions = ['--silent'];
   } else {
     args = ['install'];
-    client = options.npm;
+    client = 'npm';
     save = options.dev ? '--save-dev' : '--save';
     quietOptions = ['--silent', '--no-progress'];
   }

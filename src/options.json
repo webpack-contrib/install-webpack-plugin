@@ -11,13 +11,48 @@
           "instanceof": "Function"
         }
       ],
-      "description": "Use --save or --save-dev"
+      "description": "Install as development dependencies"
+    },
+    "NPM": {
+      "type": "boolean",
+      "description": "Use NPM to install dependencies."
+    },
+    "PeerDependencies": {
+      "type": "boolean",
+      "description": "Install missing peer dependencies"
+    },
+    "Prompt": {
+      "type": "boolean",
+      "description": "Show a prompt to confirm installation."
+    },
+    "Quiet": {
+      "type": "boolean",
+      "description": " Reduce amount of console logging"
+    },
+    "Yarn": {
+      "type": "boolean",
+      "description": "Use yarn to install dependencies."
     }
   },
   "additionalProperties": false,
   "properties": {
     "dev": {
       "$ref": "#/definitions/Dev"
+    },
+    "npm": {
+      "$ref": "#/definitions/NPM"
+    },
+    "peerDependencies": {
+      "$ref": "#/definitions/PeerDependencies"
+    },
+    "prompt": {
+      "$ref": "#/definitions/Prompt"
+    },
+    "quiet": {
+      "$ref": "#/definitions/Quiet"
+    },
+    "yarn": {
+      "$ref": "#/definitions/Yarn"
     }
   }
 }
