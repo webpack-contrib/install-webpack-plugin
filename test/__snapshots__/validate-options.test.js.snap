@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validation should throw an error on the "dev" option with "10" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.dev should be one of these:
+   boolean | function
+   -> Install as development dependencies
+   Details:
+    * options.dev should be a boolean.
+    * options.dev should be an instance of function."
+`;
+
+exports[`validation should throw an error on the "dev" option with "foo" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.dev should be one of these:
+   boolean | function
+   -> Install as development dependencies
+   Details:
+    * options.dev should be a boolean.
+    * options.dev should be an instance of function."
+`;
+
+exports[`validation should throw an error on the "npm" option with "10" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.npm should be a boolean.
+   -> Use NPM to install dependencies."
+`;
+
+exports[`validation should throw an error on the "npm" option with "bar" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.npm should be a boolean.
+   -> Use NPM to install dependencies."
+`;
+
+exports[`validation should throw an error on the "npm" option with "foo" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.npm should be a boolean.
+   -> Use NPM to install dependencies."
+`;
+
+exports[`validation should throw an error on the "peerDependencies" option with "10" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.peerDependencies should be a boolean.
+   -> Install missing peer dependencies"
+`;
+
+exports[`validation should throw an error on the "peerDependencies" option with "bar" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.peerDependencies should be a boolean.
+   -> Install missing peer dependencies"
+`;
+
+exports[`validation should throw an error on the "prompt" option with "10" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.prompt should be a boolean.
+   -> Show a prompt to confirm installation."
+`;
+
+exports[`validation should throw an error on the "prompt" option with "bar" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.prompt should be a boolean.
+   -> Show a prompt to confirm installation."
+`;
+
+exports[`validation should throw an error on the "quiet" option with "10" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.quiet should be a boolean.
+   ->  Reduce amount of console logging"
+`;
+
+exports[`validation should throw an error on the "quiet" option with "bar" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.quiet should be a boolean.
+   ->  Reduce amount of console logging"
+`;
+
+exports[`validation should throw an error on the "yarn" option with "10" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.yarn should be a boolean.
+   -> Use yarn to install dependencies."
+`;
+
+exports[`validation should throw an error on the "yarn" option with "bar" value 1`] = `
+"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
+ - options.yarn should be a boolean.
+   -> Use yarn to install dependencies."
+`;
