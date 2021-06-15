@@ -1,0 +1,23 @@
+{
+  "title": "install-webpack-plugin options",
+  "type": "object",
+  "definitions": {
+    "Dev": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "instanceof": "Function"
+        }
+      ],
+      "description": "Use --save or --save-dev"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dev": {
+      "$ref": "#/definitions/Dev"
+    }
+  }
+}
