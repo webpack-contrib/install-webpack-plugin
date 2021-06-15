@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`plugin .resolveExternal should resolve external deps 1`] = `
+Array [
+  "express",
+  Object {
+    "dev": false,
+    "npm": "npm",
+    "peerDependencies": true,
+    "prompt": true,
+    "quiet": false,
+  },
+  WebpackLogger {
+    "getChildLogger": [Function],
+    Symbol(webpack logger raw log method): [Function],
+  },
+]
+`;

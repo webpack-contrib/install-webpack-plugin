@@ -139,10 +139,7 @@ describe('plugin', () => {
           expect(this.check).toHaveBeenCalled();
           expect(this.install).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalledWith('express');
-          expect(this.install).toHaveBeenCalledWith(
-            'express',
-            installer.defaultOptions
-          );
+          expect(this.install.mock.calls[0]).toMatchSnapshot();
           done();
         }.bind(this)
       );

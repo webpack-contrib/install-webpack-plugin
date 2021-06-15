@@ -3,7 +3,11 @@ const path = require('path');
 
 const spawn = require('cross-spawn');
 
+const logging = require('webpack/lib/logging/runtime');
+
 const installer = require('../src/installer');
+
+const logger = logging.getLogger('install-webpack-plugin');
 
 describe('installer', () => {
   jest.spyOn(installer, 'prompt').mockImplementation(() => true);
@@ -94,7 +98,7 @@ describe('installer', () => {
       });
 
       it('should return early', () => {
-        const result = installer.checkBabel();
+        const result = installer.checkBabel({}, logger);
 
         expect(result).toBe(undefined);
         expect(this.sync).not.toHaveBeenCalled();
@@ -184,13 +188,13 @@ describe('installer', () => {
       });
 
       it('should attempt to install once', async () => {
-        await installer.install('does.not.exist.jsx');
+        await installer.install('does.not.exist.jsx', {}, logger);
 
         expect(this.sync).toHaveBeenCalled();
       });
 
       it('should not attempt to install it again', async () => {
-        await installer.install('does.not.exist.jsx');
+        await installer.install('does.not.exist.jsx', {}, logger);
 
         expect(this.sync).not.toHaveBeenCalled();
       });
@@ -210,9 +214,13 @@ describe('installer', () => {
       describe('given a dependency', () => {
         describe('with no options', () => {
           it('should install it with --save', async () => {
-            await installer.install('foo', {
-              yarn: true,
-            });
+            await installer.install(
+              'foo',
+              {
+                yarn: true,
+              },
+              logger
+            );
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
             expect(this.sync.mock.calls[0][0]).toEqual('yarn');
@@ -222,10 +230,14 @@ describe('installer', () => {
 
         describe('with dev set to true', () => {
           it('should install it with --dev', async () => {
-            await installer.install('foo', {
-              dev: true,
-              yarn: true,
-            });
+            await installer.install(
+              'foo',
+              {
+                dev: true,
+                yarn: true,
+              },
+              logger
+            );
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
@@ -246,9 +258,13 @@ describe('installer', () => {
           });
 
           it('should install without options', async () => {
-            await installer.install('foo', {
-              yarn: true,
-            });
+            await installer.install(
+              'foo',
+              {
+                yarn: true,
+              },
+              logger
+            );
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
             expect(this.sync.mock.calls[0][0]).toEqual('yarn');
@@ -258,10 +274,14 @@ describe('installer', () => {
 
         describe('with quiet set to true', () => {
           it('should install it with --silent --noprogress', async () => {
-            await installer.install('foo', {
-              quiet: true,
-              yarn: true,
-            });
+            await installer.install(
+              'foo',
+              {
+                quiet: true,
+                yarn: true,
+              },
+              logger
+            );
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
@@ -298,9 +318,13 @@ describe('installer', () => {
 
           describe('given no options', () => {
             it('should install peerDependencies', async () => {
-              await installer.install('redbox-react', {
-                yarn: true,
-              });
+              await installer.install(
+                'redbox-react',
+                {
+                  yarn: true,
+                },
+                logger
+              );
 
               expect(this.sync.mock.calls.length).toEqual(2);
               expect(this.sync.mock.calls[0][1]).toEqual([
@@ -318,10 +342,14 @@ describe('installer', () => {
 
           describe('given peerDependencies set to false', () => {
             it('should not install peerDependencies', async () => {
-              await installer.install('redbox-react', {
-                peerDependencies: false,
-                yarn: true,
-              });
+              await installer.install(
+                'redbox-react',
+                {
+                  peerDependencies: false,
+                  yarn: true,
+                },
+                logger
+              );
 
               expect(this.sync.mock.calls.length).toEqual(1);
               expect(this.sync.mock.calls[0][1]).toEqual([
@@ -349,7 +377,7 @@ describe('installer', () => {
       describe('given a dependency', () => {
         describe('with no options', () => {
           it('should install it with --save', async () => {
-            await installer.install('foo');
+            await installer.install('foo', {}, logger);
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
@@ -364,9 +392,13 @@ describe('installer', () => {
 
         describe('with dev set to true', () => {
           it('should install it with --save-dev', async () => {
-            await installer.install('foo', {
-              dev: true,
-            });
+            await installer.install(
+              'foo',
+              {
+                dev: true,
+              },
+              logger
+            );
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
@@ -391,7 +423,7 @@ describe('installer', () => {
           });
 
           it('should install without --save', async () => {
-            await installer.install('foo');
+            await installer.install('foo', {}, logger);
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
             expect(this.sync.mock.calls[0][0]).toEqual('npm');
@@ -401,9 +433,13 @@ describe('installer', () => {
 
         describe('with quiet set to true', () => {
           it('should install it with --silent --noprogress', async () => {
-            await installer.install('foo', {
-              quiet: true,
-            });
+            await installer.install(
+              'foo',
+              {
+                quiet: true,
+              },
+              logger
+            );
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
@@ -442,7 +478,7 @@ describe('installer', () => {
 
           describe('given no options', () => {
             it('should install peerDependencies', async () => {
-              await installer.install('redbox-react');
+              await installer.install('redbox-react', {}, logger);
 
               expect(this.sync.mock.calls.length).toEqual(2);
               expect(this.sync.mock.calls[0][1]).toEqual([
@@ -462,9 +498,13 @@ describe('installer', () => {
 
           describe('given peerDependencies set to false', () => {
             it('should not install peerDependencies', async () => {
-              await installer.install('redbox-react', {
-                peerDependencies: false,
-              });
+              await installer.install(
+                'redbox-react',
+                {
+                  peerDependencies: false,
+                },
+                logger
+              );
 
               expect(this.sync.mock.calls.length).toEqual(1);
               expect(this.sync.mock.calls[0][1]).toEqual([
