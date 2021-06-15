@@ -32,12 +32,6 @@ exports[`validation should throw an error on the "npm" option with "bar" value 1
    -> Use NPM to install dependencies."
 `;
 
-exports[`validation should throw an error on the "npm" option with "foo" value 1`] = `
-"Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
- - options.npm should be a boolean.
-   -> Use NPM to install dependencies."
-`;
-
 exports[`validation should throw an error on the "peerDependencies" option with "10" value 1`] = `
 "Invalid options object. install-webpack-plugin has been initialized using an options object that does not match the API schema.
  - options.peerDependencies should be a boolean.
