@@ -1,5 +1,5 @@
 {
-  "title": "install-webpack-plugin options",
+  "title": "Install Plugin options",
   "type": "object",
   "definitions": {
     "Dev": {
