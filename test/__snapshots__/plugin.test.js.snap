@@ -5,7 +5,7 @@ Array [
   "express",
   Object {
     "dev": false,
-    "npm": "npm",
+    "npm": true,
     "peerDependencies": true,
     "prompt": true,
     "quiet": false,

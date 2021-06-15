@@ -25,7 +25,7 @@ describe('plugin', () => {
       peerDependencies: true,
       quiet: false,
       prompt: true,
-      npm: 'npm',
+      npm: true,
     };
 
     this.plugin = new Plugin(this.options);

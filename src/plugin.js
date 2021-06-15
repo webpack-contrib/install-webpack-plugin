@@ -3,10 +3,12 @@
 const path = require('path');
 
 const { createFsFromVolume, Volume } = require('memfs');
+const { validate } = require('schema-utils');
 const webpack = require('webpack');
 
 const installer = require('./installer');
 const utils = require('./utils');
+const schema = require('./options.json');
 
 const PLUGIN_NAME = 'InstallPlugin';
 
@@ -37,6 +39,8 @@ const depFromErr = (err) => {
 
 class InstallPlugin {
   constructor(options) {
+    validate(schema, options, 'install-webpack-plugin');
+
     this.preCompiler = undefined;
     this.compiler = undefined;
     this.logger = undefined;
