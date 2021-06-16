@@ -3,26 +3,16 @@ const InstallPlugin = require('../src/plugin');
 describe('validation', () => {
   const cases = {
     dependencies: {
-      success: [
-        { dev: true },
-        { dev: () => {} },
-        { peer: true },
-        { dev: true, peer: true },
-      ],
-      failure: [
-        { dev: 'foo' },
-        { dev: 10 },
-        { peer: 'bar' },
-        { dev: 'test', peer: true },
-      ],
+      success: [{ peer: true }, { peer: false }],
+      failure: [{ peer: 'bar' }, { peer: 10 }],
     },
     npm: {
       success: [true, false],
       failure: ['bar', 10],
     },
     packageManagerOptions: {
-      success: [{ dev: true }],
-      failure: [{ test: 10 }],
+      success: [{ dev: true }, { dev: () => {} }],
+      failure: [{ dev: 10 }, { dev: 'yes' }],
     },
     prompt: {
       success: [true, false],

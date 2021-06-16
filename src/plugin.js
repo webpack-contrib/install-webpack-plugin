@@ -94,17 +94,17 @@ class InstallPlugin {
     const dep = installer.check(result.request);
 
     if (dep) {
-      const { dependencies } = this.options;
+      const { packageManagerOptions } = this.options;
 
-      if (typeof dependencies.dev === 'function') {
-        dependencies.dev = Boolean(
-          dependencies.dev(result.request, result.path)
+      if (typeof packageManagerOptions.dev === 'function') {
+        packageManagerOptions.dev = Boolean(
+          packageManagerOptions.dev(result.request, result.path)
         );
       }
 
       installer.install(
         dep,
-        Object.assign({}, this.options, { dependencies }),
+        Object.assign({}, this.options, { packageManagerOptions }),
         logger
       );
     }

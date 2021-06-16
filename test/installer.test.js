@@ -12,8 +12,8 @@ const logger = logging.getLogger('install-webpack-plugin');
 describe('installer', () => {
   jest.spyOn(installer, 'prompt').mockImplementation(() => true);
   describe('.defaultOptions', () => {
-    it('should default dependencies.dev to false', () => {
-      expect(installer.defaultOptions.dependencies.dev).toEqual(false);
+    it('should default packageManagerOptions.dev to false', () => {
+      expect(installer.defaultOptions.packageManagerOptions.dev).toEqual(false);
     });
 
     it('should default dependencies.peer to true', () => {

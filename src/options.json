@@ -7,17 +7,6 @@
       "description": "dependencies related options.",
       "additionalProperties": false,
       "properties": {
-        "dev": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "instanceof": "Function"
-            }
-          ],
-          "description": "Install missing development dependencies"
-        },
         "peer": {
           "type": "boolean",
           "description": "Install missing peer dependencies"
@@ -34,7 +23,14 @@
       "additionalProperties": false,
       "properties": {
         "dev": {
-          "type": "boolean",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "description": "Install as development dependencies"
         }
       }

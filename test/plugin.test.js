@@ -22,7 +22,6 @@ describe('plugin', () => {
 
     this.options = {
       dependencies: {
-        dev: false,
         peer: true,
       },
       packageManagerOptions: {

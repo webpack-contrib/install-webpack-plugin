@@ -15,7 +15,6 @@ const PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
 
 const defaultOptions = {
   dependencies: {
-    dev: false,
     peer: true,
   },
   packageManagerOptions: {
