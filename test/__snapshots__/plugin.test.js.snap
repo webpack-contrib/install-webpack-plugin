@@ -3,9 +3,17 @@
 exports[`plugin .install should call .install 1`] = `
 Array [
   Array [
+    "babel-loader",
     Object {
-      "path": "/",
-      "request": "babel-loader",
+      "dependencies": Object {
+        "peer": true,
+      },
+      "npm": true,
+      "packageManagerOptions": Object {
+        "dev": true,
+      },
+      "prompt": true,
+      "quiet": false,
     },
     WebpackLogger {
       "getChildLogger": [Function],
