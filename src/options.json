@@ -17,23 +17,46 @@
       "type": "boolean",
       "description": "Use NPM to install dependencies."
     },
+    "PackageManager": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PackageManagerEnum"
+        },
+        {
+          "$ref": "#/definitions/PackageManagerOptions"
+        },
+        {
+          "instanceof": "Function"
+        }
+      ],
+      "description": "Package manager to use for installing dependencies."
+    },
     "PackageManagerOptions": {
       "anyOf": [
         {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "dev": {
-              "type": "boolean",
-              "description": "Install as development dependencies"
+            "type": {
+              "$ref": "#/definitions/PackageManagerEnum"
+            },
+            "options": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "dev": {
+                  "type": "boolean",
+                  "description": "Install as development dependencies"
+                }
+              }
             }
           }
-        },
-        {
-          "instanceof": "Function"
         }
       ],
       "description": "package manager related options."
+    },
+    "PackageManagerEnum": {
+      "enum": ["npm", "yarn"]
     },
     "Prompt": {
       "type": "boolean",
@@ -56,8 +79,8 @@
     "npm": {
       "$ref": "#/definitions/NPM"
     },
-    "packageManagerOptions": {
-      "$ref": "#/definitions/PackageManagerOptions"
+    "packageManager": {
+      "$ref": "#/definitions/PackageManager"
     },
     "prompt": {
       "$ref": "#/definitions/Prompt"

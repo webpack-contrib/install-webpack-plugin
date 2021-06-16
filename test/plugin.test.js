@@ -24,12 +24,9 @@ describe('plugin', () => {
       dependencies: {
         peer: true,
       },
-      packageManagerOptions: {
-        dev: false,
-      },
+      packageManager: 'npm',
       quiet: false,
       prompt: true,
-      npm: true,
     };
 
     this.plugin = new Plugin(this.options);
@@ -68,9 +65,12 @@ describe('plugin', () => {
         'install-webpack-plugin'
       );
 
-      this.options.packageManagerOptions = (request, path) => {
+      this.options.packageManager = (request, path) => {
         return {
-          dev: request === 'babel-loader' && path === '/',
+          type: 'npm',
+          options: {
+            dev: request === 'babel-loader' && path === '/',
+          },
         };
       };
 

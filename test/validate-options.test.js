@@ -10,9 +10,29 @@ describe('validation', () => {
       success: [true, false],
       failure: ['bar', 10],
     },
-    packageManagerOptions: {
-      success: [{ dev: true }, () => {}],
-      failure: [{ dev: 10 }, { dev: 'yes' }],
+    packageManager: {
+      success: [
+        'npm',
+        'yarn',
+        {
+          type: 'npm',
+          options: {
+            dev: true,
+          },
+        },
+        {
+          type: 'yarn',
+          options: {
+            dev: true,
+          },
+        },
+        () => {},
+      ],
+      failure: [
+        'foo',
+        { type: 'foo' },
+        { type: 'npm', options: { dev: 'foo' } },
+      ],
     },
     prompt: {
       success: [true, false],

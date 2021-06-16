@@ -8,9 +8,11 @@ Array [
       "dependencies": Object {
         "peer": true,
       },
-      "npm": true,
-      "packageManagerOptions": Object {
-        "dev": true,
+      "packageManager": Object {
+        "options": Object {
+          "dev": true,
+        },
+        "type": "npm",
       },
       "prompt": true,
       "quiet": false,
@@ -30,10 +32,7 @@ Array [
     "dependencies": Object {
       "peer": true,
     },
-    "npm": true,
-    "packageManagerOptions": Object {
-      "dev": false,
-    },
+    "packageManager": "npm",
     "prompt": true,
     "quiet": false,
   },
