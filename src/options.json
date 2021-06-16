@@ -16,7 +16,7 @@
               "instanceof": "Function"
             }
           ],
-          "description": "Install as development dependencies"
+          "description": "Install missing development dependencies"
         },
         "peer": {
           "type": "boolean",
@@ -27,6 +27,17 @@
     "NPM": {
       "type": "boolean",
       "description": "Use NPM to install dependencies."
+    },
+    "PackageManagerOptions": {
+      "type": "object",
+      "description": "package manager related options.",
+      "additionalProperties": false,
+      "properties": {
+        "dev": {
+          "type": "boolean",
+          "description": "Install as development dependencies"
+        }
+      }
     },
     "Prompt": {
       "type": "boolean",
@@ -48,6 +59,9 @@
     },
     "npm": {
       "$ref": "#/definitions/NPM"
+    },
+    "packageManagerOptions": {
+      "$ref": "#/definitions/PackageManagerOptions"
     },
     "prompt": {
       "$ref": "#/definitions/Prompt"

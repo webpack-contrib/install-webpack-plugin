@@ -20,6 +20,10 @@ describe('validation', () => {
       success: [true, false],
       failure: ['bar', 10],
     },
+    packageManagerOptions: {
+      success: [{ dev: true }],
+      failure: [{ test: 10 }],
+    },
     prompt: {
       success: [true, false],
       failure: ['bar', 10],

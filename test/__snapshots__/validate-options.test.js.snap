@@ -4,7 +4,7 @@ exports[`validation should throw an error on the "dependencies" option with "{"d
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.dev should be one of these:
    boolean | function
-   -> Install as development dependencies
+   -> Install missing development dependencies
    Details:
     * options.dependencies.dev should be a boolean.
     * options.dependencies.dev should be an instance of function."
@@ -14,7 +14,7 @@ exports[`validation should throw an error on the "dependencies" option with "{"d
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.dev should be one of these:
    boolean | function
-   -> Install as development dependencies
+   -> Install missing development dependencies
    Details:
     * options.dependencies.dev should be a boolean.
     * options.dependencies.dev should be an instance of function."
@@ -24,7 +24,7 @@ exports[`validation should throw an error on the "dependencies" option with "{"d
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.dev should be one of these:
    boolean | function
-   -> Install as development dependencies
+   -> Install missing development dependencies
    Details:
     * options.dependencies.dev should be a boolean.
     * options.dependencies.dev should be an instance of function."
@@ -46,6 +46,13 @@ exports[`validation should throw an error on the "npm" option with "bar" value 1
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.npm should be a boolean.
    -> Use NPM to install dependencies."
+`;
+
+exports[`validation should throw an error on the "packageManagerOptions" option with "{"test":10}" value 1`] = `
+"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
+ - options.packageManagerOptions has an unknown property 'test'. These properties are valid:
+   object { dev? }
+   -> package manager related options."
 `;
 
 exports[`validation should throw an error on the "prompt" option with "10" value 1`] = `

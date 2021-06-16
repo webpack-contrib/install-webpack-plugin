@@ -18,6 +18,9 @@ const defaultOptions = {
     dev: false,
     peer: true,
   },
+  packageManagerOptions: {
+    dev: false,
+  },
   quiet: false,
   prompt: true,
   npm: true,
@@ -208,12 +211,12 @@ module.exports.install = async function install(deps, options, logger) {
   if (options.yarn) {
     args = ['add'];
     client = 'yarn';
-    save = options.dependencies.dev ? '--dev' : null;
+    save = options.packageManagerOptions.dev ? '--dev' : null;
     quietOptions = ['--silent'];
   } else {
     args = ['install'];
     client = 'npm';
-    save = options.dependencies.dev ? '--save-dev' : '--save';
+    save = options.packageManagerOptions.dev ? '--save-dev' : '--save';
     quietOptions = ['--silent', '--no-progress'];
   }
 
@@ -278,7 +281,7 @@ module.exports.install = async function install(deps, options, logger) {
   }
 
   if (options.dependencies.peer && peers.length) {
-    logger.info('Installing peerDependencies...');
+    logger.info('Installing peer dependencies...');
     this.install(peers, options, logger);
     logger.info('');
   }

@@ -25,6 +25,9 @@ describe('plugin', () => {
         dev: false,
         peer: true,
       },
+      packageManagerOptions: {
+        dev: false,
+      },
       quiet: false,
       prompt: true,
       npm: true,

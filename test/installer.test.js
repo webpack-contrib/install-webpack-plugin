@@ -233,7 +233,7 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                dependencies: {
+                packageManagerOptions: {
                   dev: true,
                 },
                 yarn: true,
@@ -395,7 +395,7 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                dependencies: {
+                packageManagerOptions: {
                   dev: true,
                 },
               },

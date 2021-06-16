@@ -9,6 +9,9 @@ Array [
       "peer": true,
     },
     "npm": true,
+    "packageManagerOptions": Object {
+      "dev": false,
+    },
     "prompt": true,
     "quiet": false,
   },
