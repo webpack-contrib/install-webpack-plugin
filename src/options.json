@@ -18,22 +18,22 @@
       "description": "Use NPM to install dependencies."
     },
     "PackageManagerOptions": {
-      "type": "object",
-      "description": "package manager related options.",
-      "additionalProperties": false,
-      "properties": {
-        "dev": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "instanceof": "Function"
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dev": {
+              "type": "boolean",
+              "description": "Install as development dependencies"
             }
-          ],
-          "description": "Install as development dependencies"
+          }
+        },
+        {
+          "instanceof": "Function"
         }
-      }
+      ],
+      "description": "package manager related options."
     },
     "Prompt": {
       "type": "boolean",

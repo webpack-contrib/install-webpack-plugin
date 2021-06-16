@@ -94,11 +94,12 @@ class InstallPlugin {
     const dep = installer.check(result.request);
 
     if (dep) {
-      const { packageManagerOptions } = this.options;
+      let { packageManagerOptions } = this.options;
 
-      if (typeof packageManagerOptions.dev === 'function') {
-        packageManagerOptions.dev = Boolean(
-          packageManagerOptions.dev(result.request, result.path)
+      if (typeof packageManagerOptions === 'function') {
+        packageManagerOptions = packageManagerOptions(
+          result.request,
+          result.path
         );
       }
 
