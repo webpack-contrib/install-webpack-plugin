@@ -61,6 +61,27 @@ describe('plugin', () => {
     });
   });
 
+  describe('.install', () => {
+    it('should call .install', () => {
+      const result = { path: '/', request: 'babel-loader' };
+      const logger = this.compiler.getInfrastructureLogger(
+        'install-webpack-plugin'
+      );
+
+      this.options.packageManagerOptions = (request, path) => {
+        return {
+          dev: request === 'babel-loader' && path === '/',
+        };
+      };
+
+      this.plugin = new Plugin(this.options);
+
+      this.plugin.install(result, logger);
+
+      expect(this.install.mock.calls).toMatchSnapshot();
+    });
+  });
+
   describe('.preCompile', () => {
     beforeEach(() => {
       this.run = jest
