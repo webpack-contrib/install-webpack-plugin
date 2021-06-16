@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`installer .install when using npm given a dependency with missing peerDependencies given dependencies.peer set to false should not install peerDependencies 1`] = `
+Array [
+  Array [
+    "npm",
+    Array [
+      "install",
+      "redbox-react",
+      "--save",
+    ],
+    Object {
+      "stdio": Array [
+        "ignore",
+        "pipe",
+        "inherit",
+      ],
+    },
+  ],
+]
+`;
+
+exports[`installer .install when using yarn given a dependency with missing peerDependencies given peerDependencies set to false should not install peerDependencies 1`] = `
+Array [
+  Array [
+    "yarn",
+    Array [
+      "add",
+      "redbox-react",
+    ],
+    Object {
+      "stdio": Array [
+        "ignore",
+        "pipe",
+        "inherit",
+      ],
+    },
+  ],
+]
+`;

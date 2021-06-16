@@ -2,24 +2,38 @@
   "title": "Install Plugin options",
   "type": "object",
   "definitions": {
-    "Dev": {
-      "anyOf": [
-        {
-          "type": "boolean"
-        },
-        {
-          "instanceof": "Function"
+    "Dependencies": {
+      "type": "object",
+      "description": "dependencies related options.",
+      "additionalProperties": false,
+      "properties": {
+        "peer": {
+          "type": "boolean",
+          "description": "Install missing peer dependencies"
         }
-      ],
-      "description": "Install as development dependencies"
+      }
     },
     "NPM": {
       "type": "boolean",
       "description": "Use NPM to install dependencies."
     },
-    "PeerDependencies": {
-      "type": "boolean",
-      "description": "Install missing peer dependencies"
+    "PackageManagerOptions": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dev": {
+              "type": "boolean",
+              "description": "Install as development dependencies"
+            }
+          }
+        },
+        {
+          "instanceof": "Function"
+        }
+      ],
+      "description": "package manager related options."
     },
     "Prompt": {
       "type": "boolean",
@@ -36,14 +50,14 @@
   },
   "additionalProperties": false,
   "properties": {
-    "dev": {
-      "$ref": "#/definitions/Dev"
+    "dependencies": {
+      "$ref": "#/definitions/Dependencies"
     },
     "npm": {
       "$ref": "#/definitions/NPM"
     },
-    "peerDependencies": {
-      "$ref": "#/definitions/PeerDependencies"
+    "packageManagerOptions": {
+      "$ref": "#/definitions/PackageManagerOptions"
     },
     "prompt": {
       "$ref": "#/definitions/Prompt"

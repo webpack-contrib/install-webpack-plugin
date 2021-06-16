@@ -21,8 +21,12 @@ describe('plugin', () => {
     this.next = jest.fn();
 
     this.options = {
-      dev: false,
-      peerDependencies: true,
+      dependencies: {
+        peer: true,
+      },
+      packageManagerOptions: {
+        dev: false,
+      },
       quiet: false,
       prompt: true,
       npm: true,
@@ -54,6 +58,27 @@ describe('plugin', () => {
   describe('.apply', () => {
     it('should apply the plugin only once`', () => {
       expect(this.applySpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('.install', () => {
+    it('should call .install', () => {
+      const result = { path: '/', request: 'babel-loader' };
+      const logger = this.compiler.getInfrastructureLogger(
+        'install-webpack-plugin'
+      );
+
+      this.options.packageManagerOptions = (request, path) => {
+        return {
+          dev: request === 'babel-loader' && path === '/',
+        };
+      };
+
+      this.plugin = new Plugin(this.options);
+
+      this.plugin.install(result, logger);
+
+      expect(this.install.mock.calls).toMatchSnapshot();
     });
   });
 
