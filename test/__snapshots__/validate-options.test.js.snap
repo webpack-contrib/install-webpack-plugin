@@ -24,16 +24,30 @@ exports[`validation should throw an error on the "npm" option with "bar" value 1
    -> Use NPM to install dependencies."
 `;
 
-exports[`validation should throw an error on the "packageManagerOptions" option with "{"dev":"yes"}" value 1`] = `
+exports[`validation should throw an error on the "packageManager" option with "{"type":"foo"}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.packageManagerOptions.dev should be a boolean.
+ - options.packageManager.type should be one of these:
+   \\"npm\\" | \\"yarn\\""
+`;
+
+exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"dev":"foo"}}" value 1`] = `
+"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
+ - options.packageManager.options.dev should be a boolean.
    -> Install as development dependencies"
 `;
 
-exports[`validation should throw an error on the "packageManagerOptions" option with "{"dev":10}" value 1`] = `
+exports[`validation should throw an error on the "packageManager" option with "foo" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.packageManagerOptions.dev should be a boolean.
-   -> Install as development dependencies"
+ - options.packageManager should be one of these:
+   \\"npm\\" | \\"yarn\\" | object { type?, options? } | function
+   -> Package manager to use for installing dependencies.
+   Details:
+    * options.packageManager should be one of these:
+      \\"npm\\" | \\"yarn\\"
+    * options.packageManager should be an object:
+      object { type?, options? }
+      -> package manager related options.
+    * options.packageManager should be an instance of function."
 `;
 
 exports[`validation should throw an error on the "prompt" option with "10" value 1`] = `

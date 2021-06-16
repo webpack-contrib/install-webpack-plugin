@@ -12,8 +12,8 @@ const logger = logging.getLogger('install-webpack-plugin');
 describe('installer', () => {
   jest.spyOn(installer, 'prompt').mockImplementation(() => true);
   describe('.defaultOptions', () => {
-    it('should default packageManagerOptions.dev to false', () => {
-      expect(installer.defaultOptions.packageManagerOptions.dev).toEqual(false);
+    it(`should default packageManager.type to "npm"`, () => {
+      expect(installer.defaultOptions.packageManager.type).toEqual('npm');
     });
 
     it('should default dependencies.peer to true', () => {
@@ -217,7 +217,7 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                yarn: true,
+                packageManager: 'yarn',
               },
               logger
             );
@@ -233,10 +233,12 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                packageManagerOptions: {
-                  dev: true,
+                packageManager: {
+                  type: 'yarn',
+                  options: {
+                    dev: true,
+                  },
                 },
-                yarn: true,
               },
               logger
             );
@@ -263,7 +265,7 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                yarn: true,
+                packageManager: 'yarn',
               },
               logger
             );
@@ -280,7 +282,7 @@ describe('installer', () => {
               'foo',
               {
                 quiet: true,
-                yarn: true,
+                packageManager: 'yarn',
               },
               logger
             );
@@ -323,7 +325,7 @@ describe('installer', () => {
               await installer.install(
                 'redbox-react',
                 {
-                  yarn: true,
+                  packageManager: 'yarn',
                 },
                 logger
               );
@@ -350,7 +352,7 @@ describe('installer', () => {
                   dependencies: {
                     peer: false,
                   },
-                  yarn: true,
+                  packageManager: 'yarn',
                 },
                 logger
               );
@@ -395,8 +397,11 @@ describe('installer', () => {
             await installer.install(
               'foo',
               {
-                packageManagerOptions: {
-                  dev: true,
+                packageManager: {
+                  type: 'npm',
+                  options: {
+                    dev: true,
+                  },
                 },
               },
               logger

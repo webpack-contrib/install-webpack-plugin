@@ -17,12 +17,14 @@ const defaultOptions = {
   dependencies: {
     peer: true,
   },
-  packageManagerOptions: {
-    dev: false,
+  packageManager: {
+    type: 'npm',
+    options: {
+      dev: false,
+    },
   },
   quiet: false,
   prompt: true,
-  npm: true,
 };
 
 const erroneous = [];
@@ -207,15 +209,25 @@ module.exports.install = async function install(deps, options, logger) {
   let client;
   let quietOptions;
   let save;
-  if (options.yarn) {
+
+  const { packageManager } = options;
+
+  if (
+    packageManager === 'yarn' ||
+    (packageManager && packageManager.type === 'yarn')
+  ) {
     args = ['add'];
     client = 'yarn';
-    save = options.packageManagerOptions.dev ? '--dev' : null;
+    save =
+      packageManager.options && packageManager.options.dev ? '--dev' : null;
     quietOptions = ['--silent'];
   } else {
     args = ['install'];
     client = 'npm';
-    save = options.packageManagerOptions.dev ? '--save-dev' : '--save';
+    save =
+      packageManager.options && packageManager.options.dev
+        ? '--save-dev'
+        : '--save';
     quietOptions = ['--silent', '--no-progress'];
   }
 
