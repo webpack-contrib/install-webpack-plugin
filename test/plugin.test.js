@@ -25,7 +25,6 @@ describe('plugin', () => {
         peer: true,
       },
       packageManager: 'npm',
-      quiet: false,
       prompt: true,
     };
 

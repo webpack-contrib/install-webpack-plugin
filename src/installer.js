@@ -85,7 +85,6 @@ const defaultOptions = {
       dev: false,
     },
   },
-  quiet: false,
   prompt: true,
 };
 
@@ -269,7 +268,6 @@ module.exports.install = async function install(deps, options, logger) {
 
   let args;
   let client;
-  let quietOptions;
   let save;
 
   const { packageManager } = options;
@@ -282,7 +280,6 @@ module.exports.install = async function install(deps, options, logger) {
     client = 'yarn';
     save =
       packageManager.options && packageManager.options.dev ? '--dev' : null;
-    quietOptions = ['--silent'];
   } else if (
     packageManager === 'pnpm' ||
     (packageManager && packageManager.type === 'pnpm')
@@ -293,7 +290,6 @@ module.exports.install = async function install(deps, options, logger) {
       packageManager.options && packageManager.options.dev
         ? '--save-dev'
         : null;
-    quietOptions = [];
   } else {
     args = ['install'];
     client = 'npm';
@@ -301,7 +297,6 @@ module.exports.install = async function install(deps, options, logger) {
       packageManager.options && packageManager.options.dev
         ? '--save-dev'
         : '--save';
-    quietOptions = ['--silent', '--no-progress'];
   }
 
   if (options.prompt) {
@@ -329,8 +324,8 @@ module.exports.install = async function install(deps, options, logger) {
     args.push(save);
   }
 
-  if (options.quiet) {
-    args = args.concat(quietOptions);
+  if (packageManager.options && packageManager.options.arguments) {
+    args = args.concat(packageManager.options.arguments);
   }
 
   deps.forEach((dep) => {

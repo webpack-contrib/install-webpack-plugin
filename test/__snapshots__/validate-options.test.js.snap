@@ -18,6 +18,17 @@ exports[`validation should throw an error on the "packageManager" option with "{
    \\"npm\\" | \\"pnpm\\" | \\"yarn\\""
 `;
 
+exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"arguments":"10"}}" value 1`] = `
+"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
+ - options.packageManager.options.arguments should be an array:
+   [non-empty string, ...] (should not have fewer than 1 item)"
+`;
+
+exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"arguments":[]}}" value 1`] = `
+"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
+ - options.packageManager.options.arguments should be an non-empty array."
+`;
+
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"dev":"foo"}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.dev should be a boolean.

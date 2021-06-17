@@ -43,6 +43,14 @@
                 "dev": {
                   "type": "boolean",
                   "description": "Install as development dependencies"
+                },
+                "arguments": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
                 }
               }
             }

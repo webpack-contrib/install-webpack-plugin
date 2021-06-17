@@ -29,12 +29,21 @@ describe('validation', () => {
             dev: true,
           },
         },
+        {
+          type: 'npm',
+          options: {
+            dev: true,
+            arguments: ['--quiet'],
+          },
+        },
         () => {},
       ],
       failure: [
         'foo',
         { type: 'foo' },
         { type: 'npm', options: { dev: 'foo' } },
+        { type: 'npm', options: { arguments: '10' } },
+        { type: 'npm', options: { arguments: [] } },
       ],
     },
     prompt: {

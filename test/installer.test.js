@@ -21,10 +21,6 @@ describe('installer', () => {
     it('should default dependencies.peer to true', () => {
       expect(installer.defaultOptions.dependencies.peer).toEqual(true);
     });
-
-    it('should default quiet to false', () => {
-      expect(installer.defaultOptions.quiet).toEqual(false);
-    });
   });
 
   describe('.check', () => {
@@ -379,13 +375,17 @@ describe('installer', () => {
           });
         });
 
-        describe('with quiet set to true', () => {
-          it('should install it with --silent --noprogress', async () => {
+        describe('with package manager arguments', () => {
+          it('should install it with --silent', async () => {
             await installer.install(
               'foo',
               {
-                quiet: true,
-                packageManager: 'yarn',
+                packageManager: {
+                  type: 'yarn',
+                  options: {
+                    arguments: ['--silent'],
+                  },
+                },
               },
               logger
             );
@@ -697,12 +697,17 @@ describe('installer', () => {
           });
         });
 
-        describe('with quiet set to true', () => {
-          it('should install it with --silent --noprogress', async () => {
+        describe('with package manager arguments', () => {
+          it('should install it with --silent --no-progress arguments', async () => {
             await installer.install(
               'foo',
               {
-                quiet: true,
+                packageManager: {
+                  type: 'npm',
+                  options: {
+                    arguments: ['--silent', '--no-progress'],
+                  },
+                },
               },
               logger
             );
