@@ -13,10 +13,6 @@
         }
       }
     },
-    "NPM": {
-      "type": "boolean",
-      "description": "Use NPM to install dependencies."
-    },
     "PackageManager": {
       "anyOf": [
         {
@@ -65,19 +61,12 @@
     "Quiet": {
       "type": "boolean",
       "description": " Reduce amount of console logging"
-    },
-    "Yarn": {
-      "type": "boolean",
-      "description": "Use yarn to install dependencies."
     }
   },
   "additionalProperties": false,
   "properties": {
     "dependencies": {
       "$ref": "#/definitions/Dependencies"
-    },
-    "npm": {
-      "$ref": "#/definitions/NPM"
     },
     "packageManager": {
       "$ref": "#/definitions/PackageManager"
@@ -87,9 +76,6 @@
     },
     "quiet": {
       "$ref": "#/definitions/Quiet"
-    },
-    "yarn": {
-      "$ref": "#/definitions/Yarn"
     }
   }
 }

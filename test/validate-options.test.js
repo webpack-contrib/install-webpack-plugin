@@ -6,10 +6,6 @@ describe('validation', () => {
       success: [{ peer: true }, { peer: false }],
       failure: [{ peer: 'bar' }, { peer: 10 }],
     },
-    npm: {
-      success: [true, false],
-      failure: ['bar', 10],
-    },
     packageManager: {
       success: [
         'npm',
@@ -46,10 +42,6 @@ describe('validation', () => {
       failure: ['bar', 10],
     },
     quiet: {
-      success: [true, false],
-      failure: ['bar', 10],
-    },
-    yarn: {
       success: [true, false],
       failure: ['bar', 10],
     },
