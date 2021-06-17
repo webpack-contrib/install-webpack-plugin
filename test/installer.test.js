@@ -1,4 +1,6 @@
 /* eslint-disable no-undefined */
+const process = require('process');
+
 const path = require('path');
 
 const spawn = require('cross-spawn');
@@ -150,6 +152,107 @@ describe('installer', () => {
           '@babel/preset-react-hmre',
         ]);
       });
+    });
+  });
+
+  describe('.getDefaultPackageManager()', () => {
+    const testYarnLockPath = path.resolve(
+      __dirname,
+      './fixtures/test-yarn-lock'
+    );
+    const testNpmLockPath = path.resolve(__dirname, './fixtures/test-npm-lock');
+    const testPnpmLockPath = path.resolve(
+      __dirname,
+      './fixtures/test-pnpm-lock'
+    );
+    const testNpmAndPnpmPath = path.resolve(
+      __dirname,
+      './fixtures/test-npm-and-pnpm'
+    );
+    const testNpmAndYarnPath = path.resolve(
+      __dirname,
+      './fixtures/test-npm-and-yarn'
+    );
+    const testYarnAndPnpmPath = path.resolve(
+      __dirname,
+      './fixtures/test-yarn-and-pnpm'
+    );
+    const testAllPath = path.resolve(__dirname, './fixtures/test-all-lock');
+    const noLockPath = path.resolve(__dirname, './fixtures/no-lock-files');
+
+    const cwdSpy = jest.spyOn(process, 'cwd');
+
+    beforeEach(() => {
+      this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {
+        return { stdout: null };
+      });
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should find yarn.lock', () => {
+      cwdSpy.mockReturnValue(testYarnLockPath);
+      expect(installer.getDefaultPackageManager()).toEqual('yarn');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should find package-lock.json', () => {
+      cwdSpy.mockReturnValue(testNpmLockPath);
+      expect(installer.getDefaultPackageManager()).toEqual('npm');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should find pnpm-lock.yaml', () => {
+      cwdSpy.mockReturnValue(testPnpmLockPath);
+      expect(installer.getDefaultPackageManager()).toEqual('pnpm');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should prioritize npm over pnpm', () => {
+      cwdSpy.mockReturnValue(testNpmAndPnpmPath);
+      expect(installer.getDefaultPackageManager()).toEqual('npm');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should prioritize npm over yarn', () => {
+      cwdSpy.mockReturnValue(testNpmAndYarnPath);
+      expect(installer.getDefaultPackageManager()).toEqual('npm');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should prioritize yarn over pnpm', () => {
+      cwdSpy.mockReturnValue(testYarnAndPnpmPath);
+      expect(installer.getDefaultPackageManager()).toEqual('yarn');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should prioritize npm with many lock files', () => {
+      cwdSpy.mockReturnValue(testAllPath);
+      expect(installer.getDefaultPackageManager()).toEqual('npm');
+      expect(this.sync.mock.calls.length).toEqual(0);
+    });
+
+    it('should prioritize global npm over other package managers', () => {
+      cwdSpy.mockReturnValue(noLockPath);
+      expect(installer.getDefaultPackageManager()).toEqual('npm');
+      expect(this.sync.mock.calls.length).toEqual(1);
+    });
+
+    it('should throw error if no package manager is found', () => {
+      this.sync.mockImplementation(() => {
+        throw new Error();
+      });
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+      // Do not print warning in CI
+      const consoleMock = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      expect(installer.getDefaultPackageManager()).toBeFalsy();
+      expect(mockExit).toBeCalledWith(2);
+      expect(consoleMock).toHaveBeenCalledTimes(1);
+      expect(this.sync.mock.calls.length).toEqual(3);
     });
   });
 
