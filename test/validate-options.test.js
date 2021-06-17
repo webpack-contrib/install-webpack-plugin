@@ -13,9 +13,16 @@ describe('validation', () => {
     packageManager: {
       success: [
         'npm',
+        'pnpm',
         'yarn',
         {
           type: 'npm',
+          options: {
+            dev: true,
+          },
+        },
+        {
+          type: 'pnpm',
           options: {
             dev: true,
           },

@@ -364,6 +364,162 @@ describe('installer', () => {
       });
     });
 
+    describe('when using pnpm', () => {
+      beforeEach(() => {
+        this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {
+          return { stdout: null };
+        });
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      describe('given a dependency', () => {
+        describe('with no options', () => {
+          it('should install it with --save', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: 'pnpm',
+              },
+              logger
+            );
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('pnpm');
+            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
+          });
+        });
+
+        describe('with dev set to true', () => {
+          beforeEach(() => {
+            jest
+              .spyOn(installer, 'packageExists')
+              .mockImplementation(() => true);
+          });
+
+          afterEach(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should install it with --save-dev', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'pnpm',
+                  options: {
+                    dev: true,
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('pnpm');
+            expect(this.sync.mock.calls[0][1]).toEqual([
+              'add',
+              'foo',
+              '--save-dev',
+            ]);
+          });
+        });
+
+        describe('without a package.json present', () => {
+          beforeEach(() => {
+            jest
+              .spyOn(installer, 'packageExists')
+              .mockImplementation(() => false);
+          });
+
+          afterEach(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should install without options', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: 'pnpm',
+              },
+              logger
+            );
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0][0]).toEqual('pnpm');
+            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
+          });
+        });
+
+        describe('with missing peerDependencies', () => {
+          beforeEach(() => {
+            this.sync.mockImplementation((bin, args) => {
+              // eslint-disable-next-line
+              const dep = args[1];
+
+              if (dep === 'redbox-react') {
+                return {
+                  stdout: new Buffer(
+                    [
+                      '/test',
+                      '├── redbox-react@1.2.3',
+                      '└── UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc',
+                    ].join('\n')
+                  ),
+                };
+              }
+
+              return { stdout: null };
+            });
+          });
+
+          describe('given no options', () => {
+            it('should install peerDependencies', async () => {
+              await installer.install(
+                'redbox-react',
+                {
+                  packageManager: 'pnpm',
+                },
+                logger
+              );
+
+              expect(this.sync.mock.calls.length).toEqual(2);
+              expect(this.sync.mock.calls[0][1]).toEqual([
+                'add',
+                'redbox-react',
+              ]);
+
+              // Ignore ranges, let NPM pick
+              expect(this.sync.mock.calls[1][1]).toEqual([
+                'add',
+                'UNMET PEER DEPENDENCY react@>=0.13.2 || ^0.14.0-rc1 || ^15.0.0-rc@react',
+              ]);
+            });
+          });
+
+          describe('given peerDependencies set to false', () => {
+            it('should not install peerDependencies', async () => {
+              await installer.install(
+                'redbox-react',
+                {
+                  dependencies: {
+                    peer: false,
+                  },
+                  packageManager: 'pnpm',
+                },
+                logger
+              );
+
+              expect(this.sync.mock.calls).toMatchSnapshot();
+            });
+          });
+        });
+      });
+    });
+
     describe('when using npm', () => {
       beforeEach(() => {
         this.sync = jest.spyOn(spawn, 'sync').mockImplementation(() => {

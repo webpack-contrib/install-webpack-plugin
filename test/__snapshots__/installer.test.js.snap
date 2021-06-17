@@ -20,6 +20,25 @@ Array [
 ]
 `;
 
+exports[`installer .install when using pnpm given a dependency with missing peerDependencies given peerDependencies set to false should not install peerDependencies 1`] = `
+Array [
+  Array [
+    "pnpm",
+    Array [
+      "add",
+      "redbox-react",
+    ],
+    Object {
+      "stdio": Array [
+        "ignore",
+        "pipe",
+        "inherit",
+      ],
+    },
+  ],
+]
+`;
+
 exports[`installer .install when using yarn given a dependency with missing peerDependencies given peerDependencies set to false should not install peerDependencies 1`] = `
 Array [
   Array [
