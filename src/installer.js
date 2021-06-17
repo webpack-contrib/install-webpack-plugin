@@ -221,6 +221,17 @@ module.exports.install = async function install(deps, options, logger) {
     save =
       packageManager.options && packageManager.options.dev ? '--dev' : null;
     quietOptions = ['--silent'];
+  } else if (
+    packageManager === 'pnpm' ||
+    (packageManager && packageManager.type === 'pnpm')
+  ) {
+    args = ['add'];
+    client = 'pnpm';
+    save =
+      packageManager.options && packageManager.options.dev
+        ? '--save-dev'
+        : null;
+    quietOptions = [];
   } else {
     args = ['install'];
     client = 'npm';

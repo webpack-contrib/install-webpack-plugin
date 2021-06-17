@@ -27,7 +27,7 @@ exports[`validation should throw an error on the "npm" option with "bar" value 1
 exports[`validation should throw an error on the "packageManager" option with "{"type":"foo"}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.type should be one of these:
-   \\"npm\\" | \\"yarn\\""
+   \\"npm\\" | \\"pnpm\\" | \\"yarn\\""
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"dev":"foo"}}" value 1`] = `
@@ -39,11 +39,11 @@ exports[`validation should throw an error on the "packageManager" option with "{
 exports[`validation should throw an error on the "packageManager" option with "foo" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager should be one of these:
-   \\"npm\\" | \\"yarn\\" | object { type?, options? } | function
+   \\"npm\\" | \\"pnpm\\" | \\"yarn\\" | object { type?, options? } | function
    -> Package manager to use for installing dependencies.
    Details:
     * options.packageManager should be one of these:
-      \\"npm\\" | \\"yarn\\"
+      \\"npm\\" | \\"pnpm\\" | \\"yarn\\"
     * options.packageManager should be an object:
       object { type?, options? }
       -> package manager related options.
