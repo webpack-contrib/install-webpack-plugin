@@ -12,18 +12,6 @@ exports[`validation should throw an error on the "dependencies" option with "{"p
    -> Install missing peer dependencies"
 `;
 
-exports[`validation should throw an error on the "npm" option with "10" value 1`] = `
-"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.npm should be a boolean.
-   -> Use NPM to install dependencies."
-`;
-
-exports[`validation should throw an error on the "npm" option with "bar" value 1`] = `
-"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.npm should be a boolean.
-   -> Use NPM to install dependencies."
-`;
-
 exports[`validation should throw an error on the "packageManager" option with "{"type":"foo"}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.type should be one of these:
@@ -72,16 +60,4 @@ exports[`validation should throw an error on the "quiet" option with "bar" value
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.quiet should be a boolean.
    ->  Reduce amount of console logging"
-`;
-
-exports[`validation should throw an error on the "yarn" option with "10" value 1`] = `
-"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.yarn should be a boolean.
-   -> Use yarn to install dependencies."
-`;
-
-exports[`validation should throw an error on the "yarn" option with "bar" value 1`] = `
-"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.yarn should be a boolean.
-   -> Use yarn to install dependencies."
 `;
