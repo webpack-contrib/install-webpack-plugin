@@ -56,7 +56,7 @@
       "description": "package manager related options."
     },
     "PackageManagerEnum": {
-      "enum": ["npm", "yarn"]
+      "enum": ["npm", "pnpm", "yarn"]
     },
     "Prompt": {
       "type": "boolean",
