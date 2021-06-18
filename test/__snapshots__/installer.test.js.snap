@@ -152,13 +152,13 @@ Array [
 ]
 `;
 
-exports[`installer .install when using pnpm given a dependency with package manager options should install it with --save-dev 1`] = `
+exports[`installer .install when using pnpm given a dependency with package manager options should install it with --reporter=silent when quiet is true 1`] = `
 Array [
   "pnpm",
   Array [
     "add",
     "foo",
-    "--save-dev",
+    "--reporter=silent",
   ],
   Object {
     "stdio": Array [
@@ -170,13 +170,13 @@ Array [
 ]
 `;
 
-exports[`installer .install when using pnpm given a dependency with package manager options should install it with --silent when quiet is true 1`] = `
+exports[`installer .install when using pnpm given a dependency with package manager options should install it with --save-dev 1`] = `
 Array [
   "pnpm",
   Array [
     "add",
     "foo",
-    "--reporter=silent",
+    "--save-dev",
   ],
   Object {
     "stdio": Array [
