@@ -293,7 +293,7 @@ module.exports.install = async function install(deps, options, logger) {
       packageManager.options && packageManager.options.dev
         ? '--save-dev'
         : null;
-    quietOptions = [];
+    quietOptions = ['--reporter=silent'];
   } else {
     args = ['install'];
     client = 'npm';

@@ -170,6 +170,24 @@ Array [
 ]
 `;
 
+exports[`installer .install when using pnpm given a dependency with package manager options should install it with --silent when quiet is true 1`] = `
+Array [
+  "pnpm",
+  Array [
+    "add",
+    "foo",
+    "--reporter=silent",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
 exports[`installer .install when using pnpm given a dependency with package manager options should install it with all arguments 1`] = `
 Array [
   "pnpm",
@@ -178,6 +196,7 @@ Array [
     "foo",
     "--save-dev",
     "--ignore-workspace-root-check",
+    "--reporter=silent",
   ],
   Object {
     "stdio": Array [

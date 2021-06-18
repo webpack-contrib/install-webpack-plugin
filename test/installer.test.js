@@ -558,14 +558,14 @@ describe('installer', () => {
             jest.clearAllMocks();
           });
 
-          it('should install it with --ignore-workspace-root-check', async () => {
+          it('should install it with --save-dev', async () => {
             await installer.install(
               'foo',
               {
                 packageManager: {
                   type: 'pnpm',
                   options: {
-                    arguments: ['--ignore-workspace-root-check'],
+                    dev: true,
                   },
                 },
               },
@@ -577,14 +577,33 @@ describe('installer', () => {
             expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
 
-          it('should install it with --save-dev', async () => {
+          it('should install it with --reporter=silent when quiet is true', async () => {
             await installer.install(
               'foo',
               {
                 packageManager: {
                   type: 'pnpm',
                   options: {
-                    dev: true,
+                    quiet: true,
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with --ignore-workspace-root-check', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'pnpm',
+                  options: {
+                    arguments: ['--ignore-workspace-root-check'],
                   },
                 },
               },
