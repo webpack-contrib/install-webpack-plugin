@@ -40,10 +40,6 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "dev": {
-                  "type": "boolean",
-                  "description": "Install as development dependencies"
-                },
                 "arguments": {
                   "type": "array",
                   "minItems": 1,
@@ -51,6 +47,14 @@
                     "type": "string",
                     "minLength": 1
                   }
+                },
+                "dev": {
+                  "type": "boolean",
+                  "description": "Install as development dependencies"
+                },
+                "quiet": {
+                  "type": "boolean",
+                  "description": " Reduce amount of console logging"
                 }
               }
             }
@@ -65,10 +69,6 @@
     "Prompt": {
       "type": "boolean",
       "description": "Show a prompt to confirm installation."
-    },
-    "Quiet": {
-      "type": "boolean",
-      "description": " Reduce amount of console logging"
     }
   },
   "additionalProperties": false,
@@ -81,9 +81,6 @@
     },
     "prompt": {
       "$ref": "#/definitions/Prompt"
-    },
-    "quiet": {
-      "$ref": "#/definitions/Quiet"
     }
   }
 }

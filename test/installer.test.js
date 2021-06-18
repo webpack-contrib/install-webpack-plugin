@@ -18,6 +18,18 @@ describe('installer', () => {
       expect(installer.defaultOptions.packageManager.type).toEqual('npm');
     });
 
+    it(`should default packageManager.options.dev to false`, () => {
+      expect(installer.defaultOptions.packageManager.options.dev).toEqual(
+        false
+      );
+    });
+
+    it(`should default packageManager.options.quiet to false`, () => {
+      expect(installer.defaultOptions.packageManager.options.quiet).toEqual(
+        false
+      );
+    });
+
     it('should default dependencies.peer to true', () => {
       expect(installer.defaultOptions.dependencies.peer).toEqual(true);
     });
@@ -327,28 +339,6 @@ describe('installer', () => {
           });
         });
 
-        describe('with dev set to true', () => {
-          it('should install it with --dev', async () => {
-            await installer.install(
-              'foo',
-              {
-                packageManager: {
-                  type: 'yarn',
-                  options: {
-                    dev: true,
-                  },
-                },
-              },
-              logger
-            );
-
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
-            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo', '--dev']);
-          });
-        });
-
         describe('without a package.json present', () => {
           beforeEach(() => {
             jest
@@ -370,20 +360,29 @@ describe('installer', () => {
             );
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
-            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
         });
 
-        describe('with package manager arguments', () => {
-          it('should install it with --silent', async () => {
+        describe('with package manager options', () => {
+          beforeEach(() => {
+            jest
+              .spyOn(installer, 'packageExists')
+              .mockImplementation(() => true);
+          });
+
+          afterEach(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should install it with --dev', async () => {
             await installer.install(
               'foo',
               {
                 packageManager: {
                   type: 'yarn',
                   options: {
-                    arguments: ['--silent'],
+                    dev: true,
                   },
                 },
               },
@@ -392,12 +391,66 @@ describe('installer', () => {
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('yarn');
-            expect(this.sync.mock.calls[0][1]).toEqual([
-              'add',
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with --silent when quiet is true', async () => {
+            await installer.install(
               'foo',
-              '--silent',
-            ]);
+              {
+                packageManager: {
+                  type: 'yarn',
+                  options: {
+                    quiet: true,
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with --ignore-scripts', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'yarn',
+                  options: {
+                    arguments: ['--ignore-scripts'],
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with all arguments', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'yarn',
+                  options: {
+                    dev: true,
+                    quiet: true,
+                    arguments: ['--ignore-scripts'],
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
         });
 
@@ -480,7 +533,7 @@ describe('installer', () => {
 
       describe('given a dependency', () => {
         describe('with no options', () => {
-          it('should install it with --save', async () => {
+          it('should install it without addition arguments', async () => {
             await installer.install(
               'foo',
               {
@@ -490,12 +543,11 @@ describe('installer', () => {
             );
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('pnpm');
-            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
         });
 
-        describe('with dev set to true', () => {
+        describe('with package manager options', () => {
           beforeEach(() => {
             jest
               .spyOn(installer, 'packageExists')
@@ -504,6 +556,25 @@ describe('installer', () => {
 
           afterEach(() => {
             jest.clearAllMocks();
+          });
+
+          it('should install it with --ignore-workspace-root-check', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'pnpm',
+                  options: {
+                    arguments: ['--ignore-workspace-root-check'],
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
 
           it('should install it with --save-dev', async () => {
@@ -522,38 +593,28 @@ describe('installer', () => {
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('pnpm');
-            expect(this.sync.mock.calls[0][1]).toEqual([
-              'add',
-              'foo',
-              '--save-dev',
-            ]);
-          });
-        });
-
-        describe('without a package.json present', () => {
-          beforeEach(() => {
-            jest
-              .spyOn(installer, 'packageExists')
-              .mockImplementation(() => false);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
 
-          afterEach(() => {
-            jest.clearAllMocks();
-          });
-
-          it('should install without options', async () => {
+          it('should install it with all arguments', async () => {
             await installer.install(
               'foo',
               {
-                packageManager: 'pnpm',
+                packageManager: {
+                  type: 'pnpm',
+                  options: {
+                    dev: true,
+                    quiet: true,
+                    arguments: ['--ignore-workspace-root-check'],
+                  },
+                },
               },
               logger
             );
+
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('pnpm');
-            expect(this.sync.mock.calls[0][1]).toEqual(['add', 'foo']);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
         });
 
@@ -651,32 +712,6 @@ describe('installer', () => {
           });
         });
 
-        describe('with dev set to true', () => {
-          it('should install it with --save-dev', async () => {
-            await installer.install(
-              'foo',
-              {
-                packageManager: {
-                  type: 'npm',
-                  options: {
-                    dev: true,
-                  },
-                },
-              },
-              logger
-            );
-
-            expect(this.sync).toHaveBeenCalled();
-            expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('npm');
-            expect(this.sync.mock.calls[0][1]).toEqual([
-              'install',
-              'foo',
-              '--save-dev',
-            ]);
-          });
-        });
-
         describe('without a package.json present', () => {
           beforeEach(() => {
             jest
@@ -697,15 +732,25 @@ describe('installer', () => {
           });
         });
 
-        describe('with package manager arguments', () => {
-          it('should install it with --silent --no-progress arguments', async () => {
+        describe('with package manager options', () => {
+          beforeEach(() => {
+            jest
+              .spyOn(installer, 'packageExists')
+              .mockImplementation(() => true);
+          });
+
+          afterEach(() => {
+            jest.clearAllMocks();
+          });
+
+          it('should install it with --save-dev', async () => {
             await installer.install(
               'foo',
               {
                 packageManager: {
                   type: 'npm',
                   options: {
-                    arguments: ['--silent', '--no-progress'],
+                    dev: true,
                   },
                 },
               },
@@ -714,14 +759,66 @@ describe('installer', () => {
 
             expect(this.sync).toHaveBeenCalled();
             expect(this.sync.mock.calls.length).toEqual(1);
-            expect(this.sync.mock.calls[0][0]).toEqual('npm');
-            expect(this.sync.mock.calls[0][1]).toEqual([
-              'install',
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with --silent when quiet is true', async () => {
+            await installer.install(
               'foo',
-              '--save',
-              '--silent',
-              '--no-progress',
-            ]);
+              {
+                packageManager: {
+                  type: 'npm',
+                  options: {
+                    quiet: true,
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with --ignore-scripts', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'npm',
+                  options: {
+                    arguments: ['--ignore-scripts'],
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
+          });
+
+          it('should install it with all arguments', async () => {
+            await installer.install(
+              'foo',
+              {
+                packageManager: {
+                  type: 'npm',
+                  options: {
+                    dev: true,
+                    quiet: true,
+                    arguments: ['--ignore-scripts'],
+                  },
+                },
+              },
+              logger
+            );
+
+            expect(this.sync).toHaveBeenCalled();
+            expect(this.sync.mock.calls.length).toEqual(1);
+            expect(this.sync.mock.calls[0]).toMatchSnapshot();
           });
         });
 

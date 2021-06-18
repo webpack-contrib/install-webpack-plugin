@@ -20,6 +20,84 @@ Array [
 ]
 `;
 
+exports[`installer .install when using npm given a dependency with package manager options should install it with --ignore-scripts 1`] = `
+Array [
+  "npm",
+  Array [
+    "install",
+    "foo",
+    "--save",
+    "--ignore-scripts",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using npm given a dependency with package manager options should install it with --save-dev 1`] = `
+Array [
+  "npm",
+  Array [
+    "install",
+    "foo",
+    "--save-dev",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using npm given a dependency with package manager options should install it with --silent when quiet is true 1`] = `
+Array [
+  "npm",
+  Array [
+    "install",
+    "foo",
+    "--save",
+    "--silent",
+    "--no-progress",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using npm given a dependency with package manager options should install it with all arguments 1`] = `
+Array [
+  "npm",
+  Array [
+    "install",
+    "foo",
+    "--save-dev",
+    "--ignore-scripts",
+    "--silent",
+    "--no-progress",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
 exports[`installer .install when using pnpm given a dependency with missing peerDependencies given peerDependencies set to false should not install peerDependencies 1`] = `
 Array [
   Array [
@@ -39,6 +117,78 @@ Array [
 ]
 `;
 
+exports[`installer .install when using pnpm given a dependency with no options should install it without addition arguments 1`] = `
+Array [
+  "pnpm",
+  Array [
+    "add",
+    "foo",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using pnpm given a dependency with package manager options should install it with --ignore-workspace-root-check 1`] = `
+Array [
+  "pnpm",
+  Array [
+    "add",
+    "foo",
+    "--ignore-workspace-root-check",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using pnpm given a dependency with package manager options should install it with --save-dev 1`] = `
+Array [
+  "pnpm",
+  Array [
+    "add",
+    "foo",
+    "--save-dev",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using pnpm given a dependency with package manager options should install it with all arguments 1`] = `
+Array [
+  "pnpm",
+  Array [
+    "add",
+    "foo",
+    "--save-dev",
+    "--ignore-workspace-root-check",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
 exports[`installer .install when using yarn given a dependency with missing peerDependencies given peerDependencies set to false should not install peerDependencies 1`] = `
 Array [
   Array [
@@ -55,5 +205,96 @@ Array [
       ],
     },
   ],
+]
+`;
+
+exports[`installer .install when using yarn given a dependency with package manager options should install it with --dev 1`] = `
+Array [
+  "yarn",
+  Array [
+    "add",
+    "foo",
+    "--dev",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using yarn given a dependency with package manager options should install it with --ignore-scripts 1`] = `
+Array [
+  "yarn",
+  Array [
+    "add",
+    "foo",
+    "--ignore-scripts",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using yarn given a dependency with package manager options should install it with --silent when quiet is true 1`] = `
+Array [
+  "yarn",
+  Array [
+    "add",
+    "foo",
+    "--silent",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using yarn given a dependency with package manager options should install it with all arguments 1`] = `
+Array [
+  "yarn",
+  Array [
+    "add",
+    "foo",
+    "--dev",
+    "--ignore-scripts",
+    "--silent",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
+]
+`;
+
+exports[`installer .install when using yarn given a dependency without a package.json present should install without options 1`] = `
+Array [
+  "yarn",
+  Array [
+    "add",
+    "foo",
+  ],
+  Object {
+    "stdio": Array [
+      "ignore",
+      "pipe",
+      "inherit",
+    ],
+  },
 ]
 `;

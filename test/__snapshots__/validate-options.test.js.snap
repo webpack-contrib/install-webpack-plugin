@@ -35,6 +35,18 @@ exports[`validation should throw an error on the "packageManager" option with "{
    -> Install as development dependencies"
 `;
 
+exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"quiet":"foo"}}" value 1`] = `
+"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
+ - options.packageManager.options.quiet should be a boolean.
+   ->  Reduce amount of console logging"
+`;
+
+exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"test":"foo"}}" value 1`] = `
+"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
+ - options.packageManager.options has an unknown property 'test'. These properties are valid:
+   object { arguments?, dev?, quiet? }"
+`;
+
 exports[`validation should throw an error on the "packageManager" option with "foo" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager should be one of these:
@@ -59,16 +71,4 @@ exports[`validation should throw an error on the "prompt" option with "bar" valu
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.prompt should be a boolean.
    -> Show a prompt to confirm installation."
-`;
-
-exports[`validation should throw an error on the "quiet" option with "10" value 1`] = `
-"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.quiet should be a boolean.
-   ->  Reduce amount of console logging"
-`;
-
-exports[`validation should throw an error on the "quiet" option with "bar" value 1`] = `
-"Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.quiet should be a boolean.
-   ->  Reduce amount of console logging"
 `;

@@ -33,7 +33,14 @@ describe('validation', () => {
           type: 'npm',
           options: {
             dev: true,
-            arguments: ['--quiet'],
+            quiet: true,
+          },
+        },
+        {
+          type: 'npm',
+          options: {
+            dev: true,
+            arguments: ['--ignore-scripts'],
           },
         },
         () => {},
@@ -42,15 +49,13 @@ describe('validation', () => {
         'foo',
         { type: 'foo' },
         { type: 'npm', options: { dev: 'foo' } },
+        { type: 'npm', options: { quiet: 'foo' } },
         { type: 'npm', options: { arguments: '10' } },
         { type: 'npm', options: { arguments: [] } },
+        { type: 'npm', options: { test: 'foo' } },
       ],
     },
     prompt: {
-      success: [true, false],
-      failure: ['bar', 10],
-    },
-    quiet: {
       success: [true, false],
       failure: ['bar', 10],
     },
