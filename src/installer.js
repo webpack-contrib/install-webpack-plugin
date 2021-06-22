@@ -83,9 +83,9 @@ const defaultOptions = {
     type: this.getDefaultPackageManager(),
     options: {
       dev: false,
+      quiet: false,
     },
   },
-  quiet: false,
   prompt: true,
 };
 
@@ -293,7 +293,7 @@ module.exports.install = async function install(deps, options, logger) {
       packageManager.options && packageManager.options.dev
         ? '--save-dev'
         : null;
-    quietOptions = [];
+    quietOptions = ['--reporter=silent'];
   } else {
     args = ['install'];
     client = 'npm';
@@ -329,7 +329,11 @@ module.exports.install = async function install(deps, options, logger) {
     args.push(save);
   }
 
-  if (options.quiet) {
+  if (packageManager.options && packageManager.options.arguments) {
+    args = args.concat(packageManager.options.arguments);
+  }
+
+  if (packageManager.options && packageManager.options.quiet) {
     args = args.concat(quietOptions);
   }
 

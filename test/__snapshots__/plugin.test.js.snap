@@ -15,7 +15,6 @@ Array [
         "type": "npm",
       },
       "prompt": true,
-      "quiet": false,
     },
     WebpackLogger {
       "getChildLogger": [Function],
@@ -34,7 +33,6 @@ Array [
     },
     "packageManager": "npm",
     "prompt": true,
-    "quiet": false,
   },
   WebpackLogger {
     "getChildLogger": [Function],
