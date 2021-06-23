@@ -1,16 +1,16 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-useless-escape */
-const path = require('path');
+const path = require("path");
 
-const { createFsFromVolume, Volume } = require('memfs');
-const { validate } = require('schema-utils');
-const webpack = require('webpack');
+const { createFsFromVolume, Volume } = require("memfs");
+const { validate } = require("schema-utils");
+const webpack = require("webpack");
 
-const installer = require('./installer');
-const utils = require('./utils');
-const schema = require('./options.json');
+const installer = require("./installer");
+const utils = require("./utils");
+const schema = require("./options.json");
 
-const PLUGIN_NAME = 'InstallPlugin';
+const PLUGIN_NAME = "InstallPlugin";
 
 const depFromErr = (err) => {
   if (!err) {
@@ -39,7 +39,7 @@ const depFromErr = (err) => {
 
 class InstallPlugin {
   constructor(options) {
-    validate(schema, options, 'install-webpack-plugin');
+    validate(schema, options, "install-webpack-plugin");
 
     this.preCompiler = undefined;
     this.compiler = undefined;
@@ -51,7 +51,7 @@ class InstallPlugin {
   apply(compiler) {
     this.compiler = compiler;
 
-    this.logger = compiler.getInfrastructureLogger('install-webpack-plugin');
+    this.logger = compiler.getInfrastructureLogger("install-webpack-plugin");
 
     installer.checkBabel(this.options, this.logger);
 
@@ -66,7 +66,7 @@ class InstallPlugin {
     compiler.hooks.afterResolvers.tap(PLUGIN_NAME, () => {
       // Install loaders on demand
       compiler.resolverFactory.hooks.resolver
-        .for('loader')
+        .for("loader")
         .tap(PLUGIN_NAME, (resolver) => {
           resolver.hooks.module.tapAsync(
             PLUGIN_NAME,
@@ -76,7 +76,7 @@ class InstallPlugin {
 
       // Install project dependencies on demand
       compiler.resolverFactory.hooks.resolver
-        .for('normal')
+        .for("normal")
         .tap(PLUGIN_NAME, (resolver) => {
           resolver.hooks.module.tapAsync(
             PLUGIN_NAME,
@@ -96,7 +96,7 @@ class InstallPlugin {
     if (dep) {
       let { packageManager } = this.options;
 
-      if (typeof packageManager === 'function') {
+      if (typeof packageManager === "function") {
         packageManager = packageManager(result.request, result.path);
       }
 
@@ -132,7 +132,7 @@ class InstallPlugin {
 
   resolveExternal(context, request, callback) {
     // Only install direct dependencies, not sub-dependencies
-    if (context.match('node_modules')) {
+    if (context.match("node_modules")) {
       return callback();
     }
 
@@ -148,7 +148,7 @@ class InstallPlugin {
     };
 
     this.resolve(
-      'normal',
+      "normal",
       result,
       // eslint-disable-next-line func-names
       (err) => {
@@ -172,7 +172,7 @@ class InstallPlugin {
 
   resolveLoader(result, next) {
     // Only install direct dependencies, not sub-dependencies
-    if (result.path.match('node_modules')) {
+    if (result.path.match("node_modules")) {
       return next && next();
     }
 
@@ -183,7 +183,7 @@ class InstallPlugin {
     this.resolving.add(result.request);
 
     this.resolve(
-      'loader',
+      "loader",
       result,
       // eslint-disable-next-line func-names
       (err) => {
@@ -204,7 +204,7 @@ class InstallPlugin {
 
   resolveModule(result, next) {
     // Only install direct dependencies, not sub-dependencies
-    if (result.path.match('node_modules')) {
+    if (result.path.match("node_modules")) {
       return next();
     }
 
@@ -215,7 +215,7 @@ class InstallPlugin {
     this.resolving.add(result.request);
 
     this.resolve(
-      'normal',
+      "normal",
       result,
       // eslint-disable-next-line func-names
       (err) => {
