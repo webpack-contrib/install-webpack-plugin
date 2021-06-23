@@ -1,1 +1,1 @@
-module.exports = require('./src/plugin');
+module.exports = require("./src/plugin");

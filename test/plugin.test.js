@@ -1,22 +1,22 @@
-const util = require('util');
+const util = require("util");
 
-const webpack = require('webpack');
+const webpack = require("webpack");
 
-const installer = require('../src/installer');
-const Plugin = require('../src/plugin');
+const installer = require("../src/installer");
+const Plugin = require("../src/plugin");
 
-describe('plugin', () => {
+describe("plugin", () => {
   beforeEach(async () => {
     this.check = jest
-      .spyOn(installer, 'check')
+      .spyOn(installer, "check")
       .mockImplementation((dep) => dep);
 
-    this.checkBabel = jest.spyOn(installer, 'checkBabel');
+    this.checkBabel = jest.spyOn(installer, "checkBabel");
 
     this.compiler = await webpack({});
 
     this.install = jest
-      .spyOn(installer, 'install')
+      .spyOn(installer, "install")
       .mockImplementation(() => {});
     this.next = jest.fn();
 
@@ -24,13 +24,13 @@ describe('plugin', () => {
       dependencies: {
         peer: true,
       },
-      packageManager: 'npm',
+      packageManager: "npm",
       prompt: true,
     };
 
     this.plugin = new Plugin(this.options);
 
-    this.applySpy = jest.spyOn(this.plugin, 'apply');
+    this.applySpy = jest.spyOn(this.plugin, "apply");
 
     this.plugin.apply(this.compiler);
   });
@@ -43,32 +43,32 @@ describe('plugin', () => {
     this.applySpy.mockRestore();
   });
 
-  it('should checkBabel', () => {
+  it("should checkBabel", () => {
     expect(this.checkBabel).toHaveBeenCalled();
   });
 
-  it('should accept options', () => {
+  it("should accept options", () => {
     expect(this.plugin.options).toEqual(this.options);
   });
 
-  describe('.apply', () => {
-    it('should apply the plugin only once`', () => {
+  describe(".apply", () => {
+    it("should apply the plugin only once`", () => {
       expect(this.applySpy).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('.install', () => {
-    it('should call .install', () => {
-      const result = { path: '/', request: 'babel-loader' };
+  describe(".install", () => {
+    it("should call .install", () => {
+      const result = { path: "/", request: "babel-loader" };
       const logger = this.compiler.getInfrastructureLogger(
-        'install-webpack-plugin'
+        "install-webpack-plugin"
       );
 
       this.options.packageManager = (request, path) => {
         return {
-          type: 'npm',
+          type: "npm",
           options: {
-            dev: request === 'babel-loader' && path === '/',
+            dev: request === "babel-loader" && path === "/",
           },
         };
       };
@@ -81,10 +81,10 @@ describe('plugin', () => {
     });
   });
 
-  describe('.preCompile', () => {
+  describe(".preCompile", () => {
     beforeEach(() => {
       this.run = jest
-        .spyOn(webpack.Compiler.prototype, 'run')
+        .spyOn(webpack.Compiler.prototype, "run")
         .mockImplementation((callback) => {
           callback();
         });
@@ -94,7 +94,7 @@ describe('plugin', () => {
       this.run.mockRestore();
     });
 
-    it('should perform dryrun', (done) => {
+    it("should perform dryrun", (done) => {
       const compilation = {};
 
       this.plugin.preCompile(
@@ -108,10 +108,10 @@ describe('plugin', () => {
     });
   });
 
-  describe('.resolveExternal', () => {
+  describe(".resolveExternal", () => {
     beforeEach(() => {
       this.resolve = jest
-        .spyOn(this.plugin, 'resolve')
+        .spyOn(this.plugin, "resolve")
         .mockImplementation((resolver, result, callback) => {
           callback(
             new Error(
@@ -129,10 +129,10 @@ describe('plugin', () => {
       this.resolve.mockRestore();
     });
 
-    it('should ignore node_modules', (done) => {
+    it("should ignore node_modules", (done) => {
       this.plugin.resolveExternal(
-        'node_modules',
-        'express',
+        "node_modules",
+        "express",
         // eslint-disable-next-line
         function () {
           expect(this.resolve).not.toHaveBeenCalled();
@@ -141,10 +141,10 @@ describe('plugin', () => {
       );
     });
 
-    it('should ignore inline-loaders', (done) => {
+    it("should ignore inline-loaders", (done) => {
       this.plugin.resolveExternal(
-        'src',
-        'bundle?lazy!express',
+        "src",
+        "bundle?lazy!express",
         // eslint-disable-next-line
         function () {
           expect(this.resolve).not.toHaveBeenCalled();
@@ -153,16 +153,16 @@ describe('plugin', () => {
       );
     });
 
-    it('should resolve external deps', (done) => {
+    it("should resolve external deps", (done) => {
       this.plugin.resolveExternal(
-        'src',
-        'express',
+        "src",
+        "express",
         // eslint-disable-next-line
         function () {
           expect(this.resolve).toHaveBeenCalled();
           expect(this.check).toHaveBeenCalled();
           expect(this.install).toHaveBeenCalled();
-          expect(this.check).toHaveBeenCalledWith('express');
+          expect(this.check).toHaveBeenCalledWith("express");
           expect(this.install.mock.calls[0]).toMatchSnapshot();
           done();
         }.bind(this)
@@ -170,17 +170,17 @@ describe('plugin', () => {
     });
   });
 
-  describe('.resolveLoader', () => {
-    it('should call .resolve', () => {
-      const result = { path: '/', request: 'babel-loader' };
+  describe(".resolveLoader", () => {
+    it("should call .resolve", () => {
+      const result = { path: "/", request: "babel-loader" };
 
       jest
-        .spyOn(this.plugin, 'resolve')
+        .spyOn(this.plugin, "resolve")
         .mockImplementation((resolver, res, callback) => {
           callback(null);
         });
 
-      const install = jest.spyOn(this.plugin, 'install');
+      const install = jest.spyOn(this.plugin, "install");
 
       this.plugin.resolveLoader(result, this.next);
 
@@ -190,11 +190,11 @@ describe('plugin', () => {
       expect(this.next.mock.calls[0]).toEqual([]);
     });
 
-    it('should call .resolve and install if not resolved', () => {
-      const result = { path: '/', request: 'babel-loader' };
+    it("should call .resolve and install if not resolved", () => {
+      const result = { path: "/", request: "babel-loader" };
 
       jest
-        .spyOn(this.plugin, 'resolve')
+        .spyOn(this.plugin, "resolve")
         .mockImplementation((resolver, res, callback) => {
           callback(
             new Error(
@@ -207,7 +207,7 @@ describe('plugin', () => {
           );
         });
 
-      const install = jest.spyOn(this.plugin, 'install');
+      const install = jest.spyOn(this.plugin, "install");
 
       this.plugin.resolveLoader(result, this.next);
 
@@ -217,11 +217,11 @@ describe('plugin', () => {
     });
   });
 
-  describe('.resolveModule', () => {
-    it('should prevent cyclical installs', () => {
-      const result = { path: '/', request: 'foo' };
+  describe(".resolveModule", () => {
+    it("should prevent cyclical installs", () => {
+      const result = { path: "/", request: "foo" };
 
-      this.plugin.resolving.add('foo');
+      this.plugin.resolving.add("foo");
 
       this.plugin.resolveModule(result, this.next);
 
@@ -229,11 +229,11 @@ describe('plugin', () => {
       expect(this.next.mock.calls.length).toBe(1);
     });
 
-    it('should call .resolve if direct dependency', () => {
-      const result = { path: '/', request: 'foo' };
+    it("should call .resolve if direct dependency", () => {
+      const result = { path: "/", request: "foo" };
 
       jest
-        .spyOn(this.plugin, 'resolve')
+        .spyOn(this.plugin, "resolve")
         .mockImplementation((resolver, res, callback) => {
           callback(new Error("Can't resolve '@cycle/core' in '/'"));
         });
@@ -245,8 +245,8 @@ describe('plugin', () => {
       expect(this.next.mock.calls[0]).toEqual([]);
     });
 
-    it('should call not .resolve if sub-dependency', () => {
-      const result = { path: 'node_modules', request: 'foo' };
+    it("should call not .resolve if sub-dependency", () => {
+      const result = { path: "node_modules", request: "foo" };
 
       this.plugin.resolveModule(result, this.next);
 

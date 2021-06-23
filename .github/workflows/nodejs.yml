@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       tags:
-        description: 'Test description'
+        description: "Test description"
 
 jobs:
   lint:

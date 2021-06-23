@@ -1,70 +1,70 @@
-const InstallPlugin = require('../src/plugin');
+const InstallPlugin = require("../src/plugin");
 
-describe('validation', () => {
+describe("validation", () => {
   const cases = {
     dependencies: {
       success: [{ peer: true }, { peer: false }],
-      failure: [{ peer: 'bar' }, { peer: 10 }],
+      failure: [{ peer: "bar" }, { peer: 10 }],
     },
     packageManager: {
       success: [
-        'npm',
-        'pnpm',
-        'yarn',
+        "npm",
+        "pnpm",
+        "yarn",
         {
-          type: 'npm',
+          type: "npm",
           options: {
             dev: true,
           },
         },
         {
-          type: 'pnpm',
+          type: "pnpm",
           options: {
             dev: true,
           },
         },
         {
-          type: 'yarn',
+          type: "yarn",
           options: {
             dev: true,
           },
         },
         {
-          type: 'npm',
+          type: "npm",
           options: {
             dev: true,
             quiet: true,
           },
         },
         {
-          type: 'npm',
+          type: "npm",
           options: {
             dev: true,
-            arguments: ['--ignore-scripts'],
+            arguments: ["--ignore-scripts"],
           },
         },
         () => {},
       ],
       failure: [
-        'foo',
-        { type: 'foo' },
-        { type: 'npm', options: { dev: 'foo' } },
-        { type: 'npm', options: { quiet: 'foo' } },
-        { type: 'npm', options: { arguments: '10' } },
-        { type: 'npm', options: { arguments: [] } },
-        { type: 'npm', options: { test: 'foo' } },
+        "foo",
+        { type: "foo" },
+        { type: "npm", options: { dev: "foo" } },
+        { type: "npm", options: { quiet: "foo" } },
+        { type: "npm", options: { arguments: "10" } },
+        { type: "npm", options: { arguments: [] } },
+        { type: "npm", options: { test: "foo" } },
       ],
     },
     prompt: {
       success: [true, false],
-      failure: ['bar', 10],
+      failure: ["bar", 10],
     },
   };
 
   function stringifyValue(value) {
     if (
       Array.isArray(value) ||
-      (value && typeof value === 'object' && value.constructor === Object)
+      (value && typeof value === "object" && value.constructor === Object)
     ) {
       return JSON.stringify(value);
     }
@@ -74,7 +74,7 @@ describe('validation', () => {
 
   async function createTestCase(key, value, type) {
     it(`should ${
-      type === 'success' ? 'successfully validate' : 'throw an error on'
+      type === "success" ? "successfully validate" : "throw an error on"
     } the "${key}" option with "${stringifyValue(value)}" value`, async () => {
       let error;
 
@@ -82,15 +82,15 @@ describe('validation', () => {
         // eslint-disable-next-line no-new
         new InstallPlugin({ [key]: value });
       } catch (errorFromPlugin) {
-        if (errorFromPlugin.name !== 'ValidationError') {
+        if (errorFromPlugin.name !== "ValidationError") {
           throw errorFromPlugin;
         }
 
         error = errorFromPlugin;
       } finally {
-        if (type === 'success') {
+        if (type === "success") {
           expect(error).toBeUndefined();
-        } else if (type === 'failure') {
+        } else if (type === "failure") {
           expect(() => {
             throw error;
           }).toThrowErrorMatchingSnapshot();

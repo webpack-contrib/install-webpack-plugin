@@ -5,10 +5,10 @@
  */
 const normalizeLoader = (loader) =>
   loader // e.g. react-hot-loader/webpack
-    .split('/') // ["react-hot-loader", "webpack"]
+    .split("/") // ["react-hot-loader", "webpack"]
     .shift() // "react-hot-loader"
-    .split('-loader') // ["react-hot", ""]
+    .split("-loader") // ["react-hot", ""]
     .shift() // "react-hot"
-    .concat('-loader'); // "react-hot-loader
+    .concat("-loader"); // "react-hot-loader
 
 module.exports = { normalizeLoader };

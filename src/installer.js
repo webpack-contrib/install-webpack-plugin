@@ -1,13 +1,13 @@
 /* eslint-disable consistent-return, no-useless-escape */
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
 
-const resolve = require('resolve');
-const spawn = require('cross-spawn');
-const JSON5 = require('json5');
+const resolve = require("resolve");
+const spawn = require("cross-spawn");
+const JSON5 = require("json5");
 
-const { green, yellow } = require('colorette');
+const { green, yellow } = require("colorette");
 
 // Match "react", "path", "fs", "lodash.random", etc.
 const EXTERNAL = /^\w[a-z\-0-9\.]+$/;
@@ -22,32 +22,32 @@ const PEERS = /UNMET PEER DEPENDENCY ([a-z\-0-9\.]+)@(.+)/gm;
  */
 module.exports.getDefaultPackageManager = function getDefaultPackageManager() {
   const hasLocalNpm = fs.existsSync(
-    path.resolve(process.cwd(), 'package-lock.json')
+    path.resolve(process.cwd(), "package-lock.json")
   );
 
   if (hasLocalNpm) {
-    return 'npm';
+    return "npm";
   }
 
-  const hasLocalYarn = fs.existsSync(path.resolve(process.cwd(), 'yarn.lock'));
+  const hasLocalYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
 
   if (hasLocalYarn) {
-    return 'yarn';
+    return "yarn";
   }
 
   const hasLocalPnpm = fs.existsSync(
-    path.resolve(process.cwd(), 'pnpm-lock.yaml')
+    path.resolve(process.cwd(), "pnpm-lock.yaml")
   );
 
   if (hasLocalPnpm) {
-    return 'pnpm';
+    return "pnpm";
   }
 
   try {
     // the sync function below will fail if npm is not installed,
     // an error will be thrown
-    if (spawn.sync('npm', ['--version'])) {
-      return 'npm';
+    if (spawn.sync("npm", ["--version"])) {
+      return "npm";
     }
   } catch (e) {
     // Nothing
@@ -56,8 +56,8 @@ module.exports.getDefaultPackageManager = function getDefaultPackageManager() {
   try {
     // the sync function below will fail if yarn is not installed,
     // an error will be thrown
-    if (spawn.sync('yarn', ['--version'])) {
-      return 'yarn';
+    if (spawn.sync("yarn", ["--version"])) {
+      return "yarn";
     }
   } catch (e) {
     // Nothing
@@ -66,11 +66,11 @@ module.exports.getDefaultPackageManager = function getDefaultPackageManager() {
   try {
     // the sync function below will fail if pnpm is not installed,
     // an error will be thrown
-    if (spawn.sync('pnpm', ['--version'])) {
-      return 'pnpm';
+    if (spawn.sync("pnpm", ["--version"])) {
+      return "pnpm";
     }
   } catch (e) {
-    console.error('No package manager found.');
+    console.error("No package manager found.");
     process.exit(2);
   }
 };
@@ -104,7 +104,7 @@ function normalizeBabelPlugin(plugin, prefix) {
 }
 
 module.exports.prompt = ({ message, defaultResponse, stream }) => {
-  const readline = require('readline');
+  const readline = require("readline");
   const rl = readline.createInterface({
     input: process.stdin,
     output: stream,
@@ -118,7 +118,7 @@ module.exports.prompt = ({ message, defaultResponse, stream }) => {
       const response = (answer || defaultResponse).toLowerCase();
 
       // Resolve with the input response
-      if (response === 'y' || response === 'yes') {
+      if (response === "y" || response === "yes") {
         resolve(true);
       } else {
         resolve(false);
@@ -128,7 +128,7 @@ module.exports.prompt = ({ message, defaultResponse, stream }) => {
 };
 
 module.exports.packageExists = function packageExists() {
-  const pkgPath = path.resolve('package.json');
+  const pkgPath = path.resolve("package.json");
   try {
     require.resolve(pkgPath);
     // Remove cached copy for future checks
@@ -144,11 +144,11 @@ module.exports.check = function check(request) {
     return;
   }
 
-  const namespaced = request.charAt(0) === '@';
+  const namespaced = request.charAt(0) === "@";
   const dep = request
-    .split('/')
+    .split("/")
     .slice(0, namespaced ? 2 : 1)
-    .join('/');
+    .join("/");
   // Ignore relative modules, which aren't installed by NPM
   if (!dep.match(EXTERNAL) && !namespaced) {
     return;
@@ -169,12 +169,12 @@ module.exports.checkBabel = function checkBabel(pluginOptions, logger) {
   let babelOpts;
   let babelrc;
   try {
-    babelrc = require.resolve(path.join(process.cwd(), '.babelrc'));
-    babelOpts = JSON5.parse(fs.readFileSync(babelrc, 'utf8'));
+    babelrc = require.resolve(path.join(process.cwd(), ".babelrc"));
+    babelOpts = JSON5.parse(fs.readFileSync(babelrc, "utf8"));
   } catch (e) {
     try {
       const babelConfigJs = require.resolve(
-        path.join(process.cwd(), '.babelrc')
+        path.join(process.cwd(), ".babelrc")
       );
       // eslint-disable-next-line
       babelOpts = require(babelConfigJs);
@@ -182,7 +182,7 @@ module.exports.checkBabel = function checkBabel(pluginOptions, logger) {
       logger.info("couldn't locate babel.config.js nor .babelrc");
     }
     if (babelrc) {
-      logger.info('.babelrc is invalid JSON5, babel deps are skipped');
+      logger.info(".babelrc is invalid JSON5, babel deps are skipped");
     }
     // Babel isn't installed, don't install deps
     return;
@@ -215,25 +215,25 @@ module.exports.checkBabel = function checkBabel(pluginOptions, logger) {
   );
 
   // Accumulate babel-core (required for babel-loader)+ all dependencies
-  const deps = ['@babel/core']
+  const deps = ["@babel/core"]
     .concat(
       options.plugins.map((plugin) =>
-        normalizeBabelPlugin(plugin, 'babel-plugin-')
+        normalizeBabelPlugin(plugin, "babel-plugin-")
       )
     )
     .concat(
       options.presets.map((preset) =>
-        normalizeBabelPlugin(preset, '@babel/preset-')
+        normalizeBabelPlugin(preset, "@babel/preset-")
       )
     )
     .concat(
       options.env.development.plugins.map((plugin) =>
-        normalizeBabelPlugin(plugin, 'babel-plugin-')
+        normalizeBabelPlugin(plugin, "babel-plugin-")
       )
     )
     .concat(
       options.env.development.presets.map((preset) =>
-        normalizeBabelPlugin(preset, '@babel/preset-')
+        normalizeBabelPlugin(preset, "@babel/preset-")
       )
     );
 
@@ -275,44 +275,44 @@ module.exports.install = async function install(deps, options, logger) {
   const { packageManager } = options;
 
   if (
-    packageManager === 'yarn' ||
-    (packageManager && packageManager.type === 'yarn')
+    packageManager === "yarn" ||
+    (packageManager && packageManager.type === "yarn")
   ) {
-    args = ['add'];
-    client = 'yarn';
+    args = ["add"];
+    client = "yarn";
     save =
-      packageManager.options && packageManager.options.dev ? '--dev' : null;
-    quietOptions = ['--silent'];
+      packageManager.options && packageManager.options.dev ? "--dev" : null;
+    quietOptions = ["--silent"];
   } else if (
-    packageManager === 'pnpm' ||
-    (packageManager && packageManager.type === 'pnpm')
+    packageManager === "pnpm" ||
+    (packageManager && packageManager.type === "pnpm")
   ) {
-    args = ['add'];
-    client = 'pnpm';
+    args = ["add"];
+    client = "pnpm";
     save =
       packageManager.options && packageManager.options.dev
-        ? '--save-dev'
+        ? "--save-dev"
         : null;
-    quietOptions = ['--reporter=silent'];
+    quietOptions = ["--reporter=silent"];
   } else {
-    args = ['install'];
-    client = 'npm';
+    args = ["install"];
+    client = "npm";
     save =
       packageManager.options && packageManager.options.dev
-        ? '--save-dev'
-        : '--save';
-    quietOptions = ['--silent', '--no-progress'];
+        ? "--save-dev"
+        : "--save";
+    quietOptions = ["--silent", "--no-progress"];
   }
 
   if (options.prompt) {
     const response = await this.prompt({
       message: `[install-webpack-plugin] Would you like to install package(s) ${green(
-        deps.join(', ')
+        deps.join(", ")
       )},
       )}'? (That will run '${green(`${client} ${args[0]}`)}') (${yellow(
-        'Y/n'
+        "Y/n"
       )})`,
-      defaultResponse: 'Y',
+      defaultResponse: "Y",
       stream: process.stderr,
     });
     if (!response) {
@@ -338,12 +338,12 @@ module.exports.install = async function install(deps, options, logger) {
   }
 
   deps.forEach((dep) => {
-    logger.info('Installing %s...', dep);
+    logger.info("Installing %s...", dep);
   });
 
   // Ignore input, capture output, show errors
   const output = spawn.sync(client, args, {
-    stdio: ['ignore', 'pipe', 'inherit'],
+    stdio: ["ignore", "pipe", "inherit"],
   });
 
   if (output.status) {
@@ -361,17 +361,17 @@ module.exports.install = async function install(deps, options, logger) {
     const [dep, version] = matches;
 
     // Ranges don't work well, so let NPM pick
-    if (version.match(' ')) {
+    if (version.match(" ")) {
       peers.push(dep);
     } else {
-      peers.push(util.format('%s@%s', dep, version));
+      peers.push(util.format("%s@%s", dep, version));
     }
   }
 
   if (options.dependencies.peer && peers.length) {
-    logger.info('Installing peer dependencies...');
+    logger.info("Installing peer dependencies...");
     this.install(peers, options, logger);
-    logger.info('');
+    logger.info("");
   }
 
   return output;

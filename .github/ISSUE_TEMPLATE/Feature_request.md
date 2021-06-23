@@ -1,7 +1,7 @@
 ---
 name: "[FEATURE]: Feature request \U0001F914"
 about: "Suggest ideas \U0001F680"
-labels: 'Feature Request'
+labels: "Feature Request"
 ---
 
 **Is your feature request related to a problem? Please describe.**
