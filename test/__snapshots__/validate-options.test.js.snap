@@ -3,13 +3,13 @@
 exports[`validation should throw an error on the "dependencies" option with "{"peer":"bar"}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.peer should be a boolean.
-   -> Install missing peer dependencies"
+   -> Install missing peer dependencies."
 `;
 
 exports[`validation should throw an error on the "dependencies" option with "{"peer":10}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.peer should be a boolean.
-   -> Install missing peer dependencies"
+   -> Install missing peer dependencies."
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"foo"}" value 1`] = `
@@ -21,24 +21,26 @@ exports[`validation should throw an error on the "packageManager" option with "{
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"arguments":"10"}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.arguments should be an array:
-   [non-empty string, ...] (should not have fewer than 1 item)"
+   [non-empty string, ...] (should not have fewer than 1 item)
+   -> Provide custom arguments for package manager."
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"arguments":[]}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.packageManager.options.arguments should be an non-empty array."
+ - options.packageManager.options.arguments should be an non-empty array.
+   -> Provide custom arguments for package manager."
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"dev":"foo"}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.dev should be a boolean.
-   -> Install as development dependencies"
+   -> Install as development dependencies."
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"quiet":"foo"}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.quiet should be a boolean.
-   ->  Reduce amount of console logging"
+   -> Reduce the amount of console logging."
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"test":"foo"}}" value 1`] = `

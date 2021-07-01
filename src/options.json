@@ -4,12 +4,12 @@
   "definitions": {
     "Dependencies": {
       "type": "object",
-      "description": "dependencies related options.",
+      "description": "Dependencies related options.",
       "additionalProperties": false,
       "properties": {
         "peer": {
           "type": "boolean",
-          "description": "Install missing peer dependencies"
+          "description": "Install missing peer dependencies."
         }
       }
     },
@@ -42,6 +42,7 @@
               "properties": {
                 "arguments": {
                   "type": "array",
+                  "description": "Provide custom arguments for package manager.",
                   "minItems": 1,
                   "items": {
                     "type": "string",
@@ -50,11 +51,11 @@
                 },
                 "dev": {
                   "type": "boolean",
-                  "description": "Install as development dependencies"
+                  "description": "Install as development dependencies."
                 },
                 "quiet": {
                   "type": "boolean",
-                  "description": " Reduce amount of console logging"
+                  "description": "Reduce the amount of console logging."
                 }
               }
             }
