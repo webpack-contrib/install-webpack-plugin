@@ -462,7 +462,7 @@ describe("installer", () => {
 
               if (dep === "redbox-react") {
                 return {
-                  stdout: new Buffer(
+                  stdout: Buffer.from(
                     [
                       "/test",
                       "├── redbox-react@1.2.3",
@@ -645,7 +645,7 @@ describe("installer", () => {
 
               if (dep === "redbox-react") {
                 return {
-                  stdout: new Buffer(
+                  stdout: Buffer.from(
                     [
                       "/test",
                       "├── redbox-react@1.2.3",
@@ -849,7 +849,7 @@ describe("installer", () => {
 
               if (dep === "redbox-react") {
                 return {
-                  stdout: new Buffer(
+                  stdout: Buffer.from(
                     [
                       "/test",
                       "├── redbox-react@1.2.3",
