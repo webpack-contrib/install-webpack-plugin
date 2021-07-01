@@ -10,7 +10,7 @@
     <img width="200" height="200" vspace="" hspace="25"
       src="https://cdn.rawgit.com/webpack/media/e7485eb2/logo/icon.svg">
   </a>
-  <h1>NPM Install Webpack Plugin</h1>
+  <h1>Install Webpack Plugin</h1>
   <p>Speed up development by <b>automatically installing & saving dependencies</b> with Webpack.<p>
 </div>
 
@@ -18,16 +18,16 @@ It is inefficient to <kbd>Ctrl-C</kbd> your
 build script & server just to install
 a dependency you didn't know you needed until now.
 
-Instead, use `require` or `import` how you normally would and `npm install`
+Instead, use `require` or `import` how you normally would and installation
 will happen **automatically to install & save missing dependencies** while you work!
 
-<h2 align="center">Install</h2>
+# Installation
 
 ```bash
 $ npm install --save-dev install-webpack-plugin
 ```
 
-<h2 align="center">Usage</h2>
+# Usage
 
 In your `webpack.config.js`:
 
@@ -42,24 +42,68 @@ plugins: [
 ```js
 plugins: [
   new InstallPlugin({
-    // Use --save or --save-dev
-    dev: false,
-    // Install missing peerDependencies
-    peerDependencies: true,
-    // Reduce amount of console logging
-    quiet: false,
-    // npm command used inside company, yarn is not supported yet
-    npm: 'npm'
+    dependencies: {
+      peer: true,
+    },
+    packageManager: {
+      type: this.getDefaultPackageManager(),
+      options: {
+        dev: false,
+        quiet: false,
+      },
+    },
+    prompt: true,
   });
 ],
 ```
 
-You can provide a `Function` to the `dev` to make it dynamic:
+# Options
+
+## dependencies
+
+**Type:** `object`
+
+Dependencies related options.
+
+### peer
+
+**Type:** `boolean`
+
+**Default:** `true`
+
+Install missing peer dependencies.
 
 ```js
 plugins: [
   new InstallPlugin({
-    dev: function(module, path) {
+    dependencies: {
+      peer: true,
+    }
+  }),
+],
+```
+
+## packageManager
+
+**Type:** `'npm' | 'yarn' | 'pnpm' | object | Function`
+
+Package manager to use for installing dependencies.
+
+```js
+plugins: [
+  new InstallPlugin({
+      packageManager: 'yarn'
+    },
+  }),
+],
+```
+
+You can provide a `Function` to the `packageManager` to make it dynamic:
+
+```js
+plugins: [
+  new InstallPlugin({
+    packageManager: function(module, path) {
       return [
         "babel-preset-react-hmre",
         "webpack-dev-middleware",
@@ -70,13 +114,106 @@ plugins: [
 ],
 ```
 
-<h2 align="center">Demo</h2>
+### type
+
+**Type:** `'npm' | 'yarn' | 'pnpm'`
+
+Name of package manager to use for installing dependencies.
+
+### options
+
+**Type:** `Object`
+
+Package manager related options.
+
+### arguments
+
+**Type:** `Array`
+
+Custom arguments to use with package manager.
+
+```js
+plugins: [
+  new InstallPlugin({
+      packageManager: {
+        type: 'npm',
+        options: {
+          arguments: ['--ignore-scripts']
+        }
+      }
+    },
+  }),
+],
+```
+
+### dev
+
+**Type:** `Boolean`
+
+**Default:** `false`
+
+Install as development dependencies.
+
+```js
+plugins: [
+  new InstallPlugin({
+      packageManager: {
+        type: 'npm',
+        options: {
+          dev: true,
+        }
+      }
+    },
+  }),
+],
+```
+
+### quiet
+
+**Type:** `Boolean`
+
+**Default:** `false`
+
+Reduce the amount of console logging.
+
+```js
+plugins: [
+  new InstallPlugin({
+      packageManager: {
+        type: 'npm',
+        options: {
+          quiet: true,
+        }
+      }
+    },
+  }),
+],
+```
+
+## prompt
+
+**Type:** `Boolean`
+
+**Default:** `true`
+
+Show a prompt to confirm installation.
+
+```js
+plugins: [
+  new InstallPlugin({
+      prompt: true,
+    },
+  }),
+],
+```
+
+# Demo
 
 ![install-webpack-plugin demo](https://cloud.githubusercontent.com/assets/15182/12540538/6a4e8f1a-c2d0-11e5-97ee-4ddaf6892645.gif)
 
-<h2 align="center">Features</h2>
+# Features
 
-- [x] Works with both webpack `^v1.12.0` and `^2.1.0-beta.0`.
+- [x] Works with webpack `^v5.0.0`.
 - [x] Auto-installs `.babelrc` plugins & presets.
 - [x] Supports both ES5 & ES6 Modules.
       (e.g. `require`, `import`)
@@ -100,27 +237,6 @@ plugins: [
 Please take a moment to read our contributing guidelines if you haven't yet done so.
 
 [CONTRIBUTING](./.github/CONTRIBUTING.md)
-
-<h2 align="center">Maintainers</h2>
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center">
-        <img width="150" height="150"
-        src="https://avatars2.githubusercontent.com/u/15182?v=3&s=150">
-        </br>
-        <a href="https://github.com/ericclemmons">Eric Clemmons</a>
-      </td>
-      <td align="center">
-        <img width="150" height="150"
-        src="https://avatars3.githubusercontent.com/u/226692?v=3&s=150">
-        </br>
-        <a href="https://github.com/insin">Jonny Buchanan</a>
-      </td>
-    </tr>
-  <tbody>
-</table>
 
 [npm]: https://img.shields.io/npm/v/install-webpack-plugin.svg
 [npm-url]: https://npmjs.com/package/install-webpack-plugin
