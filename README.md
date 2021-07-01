@@ -61,13 +61,13 @@ plugins: [
 
 ## dependencies
 
-**Type:** `object`
+**Type:** `Object`
 
 Dependencies related options.
 
 ### peer
 
-**Type:** `boolean`
+**Type:** `Boolean`
 
 **Default:** `true`
 
@@ -85,7 +85,7 @@ plugins: [
 
 ## packageManager
 
-**Type:** `'npm' | 'yarn' | 'pnpm' | object | Function`
+**Type:** `'npm' | 'yarn' | 'pnpm' | Object | Function`
 
 Package manager to use for installing dependencies.
 
@@ -130,7 +130,7 @@ Package manager related options.
 
 **Type:** `Array`
 
-Custom arguments to use with package manager.
+Provide custom arguments to use with package manager.
 
 ```js
 plugins: [
