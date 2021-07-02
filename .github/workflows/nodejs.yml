@@ -38,6 +38,26 @@ jobs:
       - name: Lint
         run: npm run lint
 
+  commitlint:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - run: npm install
+
+      - name: conventional-changelog-lint-config-cz
+        # $GITHUB_WORKSPACE is the path to your repository
+        run: echo "NODE_PATH=$GITHUB_WORKSPACE/node_modules" >> $GITHUB_ENV
+
+      - uses: wagoid/commitlint-github-action@v2
+
   build:
     name: Tests and Coverage - ${{ matrix.os }} - Node v${{ matrix.node-version }}
 
