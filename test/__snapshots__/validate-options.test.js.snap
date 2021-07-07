@@ -27,7 +27,7 @@ exports[`validation should throw an error on the "packageManager" option with "{
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"arguments":[]}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
- - options.packageManager.options.arguments should be an non-empty array.
+ - options.packageManager.options.arguments should be a non-empty array.
    -> Provide custom arguments for package manager."
 `;
 
