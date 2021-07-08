@@ -41,9 +41,9 @@ class InstallPlugin {
   constructor(options) {
     validate(schema, options, "install-webpack-plugin");
 
-    this.preCompiler = undefined;
-    this.compiler = undefined;
-    this.logger = undefined;
+    this.preCompiler = null;
+    this.compiler = null;
+    this.logger = null;
     this.options = { ...installer.defaultOptions, ...options };
     this.resolving = new Set();
   }
