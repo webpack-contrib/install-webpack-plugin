@@ -145,7 +145,7 @@ describe("installer", () => {
       });
 
       it("should install missing plugins & presets", () => {
-        installer.checkBabel();
+        installer.checkBabel({}, logger);
 
         const deps = this.check.mock.calls.map((call) => call[0]);
 
