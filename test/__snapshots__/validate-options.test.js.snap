@@ -3,13 +3,15 @@
 exports[`validation should throw an error on the "dependencies" option with "{"peer":"bar"}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.peer should be a boolean.
-   -> Install missing peer dependencies."
+   -> Install missing peer dependencies.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#peer"
 `;
 
 exports[`validation should throw an error on the "dependencies" option with "{"peer":10}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.dependencies.peer should be a boolean.
-   -> Install missing peer dependencies."
+   -> Install missing peer dependencies.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#peer"
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"foo"}" value 1`] = `
@@ -22,25 +24,29 @@ exports[`validation should throw an error on the "packageManager" option with "{
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.arguments should be an array:
    [non-empty string, ...] (should not have fewer than 1 item)
-   -> Provide custom arguments for package manager."
+   -> Provide custom arguments for package manager.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#arguments"
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"arguments":[]}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.arguments should be a non-empty array.
-   -> Provide custom arguments for package manager."
+   -> Provide custom arguments for package manager.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#arguments"
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"dev":"foo"}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.dev should be a boolean.
-   -> Install as development dependencies."
+   -> Install as development dependencies.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#dev"
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"quiet":"foo"}}" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.packageManager.options.quiet should be a boolean.
-   -> Reduce the amount of console logging."
+   -> Reduce the amount of console logging.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#quiet"
 `;
 
 exports[`validation should throw an error on the "packageManager" option with "{"type":"npm","options":{"test":"foo"}}" value 1`] = `
@@ -54,6 +60,7 @@ exports[`validation should throw an error on the "packageManager" option with "f
  - options.packageManager should be one of these:
    \\"npm\\" | \\"pnpm\\" | \\"yarn\\" | object { type?, options? } | function
    -> Package manager to use for installing dependencies.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#packagemanager
    Details:
     * options.packageManager should be one of these:
       \\"npm\\" | \\"pnpm\\" | \\"yarn\\"
@@ -66,11 +73,13 @@ exports[`validation should throw an error on the "packageManager" option with "f
 exports[`validation should throw an error on the "prompt" option with "10" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.prompt should be a boolean.
-   -> Show a prompt to confirm installation."
+   -> Show a prompt to confirm installation.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#prompt"
 `;
 
 exports[`validation should throw an error on the "prompt" option with "bar" value 1`] = `
 "Invalid options object. Install Plugin has been initialized using an options object that does not match the API schema.
  - options.prompt should be a boolean.
-   -> Show a prompt to confirm installation."
+   -> Show a prompt to confirm installation.
+   -> Read more at https://webpack.js.org/plugins/install-webpack-plugin/#prompt"
 `;

@@ -5,11 +5,13 @@
     "Dependencies": {
       "type": "object",
       "description": "Dependencies related options.",
+      "link": "https://webpack.js.org/plugins/install-webpack-plugin/#dependencies",
       "additionalProperties": false,
       "properties": {
         "peer": {
           "type": "boolean",
-          "description": "Install missing peer dependencies."
+          "description": "Install missing peer dependencies.",
+          "link": "https://webpack.js.org/plugins/install-webpack-plugin/#peer"
         }
       }
     },
@@ -25,7 +27,8 @@
           "instanceof": "Function"
         }
       ],
-      "description": "Package manager to use for installing dependencies."
+      "description": "Package manager to use for installing dependencies.",
+      "link": "https://webpack.js.org/plugins/install-webpack-plugin/#packagemanager"
     },
     "PackageManagerOptions": {
       "anyOf": [
@@ -34,7 +37,8 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "$ref": "#/definitions/PackageManagerEnum"
+              "$ref": "#/definitions/PackageManagerEnum",
+              "link": "https://webpack.js.org/plugins/install-webpack-plugin/#type"
             },
             "options": {
               "type": "object",
@@ -43,6 +47,7 @@
                 "arguments": {
                   "type": "array",
                   "description": "Provide custom arguments for package manager.",
+                  "link": "https://webpack.js.org/plugins/install-webpack-plugin/#arguments",
                   "minItems": 1,
                   "items": {
                     "type": "string",
@@ -51,11 +56,13 @@
                 },
                 "dev": {
                   "type": "boolean",
-                  "description": "Install as development dependencies."
+                  "description": "Install as development dependencies.",
+                  "link": "https://webpack.js.org/plugins/install-webpack-plugin/#dev"
                 },
                 "quiet": {
                   "type": "boolean",
-                  "description": "Reduce the amount of console logging."
+                  "description": "Reduce the amount of console logging.",
+                  "link": "https://webpack.js.org/plugins/install-webpack-plugin/#quiet"
                 }
               }
             }
@@ -69,7 +76,8 @@
     },
     "Prompt": {
       "type": "boolean",
-      "description": "Show a prompt to confirm installation."
+      "description": "Show a prompt to confirm installation.",
+      "link": "https://webpack.js.org/plugins/install-webpack-plugin/#prompt"
     }
   },
   "additionalProperties": false,
