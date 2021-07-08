@@ -49,10 +49,6 @@ class InstallPlugin {
   }
 
   apply(compiler) {
-    process.on("unhandledRejection", (reason, p) => {
-      console.log("Unhandled Rejection at: Promise", p, "reason:", reason);
-    });
-
     this.compiler = compiler;
 
     this.logger = compiler.getInfrastructureLogger("install-webpack-plugin");

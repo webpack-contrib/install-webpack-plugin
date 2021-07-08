@@ -128,7 +128,7 @@ describe("installer", () => {
       });
 
       it("should check plugins & presets", () => {
-        installer.checkBabel();
+        installer.checkBabel({}, logger);
 
         const deps = this.check.mock.calls.map((call) => call[0]);
 
