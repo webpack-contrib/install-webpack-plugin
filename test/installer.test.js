@@ -128,7 +128,7 @@ describe("installer", () => {
       });
 
       it("should check plugins & presets", () => {
-        installer.checkBabel();
+        installer.checkBabel({}, logger);
 
         const deps = this.check.mock.calls.map((call) => call[0]);
 
@@ -145,7 +145,7 @@ describe("installer", () => {
       });
 
       it("should install missing plugins & presets", () => {
-        installer.checkBabel();
+        installer.checkBabel({}, logger);
 
         const deps = this.check.mock.calls.map((call) => call[0]);
 
@@ -462,7 +462,7 @@ describe("installer", () => {
 
               if (dep === "redbox-react") {
                 return {
-                  stdout: new Buffer(
+                  stdout: Buffer.from(
                     [
                       "/test",
                       "├── redbox-react@1.2.3",
@@ -645,7 +645,7 @@ describe("installer", () => {
 
               if (dep === "redbox-react") {
                 return {
-                  stdout: new Buffer(
+                  stdout: Buffer.from(
                     [
                       "/test",
                       "├── redbox-react@1.2.3",
@@ -849,7 +849,7 @@ describe("installer", () => {
 
               if (dep === "redbox-react") {
                 return {
-                  stdout: new Buffer(
+                  stdout: Buffer.from(
                     [
                       "/test",
                       "├── redbox-react@1.2.3",
