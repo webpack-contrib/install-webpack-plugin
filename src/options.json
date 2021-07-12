@@ -5,13 +5,13 @@
     "Dependencies": {
       "type": "object",
       "description": "Dependencies related options.",
-      "link": "https://webpack.js.org/plugins/install-webpack-plugin/#dependencies",
+      "link": "https://github.com/webpack-contrib/install-webpack-plugin/#dependencies",
       "additionalProperties": false,
       "properties": {
         "peer": {
           "type": "boolean",
           "description": "Install missing peer dependencies.",
-          "link": "https://webpack.js.org/plugins/install-webpack-plugin/#peer"
+          "link": "https://github.com/webpack-contrib/install-webpack-plugin/#peer"
         }
       }
     },
@@ -28,7 +28,7 @@
         }
       ],
       "description": "Package manager to use for installing dependencies.",
-      "link": "https://webpack.js.org/plugins/install-webpack-plugin/#packagemanager"
+      "link": "https://github.com/webpack-contrib/install-webpack-plugin/#packagemanager"
     },
     "PackageManagerOptions": {
       "anyOf": [
@@ -38,7 +38,7 @@
           "properties": {
             "type": {
               "$ref": "#/definitions/PackageManagerEnum",
-              "link": "https://webpack.js.org/plugins/install-webpack-plugin/#type"
+              "link": "https://github.com/webpack-contrib/install-webpack-plugin/#type"
             },
             "options": {
               "type": "object",
@@ -47,7 +47,7 @@
                 "arguments": {
                   "type": "array",
                   "description": "Provide custom arguments for package manager.",
-                  "link": "https://webpack.js.org/plugins/install-webpack-plugin/#arguments",
+                  "link": "https://github.com/webpack-contrib/install-webpack-plugin/#arguments",
                   "minItems": 1,
                   "items": {
                     "type": "string",
@@ -57,12 +57,12 @@
                 "dev": {
                   "type": "boolean",
                   "description": "Install as development dependencies.",
-                  "link": "https://webpack.js.org/plugins/install-webpack-plugin/#dev"
+                  "link": "https://github.com/webpack-contrib/install-webpack-plugin/#dev"
                 },
                 "quiet": {
                   "type": "boolean",
                   "description": "Reduce the amount of console logging.",
-                  "link": "https://webpack.js.org/plugins/install-webpack-plugin/#quiet"
+                  "link": "https://github.com/webpack-contrib/install-webpack-plugin/#quiet"
                 }
               }
             }
@@ -77,7 +77,7 @@
     "Prompt": {
       "type": "boolean",
       "description": "Show a prompt to confirm installation.",
-      "link": "https://webpack.js.org/plugins/install-webpack-plugin/#prompt"
+      "link": "https://github.com/webpack-contrib/install-webpack-plugin/#prompt"
     }
   },
   "additionalProperties": false,
