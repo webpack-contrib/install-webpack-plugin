@@ -48,9 +48,6 @@ class InstallPlugin {
 
     this.checkBabel();
 
-    // Recursively install missing dependencies so primary build doesn't fail
-    // compiler.hooks.watchRun.tapAsync(PLUGIN_NAME, this.preCompile.bind(this));
-
     compiler.hooks.afterCompile.tap(PLUGIN_NAME, (compilation) => {
       console.log("afterCompile");
 
@@ -69,15 +66,17 @@ class InstallPlugin {
           const state = this.state.get(request);
 
           if (state.status === "skipped") {
-            this.state.clear();
+            console.log('ERRORRRRRRRR skipped', this.state);
+            this.state.delete(request);
           }
 
           if (state.status === "notInstalled") {
-            this.state.clear();
-            console.log('AAAAAAAAAAAAAAAAAAAAAAAA', this.state)
+            console.log('ERRORRRRRRRR notInstalled', this.state);
+            this.state.delete(request);
           }
 
           if (state.status === "installed") {
+            console.log('ERRORRRRRRRR installed', this.state);
             return false;
           }
 
@@ -133,29 +132,40 @@ class InstallPlugin {
       compiler.resolverFactory.hooks.resolver
         .for("normal")
         .tap(PLUGIN_NAME, (resolver) => {
-          resolver.hooks.rawModule.tapAsync(
+          resolver.hooks.rawModule.tapPromise(
             PLUGIN_NAME,
-            (result, resolveContext, next) => {
-              console.log("resolverFactory", this.state);
+            (result, resolveContext) => {
+              // const asyncResolve = () => new Promise((resolve) => {
+              //   console.log('WAIT');
+              //   setTimeout(() => {
+              //     resolve();
+              //   }, 5000);
+              // })
+              //
+              // return asyncResolve();
+
               // Only install direct dependencies, not sub-dependencies
-              if (result.path.match("node_modules")) {
-                next();
+              // if (result.path.match("node_modules")) {
+              //   console.log("resolverFactory node_modules", this.state);
+              //   next();
+              //
+              //   return;
+              // }
+              //
+              // if (this.state.has(result.request)) {
+              //   console.log("resolverFactory has", this.state);
+              //   next();
+              //
+              //   return;
+              // }
 
-                return;
-              }
-
-              if (this.state.has(result.request)) {
-                next();
-
-                return;
-              }
-
-              this.resolveRequest(
+              return this.resolveRequest(
                 result,
                 resolveContext,
-                utils.depFromErr,
-                next
+                utils.depFromErr
               );
+              console.log("resolverFactory resolveRequest", this.state);
+              // next();
             }
           );
         });
@@ -389,7 +399,9 @@ class InstallPlugin {
   }
 
   resolve(resolver, result, callback) {
-    return this.compiler.resolverFactory
+    // console.log( this.compiler.resolverFactory
+    //   .get(resolver).resolve.toString())
+    this.compiler.resolverFactory
       .get(resolver)
       .resolve(result.context, result.path, result.request, {}, callback);
   }
@@ -423,44 +435,33 @@ class InstallPlugin {
     );
   }
 
-  async resolveRequest(result, resolveContext, normalizeRequestFn, next) {
+  resolveRequest(result, resolveContext, normalizeRequestFn) {
     const state = {
-      status: "processed",
+      // status: "processed",
     };
 
-    this.state.set(result.request, state);
+    // this.state.set(result.request, state);
 
-    const asyncResolve = () =>
-      new Promise((resolve) => {
-        this.resolve(
-          "normal",
-          result,
-          // eslint-disable-next-line func-names
-          async (err) => {
-            console.log("AAAAAAAa", state.status);
-            if (err) {
-              const installResult = await this.runInstall({
-                ...result,
-                request: normalizeRequestFn(err),
-              });
+    // return new Promise((resolve) => {
+    //   console.log('WAIT');
+    //   setTimeout(() => {
+    //     resolve();
+    //   }, 2000);
+    // })
 
-              console.log('A_B', installResult)
-              state.status =
-                typeof installResult === "undefined"
-                  ? "skipped"
-                  : installResult.status === 0
-                  ? "installed"
-                  : "notInstalled";
-            }
-            console.log("BBBBBB",  state.status);
-            resolve(state);
-          }
-        );
-      });
+    return new Promise((resolve) => {
 
-    await asyncResolve();
+      this.resolve(
+        "normal",
+        result,
+        // eslint-disable-next-line func-names
+        (err) => {
+          console.log('hERE');
+          resolve();
+        }
+      );
+    });
 
-    next();
   }
 }
 
