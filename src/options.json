@@ -2,17 +2,6 @@
   "title": "Install Plugin options",
   "type": "object",
   "definitions": {
-    "Dependencies": {
-      "type": "object",
-      "description": "dependencies related options.",
-      "additionalProperties": false,
-      "properties": {
-        "peer": {
-          "type": "boolean",
-          "description": "Install missing peer dependencies"
-        }
-      }
-    },
     "PackageManager": {
       "anyOf": [
         {
@@ -73,9 +62,6 @@
   },
   "additionalProperties": false,
   "properties": {
-    "dependencies": {
-      "$ref": "#/definitions/Dependencies"
-    },
     "packageManager": {
       "$ref": "#/definitions/PackageManager"
     },

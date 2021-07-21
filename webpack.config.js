@@ -1,16 +1,23 @@
-const InstallPlugin = require('./index');
+const InstallPlugin = require("./index");
 
 module.exports = {
   mode: "development",
-  entry: './sb/index',
+  entry: "./sb/index",
+  module: {
+    rules: [
+      {
+        test: /\.css/,
+        loader: "css-loader",
+      },
+    ],
+  },
   plugins: [
     new InstallPlugin({
-      packageManager: 'npm',
       // prompt: false
       // dev: false,
       // peerDependencies: true,
       // quiet: false,
       // npm: 'npm'
     }),
-  ]
-}
+  ],
+};
