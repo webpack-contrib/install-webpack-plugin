@@ -3,9 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const util = require("util");
 
-const resolve = require("resolve");
 const spawn = require("cross-spawn");
-const JSON5 = require("json5");
 
 const { green, yellow } = require("colorette");
 
@@ -70,6 +68,7 @@ module.exports.getDefaultPackageManager = function getDefaultPackageManager() {
       return "pnpm";
     }
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error("No package manager found.");
     process.exit(2);
   }
@@ -144,6 +143,7 @@ module.exports.check = function check(request) {
     return;
   }
 
+  const resolve = require("resolve");
   const namespaced = request.charAt(0) === "@";
   const dep = request
     .split("/")
@@ -166,6 +166,7 @@ module.exports.check = function check(request) {
 };
 
 module.exports.checkBabel = function checkBabel(pluginOptions, logger) {
+  const JSON5 = require("json5");
   let babelOpts;
   let babelrc;
   try {
