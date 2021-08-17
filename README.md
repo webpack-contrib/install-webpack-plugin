@@ -11,7 +11,7 @@
       src="https://cdn.rawgit.com/webpack/media/e7485eb2/logo/icon.svg">
   </a>
   <h1>Install Webpack Plugin</h1>
-  <p>Speed up development by <b>automatically installing & saving dependencies</b> with Webpack.<p>
+  <p>Speed up development by <b>automatically installing & saving dependencies</b> with Webpack.</p>
 </div>
 
 It is inefficient to <kbd>Ctrl-C</kbd> your
