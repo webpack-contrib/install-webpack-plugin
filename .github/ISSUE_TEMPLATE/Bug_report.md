@@ -4,6 +4,8 @@ about: "Template for \U0001F98E's you encountered"
 labels: "Bug"
 ---
 
+**Please paste the results of `npx webpack info` here, and mention other relevant information**
+
 **Describe the bug**
 
 <!-- A 💯 way to do this is to provide your configuration via a GitHub gist and/or to use markdown when describing which commands you used when the error occurred! Be precise and clear in your description of the bug. -->
