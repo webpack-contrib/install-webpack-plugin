@@ -59,6 +59,12 @@ plugins: [
 
 # Options
 
+|                  Name                   |                    Type                     |           Default           | Description                                         |
+| :-------------------------------------: | :-----------------------------------------: | :-------------------------: | :-------------------------------------------------- |
+|   **[`dependencies`](#dependencies)**   |                 `{Object}`                  |      `{ peer: true }`       | Dependencies related options.                       |
+| **[`packageManager`](#packagemanager)** | `{'npm'\|'yarn'\|'pnpm'\|Object\|Function}` | `yourDefaultPackageManager` | Package manager to use for installing dependencies. |
+|         **[`prompt`](#prompt)**         |                 `{Boolean}`                 |           `true`            | Show a prompt to confirm installation.              |
+
 ## dependencies
 
 **Type:** `Object`
