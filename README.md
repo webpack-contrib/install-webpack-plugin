@@ -23,8 +23,16 @@ will happen **automatically to install & save missing dependencies** while you w
 
 # Installation
 
-```bash
-$ npm install --save-dev install-webpack-plugin
+```console
+npm install --save-dev install-webpack-plugin
+```
+
+```console
+yarn add -D install-webpack-plugin
+```
+
+```console
+yarn add -D install-webpack-plugin
 ```
 
 # Usage
@@ -61,13 +69,23 @@ plugins: [
 
 ## dependencies
 
-**Type:** `Object`
+**Type:**
+
+```ts
+type dependencies = {
+  peer: boolean;
+};
+```
 
 Dependencies related options.
 
 ### peer
 
-**Type:** `Boolean`
+**Type:**
+
+```ts
+type peer = boolean;
+```
 
 **Default:** `true`
 
@@ -85,7 +103,23 @@ plugins: [
 
 ## packageManager
 
-**Type:** `'npm' | 'yarn' | 'pnpm' | Object | Function`
+**Type:**
+
+```ts
+type packageManager =
+  | "npm"
+  | "yarn"
+  | "pnpm"
+  | {
+      type: "npm" | "yarn" | "pnpm";
+      options: {
+        dev: boolean;
+        arguments: Array<string>;
+        quiet: boolean;
+      };
+    }
+  | (module:string,path:string) => boolean;
+```
 
 Package manager to use for installing dependencies.
 
@@ -98,7 +132,7 @@ plugins: [
 ],
 ```
 
-You can provide a `Function` to the `packageManager` to make it dynamic:
+You can provide a `function` to the `packageManager` to make it dynamic:
 
 ```js
 plugins: [
@@ -116,19 +150,35 @@ plugins: [
 
 ### type
 
-**Type:** `'npm' | 'yarn' | 'pnpm'`
+**Type:**
+
+```ts
+type type = "npm" | "yarn" | "pnpm";
+```
 
 Name of package manager to use for installing dependencies.
 
 ### options
 
-**Type:** `Object`
+**Type:**
+
+```ts
+type options = {
+  dev: boolean;
+  arguments: Array<string>;
+  quiet: boolean;
+};
+```
 
 Package manager related options.
 
 ### arguments
 
-**Type:** `Array`
+**Type:**
+
+```ts
+type arguments = Array<string>;
+```
 
 Provide custom arguments to use with package manager.
 
@@ -148,7 +198,11 @@ plugins: [
 
 ### dev
 
-**Type:** `Boolean`
+**Type:**
+
+```ts
+type dev = boolean;
+```
 
 **Default:** `false`
 
@@ -170,7 +224,11 @@ plugins: [
 
 ### quiet
 
-**Type:** `Boolean`
+**Type:**
+
+```ts
+type quiet = boolean;
+```
 
 **Default:** `false`
 
@@ -192,7 +250,11 @@ plugins: [
 
 ## prompt
 
-**Type:** `Boolean`
+**Type:**
+
+```ts
+type prompt = boolean;
+```
 
 **Default:** `true`
 
