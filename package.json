@@ -45,6 +45,10 @@
     "url": "https://github.com/webpack-contrib/install-webpack-plugin/issues"
   },
   "homepage": "https://github.com/webpack-contrib/install-webpack-plugin#readme",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/webpack"
+  },
   "dependencies": {
     "colorette": "^1.2.2",
     "cross-spawn": "^7.0.3",
